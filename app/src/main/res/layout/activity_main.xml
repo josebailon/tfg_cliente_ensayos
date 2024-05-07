@@ -10,14 +10,18 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:foregroundTint="#FF0000">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimaryDark"
+            android:theme="@style/Theme.Ensayos.Toolbar"
+            app:title="Login"
             app:titleCentered="true"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Display1"
             app:titleTextColor="#FFFFFF" />
 
     </com.google.android.material.appbar.AppBarLayout>

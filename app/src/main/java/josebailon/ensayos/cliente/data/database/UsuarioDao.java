@@ -9,6 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
+import java.util.UUID;
 
 import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 
@@ -24,9 +25,12 @@ public interface UsuarioDao {
     @Delete
     void deleteUsuario(UsuarioEntity usuarioModel);
 
-    @Query("SELECT * from usuario")
+    @Query("SELECT * from usuario ORDER BY email")
     LiveData<List<UsuarioEntity>> getAllUsuarios();
 
-    @Query("SELECT * from usuario where id=:id")
-    LiveData<UsuarioEntity> getUsuarioById(Long id);
+    @Query("SELECT * from usuario where email=:email AND grupo=:grupo ORDER BY email")
+    LiveData<UsuarioEntity> getUsuarioByEmailGrupo(String email, UUID grupo);
+
+    @Query("SELECT * from usuario where grupo=:grupo ORDER BY email")
+    LiveData<UsuarioEntity> getUsuarioByGrupo( UUID grupo);
 }

@@ -1,28 +1,28 @@
 package josebailon.ensayos.cliente.ui.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import josebailon.ensayos.cliente.R;
+import josebailon.ensayos.cliente.data.database.CancionDao;
+import josebailon.ensayos.cliente.data.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
+import josebailon.ensayos.cliente.databinding.CancionItemBinding;
 import josebailon.ensayos.cliente.databinding.GrupoItemBinding;
+import josebailon.ensayos.cliente.fragmentos.VergrupodetalleFragment;
 import josebailon.ensayos.cliente.fragmentos.VergruposFragment;
 
 
-public class GruposAdapter extends RecyclerView.Adapter<GruposAdapter.ViewHolder> {
+public class CancionesAdapter extends RecyclerView.Adapter<CancionesAdapter.ViewHolder> {
 
-    List<GrupoEntity> list;
-    VergruposFragment fragment;
+    List<CancionEntity> list;
+    VergrupodetalleFragment fragment;
 
-    public GruposAdapter(List<GrupoEntity> list, VergruposFragment fragment) {
+    public CancionesAdapter(List<CancionEntity> list, VergrupodetalleFragment fragment) {
         this.list = list;
         this.fragment = fragment;
     }
@@ -30,15 +30,14 @@ public class GruposAdapter extends RecyclerView.Adapter<GruposAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        GrupoItemBinding binding =GrupoItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        CancionItemBinding binding =CancionItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.binding.texto.setText(list.get(position).getNombre());
-        holder.itemView.setOnClickListener(v -> fragment.verGrupo(list.get(position).getId()));
-        holder.itemView.setOnLongClickListener(v -> fragment.mostrarMenu(position));
+        holder.itemView.setOnClickListener(v -> fragment.verCancion(list.get(position).getId()));
     }
 
     @Override
@@ -46,14 +45,14 @@ public class GruposAdapter extends RecyclerView.Adapter<GruposAdapter.ViewHolder
         return list.size();
     }
 
-    public void setData(List<GrupoEntity> grupos) {
-        this.list=grupos;
+    public void setData(List<CancionEntity> canciones) {
+        this.list=canciones;
         this.notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        GrupoItemBinding binding;
-        public ViewHolder(@NonNull GrupoItemBinding binding) {
+        CancionItemBinding binding;
+        public ViewHolder(@NonNull CancionItemBinding binding) {
             super(binding.getRoot());
             this.binding=binding;
         }

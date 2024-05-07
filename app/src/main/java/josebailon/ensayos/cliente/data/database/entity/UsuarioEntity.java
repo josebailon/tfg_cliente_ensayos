@@ -1,22 +1,22 @@
 package josebailon.ensayos.cliente.data.database.entity;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "usuario")
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+
+@Entity(tableName = "usuario", primaryKeys = {"email","grupo"}, foreignKeys = {@ForeignKey(entity = GrupoEntity.class, parentColumns = {"id"}, childColumns = {"grupo"}, onDelete= ForeignKey.CASCADE)})
 public class UsuarioEntity {
-    @PrimaryKey()
-    private Long id;
+
+    @NotNull
     private String email;
-    private String role;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ColumnInfo(name = "grupo", index = true)
+    @NotNull
+    private UUID grupo;
 
     public String getEmail() {
         return email;
@@ -26,11 +26,11 @@ public class UsuarioEntity {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public UUID getGrupo() {
+        return grupo;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setGrupo(UUID grupo) {
+        this.grupo = grupo;
     }
 }

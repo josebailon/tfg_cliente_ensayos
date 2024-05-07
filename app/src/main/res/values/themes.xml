@@ -9,7 +9,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorSecondary">@color/white</item>
+
+        <item name="materialButtonStyle">@style/Theme.Ensayos.Button</item>
     </style>
 
     <style name="Theme.Ensayos" parent="Base.Theme.Ensayos" />
@@ -17,4 +18,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#2F3D8B</color>
     <color name="colorAccent">#FFC107</color>
+
+    <style name="Theme.Ensayos.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:textColorSecondary">#FFFFFF</item>
+    </style>
+    <style name="Theme.Ensayos.Button" parent="Widget.MaterialComponents.Button">
+        <item name="cornerSize">50dp</item>
+    </style>
 </resources>

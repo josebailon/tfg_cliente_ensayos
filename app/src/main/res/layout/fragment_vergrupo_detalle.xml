@@ -11,29 +11,34 @@
         android:id="@+id/lbNombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Nombre Grupo"
+        android:layout_marginTop="16dp"
         android:textAlignment="center"
 
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Nombre Grupo" />
 
     <TextView
         android:id="@+id/lbDescripcion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        tools:text="Descripcion del grupo \n mmultilínea"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbNombre" />
+        app:layout_constraintTop_toBottomOf="@+id/lbNombre"
+        tools:text="Descripcion del grupo \n mmultilínea" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/separadorDetallesGrupo"
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
@@ -49,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintTop_toBottomOf="@+id/separadorDetallesGrupo">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -60,14 +65,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:background="@color/celeste"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/separadorSuperiorCanciones"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:src="@drawable/separador"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <Button
                     android:id="@+id/btnAgregarCancion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     android:layout_marginEnd="8dp"
-                    android:text="Agregar canción"
+                    android:layout_marginBottom="8dp"
+                    android:text="Agregar"
                     app:icon="@android:drawable/ic_menu_add"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +95,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Canciones:"
+                    android:text="Canciones"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="@+id/btnAgregarCancion"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/btnAgregarCancion" />
@@ -99,15 +117,26 @@
                 android:id="@+id/botoneraUsuarios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:background="@color/celeste"
                 app:layout_constraintTop_toBottomOf="@+id/verCancionesRecycleView">
+
+                <ImageView
+                    android:id="@+id/separadorSuperiorUsuarios"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:src="@drawable/separador"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <Button
                     android:id="@+id/btnAgregarUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     android:layout_marginEnd="8dp"
-                    android:text="Agregar usuario"
+                    android:layout_marginBottom="8dp"
+                    android:text="Agregar"
                     app:icon="@android:drawable/ic_menu_add"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +147,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Usuarios:"
+                    android:text="Usuarios"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="@+id/btnAgregarUsuario"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/btnAgregarUsuario" />

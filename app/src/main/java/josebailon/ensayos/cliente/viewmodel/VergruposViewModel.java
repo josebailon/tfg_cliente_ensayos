@@ -25,4 +25,16 @@ public class VergruposViewModel extends ViewModel {
         return grupoRepo.getAllGrupos();
     }
 
+    public void actualizar(GrupoEntity grupo, String nombre, String descripcion) {
+        grupo.setNombre(nombre);
+        grupo.setDescripcion(descripcion);
+        grupo.setEditado(true);
+        grupoRepo.updateGrupo(grupo);
+    }
+
+    public void borrar(GrupoEntity grupo) {
+        grupo.setBorrado(true);
+        grupo.setEditado(true);
+        grupoRepo.borrardoLogico(grupo);
+    }
 }

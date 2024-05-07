@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -41,8 +42,8 @@ public class UsuarioRepo {
             return appDatabase.usuarioDao().getAllUsuarios();
     }
 
-    public LiveData<UsuarioEntity> getUsuarioById(Long id){
-            return appDatabase.usuarioDao().getUsuarioById(id);
+    public LiveData<UsuarioEntity> getUsuarioByEmailGrupo(String email, UUID grupo){
+            return appDatabase.usuarioDao().getUsuarioByEmailGrupo(email,grupo);
     }
 
 }
