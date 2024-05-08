@@ -1,6 +1,7 @@
 package josebailon.ensayos.cliente.viewmodel;
 
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,19 +10,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
-import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.data.network.model.LoginRequest;
 import josebailon.ensayos.cliente.data.network.model.LoginResponse;
-import josebailon.ensayos.cliente.data.repository.AuthRepo;
-import josebailon.ensayos.cliente.data.repository.GrupoRepo;
+import josebailon.ensayos.cliente.data.repository.AuthApiRepo;
 import josebailon.ensayos.cliente.data.repository.SharedPreferencesRepo;
-import josebailon.ensayos.cliente.data.repository.UsuarioRepo;
 import josebailon.ensayos.cliente.data.sharedpref.LoginDto;
 import retrofit2.Response;
 
@@ -33,23 +27,32 @@ public class InitViewModel extends AndroidViewModel {
     public static final int LOGINOK =2;
     public static final int NO_INTERNET =-1;
 
-    private AuthRepo authRepo;
+    private AuthApiRepo authApiRepo;
     MutableLiveData<Integer> _estado = new MutableLiveData<>();
 
     public MutableLiveData<List<GrupoEntity>> grupos = new MutableLiveData<>();
+    private SharedPreferencesRepo repo = SharedPreferencesRepo.getInstance();
     public InitViewModel(@NonNull Application application) {
         super(application);
-        authRepo= AuthRepo.getInstance();
+        authApiRepo = AuthApiRepo.getInstance();
         _estado.postValue(WORKING);
     }
 
+    /**
+     * Devuelve si el usuario esta inicializado
+     * @return
+     */
+    public boolean usuarioInicializado(){
+        return !TextUtils.isEmpty(repo.readLogin().getEmail());
+    }
+
     public LiveData<Integer> comprobar(){
-         SharedPreferencesRepo repo = SharedPreferencesRepo.getInstance();
+
         //repo.clear();
 
         LoginDto l = repo.readLogin();
         Log.i("JJBO",l.getEmail());
-        authRepo.login(new LoginRequest(l.getEmail(), l.getPassword()), new AuthRepo.ILoginResponse() {
+        authApiRepo.login(new LoginRequest(l.getEmail(), l.getPassword()), new AuthApiRepo.ILoginResponse() {
             @Override
             public void onResponse(Response<LoginResponse> loginResponse) {
 

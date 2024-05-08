@@ -58,6 +58,11 @@ public class CancionRepo {
             return appDatabase.cancionDao().getCancionById(id);
     }
 
+    public void borrardoLogico(CancionEntity cancion) {
+        cancion.setBorrado(true);
+        this.updateCancion(cancion);
+    }
+
 
     //public LiveData<GrupoAndUsuariosAndCanciones> getGrupoWithUsuariosAndCanciones(UUID id){return appDatabase.grupoDao().getWithUsuariosAndCanciones(id);}
 

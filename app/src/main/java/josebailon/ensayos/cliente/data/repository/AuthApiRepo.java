@@ -1,8 +1,5 @@
 package josebailon.ensayos.cliente.data.repository;
 
-import android.app.Activity;
-import android.content.Context;
-
 import josebailon.ensayos.cliente.data.network.APIBuilder;
 import josebailon.ensayos.cliente.data.network.model.LoginRequest;
 import josebailon.ensayos.cliente.data.network.model.LoginResponse;
@@ -12,18 +9,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AuthRepo {
-    private static volatile AuthRepo instancia = null;
+public class AuthApiRepo {
+    private static volatile AuthApiRepo instancia = null;
     APIservice servicio;
-    private AuthRepo() {
+    private AuthApiRepo() {
         servicio = APIBuilder.getBuilder().create(APIservice.class);
     }
 
-    public static AuthRepo getInstance() {
+    public static AuthApiRepo getInstance() {
         if (instancia == null) {
             synchronized (SharedPreferencesRepo.class) {
                 if (instancia == null) {
-                    instancia = new AuthRepo();
+                    instancia = new AuthApiRepo();
                 }
             }
         }
@@ -44,6 +41,7 @@ public class AuthRepo {
             }
         });
     }
+
     public void registro(LoginRequest loginRequest, IRegistroResponse callback){
         Call<RegistroResponse> registroCall = servicio.registro(loginRequest);
         registroCall.enqueue(new Callback<RegistroResponse>() {
@@ -64,6 +62,7 @@ public class AuthRepo {
         void onResponse(Response<LoginResponse> loginResponse);
         void onFailure(Throwable t);
     }
+
     public interface IRegistroResponse{
         void onResponse(Response<RegistroResponse> registroResponse);
         void onFailure(Throwable t);

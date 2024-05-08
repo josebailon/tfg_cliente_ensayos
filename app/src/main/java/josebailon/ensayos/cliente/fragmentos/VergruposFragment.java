@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,8 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -110,7 +107,7 @@ public class VergruposFragment extends Fragment {
         Window window = dialog.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
-            String nombre = ((EditText) (dialog.findViewById(R.id.inputNombre))).getText().toString();
+            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
             String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
 
             if (TextUtils.isEmpty(nombre))
@@ -201,13 +198,13 @@ public class VergruposFragment extends Fragment {
     private void mostrarDialogoEdicion(GrupoEntity grupo) {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialogo_crear_grupo);
-        ((EditText)dialog.findViewById(R.id.inputNombre)).setText(grupo.getNombre());
+        ((EditText)dialog.findViewById(R.id.inputEmail)).setText(grupo.getNombre());
         ((EditText)dialog.findViewById(R.id.inputDescripcion)).setText(grupo.getDescripcion());
         dialog.show();
         Window window = dialog.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
-            String nombre = ((EditText) (dialog.findViewById(R.id.inputNombre))).getText().toString();
+            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
             String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
 
             if (TextUtils.isEmpty(nombre))

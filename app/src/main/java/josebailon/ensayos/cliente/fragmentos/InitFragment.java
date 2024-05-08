@@ -35,7 +35,6 @@ public class InitFragment extends Fragment {
     }
 
 
-
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -43,8 +42,8 @@ public class InitFragment extends Fragment {
         // Inicialización del ViewModel
         InitViewModel viewModel = new ViewModelProvider(this).get(InitViewModel.class);
         // Observar cambios en el estado
-        viewModel.comprobar().observe(getViewLifecycleOwner(),integer ->{
-            switch (integer){
+        viewModel.comprobar().observe(getViewLifecycleOwner(), integer -> {
+            switch (integer) {
                 case InitViewModel.LOGINOK:
                     // ir a grupos
                     NavHostFragment.findNavController(InitFragment.this)
@@ -52,7 +51,15 @@ public class InitFragment extends Fragment {
                     break;
                 case InitViewModel.NO_INTERNET:
                     //mostrar toast de no internet e ir a grupos
-                    Toast.makeText(getContext(),"No se puede conectar con el servidor", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No se puede conectar con el servidor", Toast.LENGTH_SHORT).show();
+                    if (viewModel.usuarioInicializado()) {
+                        NavHostFragment.findNavController(InitFragment.this)
+                                .navigate(R.id.action_InitFragment_to_vergruposFragment);
+                        Toast.makeText(getContext(), "Trabajando en modo sin conexión", Toast.LENGTH_SHORT).show();
+                    } else
+                        NavHostFragment.findNavController(InitFragment.this)
+                                .navigate(R.id.action_InitFragment_to_LoginRegistroFragment);
+                    break;
                 case InitViewModel.NEEDLOGIN:
                     //ir a login
                     NavHostFragment.findNavController(InitFragment.this)
@@ -60,13 +67,13 @@ public class InitFragment extends Fragment {
                     break;
 
             }
-        } );
+        });
 
-        viewModel.grupos.observe(getViewLifecycleOwner(),grupoEntities -> {
+        viewModel.grupos.observe(getViewLifecycleOwner(), grupoEntities -> {
             for (GrupoEntity g : grupoEntities
-                 ) {
-                Log.i("JJBO",g.getNombre());
-                Log.i("JJBO",""+g.isBorrado());
+            ) {
+                Log.i("JJBO", g.getNombre());
+                Log.i("JJBO", "" + g.isBorrado());
             }
         });
     }
@@ -77,8 +84,6 @@ public class InitFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
 
 
     @Override

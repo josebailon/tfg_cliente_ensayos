@@ -8,9 +8,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import josebailon.ensayos.cliente.data.network.model.LoginRequest;
-import josebailon.ensayos.cliente.data.network.model.LoginResponse;
 import josebailon.ensayos.cliente.data.network.model.RegistroResponse;
-import josebailon.ensayos.cliente.data.repository.AuthRepo;
+import josebailon.ensayos.cliente.data.repository.AuthApiRepo;
 import josebailon.ensayos.cliente.data.repository.SharedPreferencesRepo;
 import retrofit2.Response;
 
@@ -22,12 +21,12 @@ public class RegistroViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> registrando =new MutableLiveData<>();
     private MutableLiveData<Integer> resultado=new MutableLiveData<>();
 
-    private AuthRepo authRepo;
+    private AuthApiRepo authApiRepo;
     private SharedPreferencesRepo sharedRepo;
 
     public RegistroViewModel(@NonNull Application application) {
         super(application);
-        authRepo= AuthRepo.getInstance();
+        authApiRepo = AuthApiRepo.getInstance();
         sharedRepo= SharedPreferencesRepo.getInstance();
         registrando.postValue(false);
         resultado.postValue(0);
@@ -43,7 +42,7 @@ public class RegistroViewModel extends AndroidViewModel {
 
     public void registro(String email, String password){
         registrando.setValue(true);
-        authRepo.registro(new LoginRequest(email, password), new AuthRepo.IRegistroResponse() {
+        authApiRepo.registro(new LoginRequest(email, password), new AuthApiRepo.IRegistroResponse() {
             @Override
             public void onResponse(Response<RegistroResponse> registroResponse) {
                 registrando.setValue(false);

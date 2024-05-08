@@ -8,10 +8,15 @@ import java.util.UUID;
 
 import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
+import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.data.repository.GrupoRepo;
+import josebailon.ensayos.cliente.data.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.data.repository.UsuarioRepo;
 
 public class VergruposViewModel extends ViewModel {
     GrupoRepo grupoRepo = GrupoRepo.getInstance(App.getContext());
+    UsuarioRepo usuarioRepo = UsuarioRepo.getInstance(App.getContext());
+    SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
     public void crear(String nombre, String descripcion) {
         GrupoEntity g = new GrupoEntity();
         g.setId(UUID.randomUUID());
@@ -20,6 +25,11 @@ public class VergruposViewModel extends ViewModel {
         g.setVersion(0);
 
         grupoRepo.insertGrupo(g);
+        UsuarioEntity u = new UsuarioEntity();
+
+        u.setEmail(sharedRepo.readLogin().getEmail());
+        u.setGrupo(g.getId());
+        usuarioRepo.insertUsuario(u);
     }
     public LiveData<List<GrupoEntity>> getGrupos() {
         return grupoRepo.getAllGrupos();

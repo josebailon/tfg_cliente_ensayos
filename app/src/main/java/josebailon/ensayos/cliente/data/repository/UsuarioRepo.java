@@ -16,10 +16,23 @@ public class UsuarioRepo {
 
     private AppDatabase appDatabase;
     private Executor executor = Executors.newSingleThreadExecutor();
+    private static UsuarioRepo instancia;
     public UsuarioRepo(Context context){
         appDatabase=AppDatabase.getInstance(context);
     }
 
+
+
+    public static UsuarioRepo getInstance(Context context) {
+        if (instancia == null) {
+            synchronized (SharedPreferencesRepo.class) {
+                if (instancia == null) {
+                    instancia = new UsuarioRepo(context);
+                }
+            }
+        }
+        return instancia;
+    }
 
     public void insertUsuario(UsuarioEntity usuarioEntity){
         executor.execute(() ->{

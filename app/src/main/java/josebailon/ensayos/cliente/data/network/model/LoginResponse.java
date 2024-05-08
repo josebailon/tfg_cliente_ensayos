@@ -13,4 +13,8 @@ public class LoginResponse {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
+
+    public String getBearer(){
+        return "Bearer "+accessToken;
+    }
 }

@@ -9,9 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import josebailon.ensayos.cliente.data.network.model.LoginRequest;
 import josebailon.ensayos.cliente.data.network.model.LoginResponse;
-import josebailon.ensayos.cliente.data.repository.AuthRepo;
+import josebailon.ensayos.cliente.data.repository.AuthApiRepo;
 import josebailon.ensayos.cliente.data.repository.SharedPreferencesRepo;
-import josebailon.ensayos.cliente.data.sharedpref.LoginDto;
 import retrofit2.Response;
 
 public class LoginViewModel extends AndroidViewModel {
@@ -22,12 +21,12 @@ public class LoginViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> loging=new MutableLiveData<>();
     private MutableLiveData<Integer> resultado=new MutableLiveData<>();
 
-    private AuthRepo authRepo;
+    private AuthApiRepo authApiRepo;
     private SharedPreferencesRepo sharedRepo;
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
-        authRepo= AuthRepo.getInstance();
+        authApiRepo = AuthApiRepo.getInstance();
         sharedRepo= SharedPreferencesRepo.getInstance();
         loging.postValue(false);
         resultado.postValue(0);
@@ -43,7 +42,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void login(String email, String password){
         loging.setValue(true);
-        authRepo.login(new LoginRequest(email, password), new AuthRepo.ILoginResponse() {
+        authApiRepo.login(new LoginRequest(email, password), new AuthApiRepo.ILoginResponse() {
             @Override
             public void onResponse(Response<LoginResponse> loginResponse) {
                 loging.setValue(false);

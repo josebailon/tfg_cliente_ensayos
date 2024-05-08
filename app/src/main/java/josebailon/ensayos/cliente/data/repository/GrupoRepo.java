@@ -11,7 +11,6 @@ import java.util.concurrent.Executors;
 
 import josebailon.ensayos.cliente.data.database.AppDatabase;
 import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
-import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.data.database.relaciones.GrupoAndUsuariosAndCanciones;
 
 public class GrupoRepo {
@@ -53,7 +52,7 @@ public class GrupoRepo {
         } );
     }
     public LiveData<List<GrupoEntity>> getAllGrupos(){
-            return appDatabase.grupoDao().getAllGrupos();
+            return appDatabase.grupoDao().getAllGruposNoBorrados();
     }
 
     public GrupoEntity getGrupoById(UUID id){

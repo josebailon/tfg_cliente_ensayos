@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
-import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.data.database.relaciones.GrupoAndUsuariosAndCanciones;
 
 
@@ -28,8 +27,10 @@ public interface GrupoDao {
     @Delete
     void deleteGrupo(GrupoEntity grupoEntity);
 
+    @Query("SELECT * from grupo ORDER BY nombre ASC")
+    List<GrupoEntity> getAllGrupos();
     @Query("SELECT * from grupo WHERE borrado=0 ORDER BY nombre ASC")
-    LiveData<List<GrupoEntity>> getAllGrupos();
+    LiveData<List<GrupoEntity>> getAllGruposNoBorrados();
 
     @Query("SELECT * from grupo where id=:id")
     GrupoEntity getGrupoById(UUID id);
