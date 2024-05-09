@@ -24,12 +24,11 @@ public class VergruposViewModel extends ViewModel {
         g.setDescripcion(descripcion);
         g.setVersion(0);
 
-        grupoRepo.insertGrupo(g);
-        UsuarioEntity u = new UsuarioEntity();
 
+        UsuarioEntity u = new UsuarioEntity();
         u.setEmail(sharedRepo.readLogin().getEmail());
         u.setGrupo(g.getId());
-        usuarioRepo.insertUsuario(u);
+        grupoRepo.insertGrupoUsuario(g,u);
     }
     public LiveData<List<GrupoEntity>> getGrupos() {
         return grupoRepo.getAllGrupos();
@@ -45,6 +44,9 @@ public class VergruposViewModel extends ViewModel {
     public void borrar(GrupoEntity grupo) {
         grupo.setBorrado(true);
         grupo.setEditado(true);
-        grupoRepo.borrardoLogico(grupo);
+        if(grupo.getVersion()==0)
+            grupoRepo.deleteGrupo(grupo);
+        else
+            grupoRepo.borrardoLogico(grupo);
     }
 }

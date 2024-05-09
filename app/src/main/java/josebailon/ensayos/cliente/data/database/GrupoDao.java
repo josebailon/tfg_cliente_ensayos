@@ -29,7 +29,7 @@ public interface GrupoDao {
 
     @Query("SELECT * from grupo ORDER BY nombre ASC")
     List<GrupoEntity> getAllGrupos();
-    @Query("SELECT * from grupo WHERE borrado=0 ORDER BY nombre ASC")
+    @Query("SELECT * from grupo WHERE borrado=0 AND abandonado=0 ORDER BY nombre ASC")
     LiveData<List<GrupoEntity>> getAllGruposNoBorrados();
 
     @Query("SELECT * from grupo where id=:id")

@@ -54,7 +54,7 @@ public class CancionRepo {
     }
 
 
-    public GrupoEntity getCancionById(UUID id){
+    public CancionEntity getCancionById(UUID id){
             return appDatabase.cancionDao().getCancionById(id);
     }
 

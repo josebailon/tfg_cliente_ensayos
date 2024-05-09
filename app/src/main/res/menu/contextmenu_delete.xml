@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itemEliminar"
+        android:orderInCategory="100"
+        android:title="Eliminar"
+        android:visible="true" />
+</menu>

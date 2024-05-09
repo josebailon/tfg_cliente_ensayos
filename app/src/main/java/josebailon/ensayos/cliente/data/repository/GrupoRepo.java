@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 
 import josebailon.ensayos.cliente.data.database.AppDatabase;
 import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
+import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.data.database.relaciones.GrupoAndUsuariosAndCanciones;
 
 public class GrupoRepo {
@@ -40,6 +41,12 @@ public class GrupoRepo {
         } );
     }
 
+    public void insertGrupoUsuario(GrupoEntity grupoEntity, UsuarioEntity usuarioEntity){
+        executor.execute(() ->{
+            appDatabase.grupoDao().insertGrupo(grupoEntity);
+            appDatabase.usuarioDao().insertUsuario(usuarioEntity);
+        } );
+    }
     public void updateGrupo(GrupoEntity grupoEntity){
         executor.execute(() ->{
             appDatabase.grupoDao().updateGrupo(grupoEntity);

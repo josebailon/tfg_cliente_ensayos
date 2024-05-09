@@ -32,7 +32,7 @@ public interface CancionDao {
     LiveData<List<CancionEntity>> getAllCanciones();
 
     @Query("SELECT * from cancion where id=:id")
-    GrupoEntity getCancionById(UUID id);
+    CancionEntity getCancionById(UUID id);
 //
 //    @Transaction
 //    @Query("SELECT * FROM grupo WHERE id = :id")

@@ -69,8 +69,6 @@
         <action
             android:id="@+id/action_vergruposFragment_to_vergrupodetalleFragment"
             app:destination="@id/vergrupodetalleFragment">
-
-
         </action>
     </fragment>
     <fragment
@@ -81,5 +79,22 @@
         <argument
             android:name="idgrupo"
             app:argType="string" />
+        <action
+            android:id="@+id/action_vergrupodetalleFragment_to_vercanciondetalleFragment"
+            app:destination="@id/vercanciondetalleFragment">
+        </action>
     </fragment>
+    <fragment
+        android:id="@+id/vercanciondetalleFragment"
+        android:name="josebailon.ensayos.cliente.fragmentos.VercanciondetalleFragment"
+        android:label="Canción"
+        tools:layout="@layout/fragment_vercancion_detalle">
+        <argument
+            android:name="idcancion"
+            app:argType="string" />
+    </fragment>
+    <argument
+        android:name="idcancion"
+        app:argType="string" />
+        />
 </navigation>

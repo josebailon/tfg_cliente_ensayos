@@ -1,32 +1,32 @@
 package josebailon.ensayos.cliente.data.database.entity;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
-
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@Entity(tableName = "grupo")
-public class GrupoEntity {
+@Entity(tableName = "nota", foreignKeys = {@ForeignKey(entity = CancionEntity.class, parentColumns = {"id"}, childColumns = {"cancion"}, onDelete= ForeignKey.CASCADE)})
+public class NotaEntity {
     @PrimaryKey(autoGenerate = false)
     @NotNull
     private UUID id;
     private String nombre;
-    private String descripcion;
+    private String texto;
 
     private int version;
     @ColumnInfo(name = "borrado", defaultValue = "0")
     private boolean borrado;
-    @ColumnInfo(name = "editado", defaultValue = "0")
+    @ColumnInfo(name = "destacado", defaultValue = "0")
     private boolean editado;
+    @ColumnInfo(name = "destacado", defaultValue = "0")
+    private boolean destacado;
 
-
-    @ColumnInfo(name = "abandonado", defaultValue = "0")
-    private boolean abandonado;
+    @ColumnInfo(name = "cancion", index = true)
+    private UUID cancion;
 
     public UUID getId() {
         return id;
@@ -44,12 +44,12 @@ public class GrupoEntity {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getTexto() {
+        return texto;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setTexto(String texto) {
+        this.texto = texto;
     }
 
     public int getVersion() {
@@ -75,11 +75,20 @@ public class GrupoEntity {
     public void setEditado(boolean editado) {
         this.editado = editado;
     }
-    public boolean isAbandonado() {
-        return abandonado;
+
+    public boolean isDestacado() {
+        return destacado;
     }
 
-    public void setAbandonado(boolean abandonado) {
-        this.abandonado = abandonado;
+    public void setDestacado(boolean destacado) {
+        this.destacado = destacado;
+    }
+
+    public UUID getCancion() {
+        return cancion;
+    }
+
+    public void setCancion(UUID cancion) {
+        this.cancion = cancion;
     }
 }

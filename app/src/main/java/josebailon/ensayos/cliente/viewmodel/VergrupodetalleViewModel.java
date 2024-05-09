@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 
 import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.data.database.entity.CancionEntity;
+import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.data.database.relaciones.GrupoAndUsuariosAndCanciones;
 import josebailon.ensayos.cliente.data.network.model.LoginRequest;
@@ -28,12 +29,18 @@ import josebailon.ensayos.cliente.data.sharedpref.LoginDto;
 import retrofit2.Response;
 
 public class VergrupodetalleViewModel extends ViewModel {
-    GrupoRepo grupoRepo = GrupoRepo.getInstance(App.getContext());
-    CancionRepo cancionRepo = CancionRepo.getInstance(App.getContext());
-    UsuarioRepo usuarioRepo = UsuarioRepo.getInstance(App.getContext());
-    SharedPreferencesRepo sharedReqpo = SharedPreferencesRepo.getInstance();
-    AuthApiRepo authApiRepo = AuthApiRepo.getInstance();
-    UsuarioApiRepo usuarioApiRepo = UsuarioApiRepo.getInstance();
+    private GrupoRepo grupoRepo = GrupoRepo.getInstance(App.getContext());
+    private CancionRepo cancionRepo = CancionRepo.getInstance(App.getContext());
+    private UsuarioRepo usuarioRepo = UsuarioRepo.getInstance(App.getContext());
+    private SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
+    private AuthApiRepo authApiRepo = AuthApiRepo.getInstance();
+    private UsuarioApiRepo usuarioApiRepo = UsuarioApiRepo.getInstance();
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    private String usuario ="";
 
     MutableLiveData<String> mensaje = new MutableLiveData<>();
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -44,6 +51,7 @@ public class VergrupodetalleViewModel extends ViewModel {
     }
 
     public VergrupodetalleViewModel() {
+        usuario=sharedRepo.readLogin().getEmail();
     }
 
     public LiveData<String> getMensaje() {
@@ -82,8 +90,8 @@ public class VergrupodetalleViewModel extends ViewModel {
     }
 
 
-    public void agregarUsuario(String email) {
-        LoginDto l = sharedReqpo.readLogin();
+    public void agregarUsuario(String email, GrupoEntity grupo) {
+        LoginDto l = sharedRepo.readLogin();
         if (TextUtils.isEmpty(l.getEmail())) {
             this.mensaje.postValue("Debe hacer login antes de agregar un usuario");
             return;
@@ -104,6 +112,8 @@ public class VergrupodetalleViewModel extends ViewModel {
                                     u.setEmail(email);
                                     u.setGrupo(grupoId);
                                     usuarioRepo.insertUsuario(u);
+                                    grupo.setEditado(true);
+                                    grupoRepo.updateGrupo(grupo);
                                     break;
                                 case 404:
                                     mensaje.postValue("El usuario no existe");
@@ -125,5 +135,21 @@ public class VergrupodetalleViewModel extends ViewModel {
                 mensaje.postValue("Sin conexión con el servidor");
             }
         });
+    }
+
+    public void borrarUsuario(UsuarioEntity usuario, GrupoEntity grupo) {
+        usuarioRepo.deleteUsuario(usuario);
+        grupo.setEditado(true);
+        grupoRepo.updateGrupo(grupo);
+    }
+
+    public void abandonarGrupo(UsuarioEntity usuario, GrupoEntity grupo) {
+        if (grupo.getVersion()==0)
+            grupoRepo.deleteGrupo(grupo);
+        else
+            grupo.setAbandonado(true);
+        usuarioRepo.deleteUsuario(usuario);
+        grupo.setEditado(true);
+        grupoRepo.updateGrupo(grupo);
     }
 }

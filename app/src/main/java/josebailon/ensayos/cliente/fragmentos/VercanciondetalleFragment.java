@@ -39,22 +39,23 @@ import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.databinding.FragmentVergrupoDetalleBinding;
 import josebailon.ensayos.cliente.ui.adapter.CancionesAdapter;
+import josebailon.ensayos.cliente.ui.adapter.NotasAdapter;
 import josebailon.ensayos.cliente.ui.adapter.UsuariosAdapter;
 import josebailon.ensayos.cliente.viewmodel.VergrupodetalleViewModel;
 
-public class VergrupodetalleFragment extends Fragment {
+public class VercanciondetalleFragment extends Fragment {
 
 
 
     private FragmentVergrupoDetalleBinding binding;
     private VergrupodetalleViewModel viewModel;
 
-    private CancionesAdapter adaptadorCanciones;
+    private NotasAdapter adaptadorNotas;
     private UsuariosAdapter adaptadorUsuarios;
     List<CancionEntity> cancionesActuales=null;
     List<UsuarioEntity> usuariosActuales =null;
 
-    UUID idgrupo;
+    UUID idcancion;
     private GrupoEntity grupo;
 
     @Override
@@ -64,19 +65,15 @@ public class VergrupodetalleFragment extends Fragment {
     ) {
 
         binding = FragmentVergrupoDetalleBinding.inflate(inflater, container, false);
-        //recoger id grupo
-        idgrupo = UUID.fromString(getArguments().getString("idgrupo"));
+        //recoger id cancion
+        idcancion = UUID.fromString(getArguments().getString("idcancion"));
 
-        //recycler de canciones
-        RecyclerView cancionesRecyclerView = binding.verCancionesRecycleView;
-        cancionesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adaptadorCanciones = new CancionesAdapter(new ArrayList<CancionEntity>(),this);
-        cancionesRecyclerView.setAdapter(adaptadorCanciones);
-        //recycler de usuarios
-        RecyclerView usuariosRecyclerView = binding.verUsuariosRecycleView;
-        usuariosRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adaptadorUsuarios = new UsuariosAdapter(new ArrayList<UsuarioEntity>(),this);
-        usuariosRecyclerView.setAdapter(adaptadorUsuarios);
+        //recycler de notas
+        RecyclerView notasRecyclerView = binding.verNotasRecycleView;
+        notasRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adaptadorNotas = new NotasAdapter(new ArrayList<CancionEntity>(),this);
+        notasRecyclerView.setAdapter(adaptadorNotas);
+
 
 
         // Inicialización del ViewModel
@@ -85,7 +82,7 @@ public class VergrupodetalleFragment extends Fragment {
         viewModel.getMensaje().observe(getViewLifecycleOwner(),mensaje -> toast(mensaje.toString()));
 
         //recoger datos
-        viewModel.getGrupo(idgrupo).observe(getViewLifecycleOwner(), datos ->{
+        viewModel.getGrupo(idcancion).observe(getViewLifecycleOwner(), datos ->{
             //refrescar nombre
             this.grupo=datos.grupo;
             binding.lbNombre.setText(datos.grupo.getNombre());
@@ -93,7 +90,7 @@ public class VergrupodetalleFragment extends Fragment {
             viewModel.setGrupoId(datos.grupo.getId());
             //refrescar canciones
             cancionesActuales=datos.getCancionesOrdenadas().stream().filter(cancionEntity -> !cancionEntity.isBorrado()).collect(Collectors.toList());
-            adaptadorCanciones.setData(cancionesActuales);
+            adaptadorNotas.setData(cancionesActuales);
             //refrescar usuarios
             adaptadorUsuarios.setData(datos.getUsuariosOrdenados());
             usuariosActuales =datos.getUsuariosOrdenados();
@@ -162,7 +159,7 @@ public class VergrupodetalleFragment extends Fragment {
                 toast("El nombre no puede estar vacío");
             else {
                 //guardar Cancion
-                viewModel.crearCancion(nombre,  descripcion, duracion, idgrupo);
+                viewModel.crearCancion(nombre,  descripcion, duracion, idcancion);
                 dialog.dismiss();
             }
         });
@@ -215,7 +212,7 @@ public class VergrupodetalleFragment extends Fragment {
     }
 
     public boolean mostrarMenuCancion(int position) {
-        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verCancionesRecycleView.getChildAt(position).findViewById(R.id.texto));
+        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verNotasRecycleView.getChildAt(position).findViewById(R.id.texto));
         // add the menu
         popupMenu.inflate(R.menu.contextmenu);
         // implement on menu item click Listener
@@ -272,7 +269,7 @@ public class VergrupodetalleFragment extends Fragment {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("SÍ", (dialog, which) -> {
                        viewModel.abandonarGrupo(usuarioEntity,grupo);
-                        NavHostFragment.findNavController(VergrupodetalleFragment.this).popBackStack();
+                        NavHostFragment.findNavController(VercanciondetalleFragment.this).popBackStack();
                     })
                     .setNegativeButton("NO", null)
                     .show();

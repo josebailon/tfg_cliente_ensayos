@@ -9,18 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import josebailon.ensayos.cliente.data.database.entity.CancionEntity;
-import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.databinding.CancionItemBinding;
-import josebailon.ensayos.cliente.databinding.UsuarioItemBinding;
+import josebailon.ensayos.cliente.fragmentos.VercanciondetalleFragment;
 import josebailon.ensayos.cliente.fragmentos.VergrupodetalleFragment;
 
 
-public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHolder> {
+public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.ViewHolder> {
 
-    List<UsuarioEntity> list;
-    VergrupodetalleFragment fragment;
+    List<CancionEntity> list;
+    VercanciondetalleFragment fragment;
 
-    public UsuariosAdapter(List<UsuarioEntity> list, VergrupodetalleFragment fragment) {
+    public NotasAdapter(List<CancionEntity> list, VercanciondetalleFragment fragment) {
         this.list = list;
         this.fragment = fragment;
     }
@@ -28,15 +27,15 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        UsuarioItemBinding binding =UsuarioItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        CancionItemBinding binding =CancionItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.binding.texto.setText(list.get(position).getEmail());
-        holder.itemView.setOnLongClickListener(v -> fragment.mostrarMenuUsuario(position));
-
+        holder.binding.texto.setText(list.get(position).getNombre());
+        holder.itemView.setOnClickListener(v -> fragment.verCancion(list.get(position).getId()));
+        holder.itemView.setOnLongClickListener(v -> fragment.mostrarMenuCancion(position));
     }
 
     @Override
@@ -44,14 +43,14 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
         return list.size();
     }
 
-    public void setData(List<UsuarioEntity> usuarios) {
-        this.list=usuarios;
+    public void setData(List<CancionEntity> canciones) {
+        this.list=canciones;
         this.notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        UsuarioItemBinding binding;
-        public ViewHolder(@NonNull UsuarioItemBinding binding) {
+        CancionItemBinding binding;
+        public ViewHolder(@NonNull CancionItemBinding binding) {
             super(binding.getRoot());
             this.binding=binding;
         }
