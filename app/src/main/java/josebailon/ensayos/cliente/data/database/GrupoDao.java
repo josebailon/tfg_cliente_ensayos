@@ -37,7 +37,7 @@ public interface GrupoDao {
 
     @Transaction
     @Query("SELECT * FROM grupo WHERE id = :id")
-    LiveData<GrupoAndUsuariosAndCanciones> getWithUsuariosAndCanciones(UUID id);
+    LiveData<GrupoAndUsuariosAndCanciones> getGrupoWithUsuariosAndCanciones(UUID id);
 
 
 

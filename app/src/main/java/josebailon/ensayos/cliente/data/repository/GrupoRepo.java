@@ -26,7 +26,7 @@ public class GrupoRepo {
 
     public static GrupoRepo getInstance(Context context) {
         if (instancia == null) {
-            synchronized (SharedPreferencesRepo.class) {
+            synchronized (GrupoRepo.class) {
                 if (instancia == null) {
                     instancia = new GrupoRepo(context);
                 }
@@ -67,7 +67,7 @@ public class GrupoRepo {
     }
 
 
-    public LiveData<GrupoAndUsuariosAndCanciones> getGrupoWithUsuariosAndCanciones(UUID id){return appDatabase.grupoDao().getWithUsuariosAndCanciones(id);}
+    public LiveData<GrupoAndUsuariosAndCanciones> getGrupoWithUsuariosAndCanciones(UUID id){return appDatabase.grupoDao().getGrupoWithUsuariosAndCanciones(id);}
 
 
 

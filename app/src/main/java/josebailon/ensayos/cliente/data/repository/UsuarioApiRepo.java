@@ -23,7 +23,7 @@ public class UsuarioApiRepo {
 
     public static UsuarioApiRepo getInstance() {
         if (instancia == null) {
-            synchronized (SharedPreferencesRepo.class) {
+            synchronized (UsuarioApiRepo.class) {
                 if (instancia == null) {
                     instancia = new UsuarioApiRepo();
                 }

@@ -22,7 +22,7 @@
         tools:text="Nombre Cancion" />
 
     <TextView
-        android:id="@+id/lbTexto"
+        android:id="@+id/lbDescripcion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -42,27 +42,28 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Duracion:"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/separadorDetallesGrupo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbTexto" />
+        app:layout_constraintStart_toEndOf="@+id/etiquetaduracion"
+        app:layout_constraintTop_toBottomOf="@+id/lbDescripcion" />
 
-    <ImageView
-        android:id="@+id/separadorDetallesGrupo"
+    <TextView
+        android:id="@+id/etiquetaduracion"
         android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:src="@drawable/separador"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Duración:"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbDuracion" />
+        app:layout_constraintTop_toBottomOf="@+id/lbDescripcion" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbDuracion">
+        app:layout_constraintTop_toBottomOf="@+id/etiquetaduracion">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/botoneraCanciones"
@@ -82,14 +83,14 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/btnAgregarCancion"
+                android:id="@+id/btnAgregarNota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="Agregar"
-                app:icon="@android:drawable/ic_menu_add"
+                app:icon="@drawable/baseline_add_circle_outline_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,9 +102,9 @@
                 android:layout_marginStart="8dp"
                 android:text="Notas"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="@+id/btnAgregarCancion"
+                app:layout_constraintBottom_toBottomOf="@+id/btnAgregarNota"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btnAgregarCancion" />
+                app:layout_constraintTop_toTopOf="@+id/btnAgregarNota" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

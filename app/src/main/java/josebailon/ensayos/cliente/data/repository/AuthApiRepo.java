@@ -18,7 +18,7 @@ public class AuthApiRepo {
 
     public static AuthApiRepo getInstance() {
         if (instancia == null) {
-            synchronized (SharedPreferencesRepo.class) {
+            synchronized (AuthApiRepo.class) {
                 if (instancia == null) {
                     instancia = new AuthApiRepo();
                 }

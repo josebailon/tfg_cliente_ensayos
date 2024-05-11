@@ -1,8 +1,6 @@
 package josebailon.ensayos.cliente.fragmentos;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,10 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -23,7 +17,6 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,28 +28,28 @@ import java.util.stream.Collectors;
 import josebailon.ensayos.cliente.MainActivity;
 import josebailon.ensayos.cliente.R;
 import josebailon.ensayos.cliente.data.database.entity.CancionEntity;
-import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
+import josebailon.ensayos.cliente.data.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
-import josebailon.ensayos.cliente.databinding.FragmentVergrupoDetalleBinding;
-import josebailon.ensayos.cliente.ui.adapter.CancionesAdapter;
-import josebailon.ensayos.cliente.ui.adapter.NotasAdapter;
+import josebailon.ensayos.cliente.data.database.relaciones.NotaAndAudio;
+import josebailon.ensayos.cliente.databinding.FragmentVercancionDetalleBinding;
+import josebailon.ensayos.cliente.ui.adapter.NotasConAudioAdapter;
 import josebailon.ensayos.cliente.ui.adapter.UsuariosAdapter;
-import josebailon.ensayos.cliente.viewmodel.VergrupodetalleViewModel;
+import josebailon.ensayos.cliente.viewmodel.VercanciondetalleViewModel;
 
 public class VercanciondetalleFragment extends Fragment {
 
 
 
-    private FragmentVergrupoDetalleBinding binding;
-    private VergrupodetalleViewModel viewModel;
+    private FragmentVercancionDetalleBinding binding;
+    private VercanciondetalleViewModel viewModel;
 
-    private NotasAdapter adaptadorNotas;
+    private NotasConAudioAdapter adaptadorNotas;
     private UsuariosAdapter adaptadorUsuarios;
-    List<CancionEntity> cancionesActuales=null;
+    List<NotaAndAudio> notasActuales=null;
     List<UsuarioEntity> usuariosActuales =null;
 
     UUID idcancion;
-    private GrupoEntity grupo;
+    private CancionEntity cancion;
 
     @Override
     public View onCreateView(
@@ -64,57 +57,51 @@ public class VercanciondetalleFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentVergrupoDetalleBinding.inflate(inflater, container, false);
+        binding = FragmentVercancionDetalleBinding.inflate(inflater, container, false);
         //recoger id cancion
         idcancion = UUID.fromString(getArguments().getString("idcancion"));
 
         //recycler de notas
         RecyclerView notasRecyclerView = binding.verNotasRecycleView;
         notasRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adaptadorNotas = new NotasAdapter(new ArrayList<CancionEntity>(),this);
+        adaptadorNotas = new NotasConAudioAdapter(new ArrayList<NotaAndAudio>(),this);
         notasRecyclerView.setAdapter(adaptadorNotas);
 
 
 
         // Inicialización del ViewModel
-        viewModel = new ViewModelProvider(this).get(VergrupodetalleViewModel.class);
+        viewModel = new ViewModelProvider(this).get(VercanciondetalleViewModel.class);
         //escuchar mensajes
         viewModel.getMensaje().observe(getViewLifecycleOwner(),mensaje -> toast(mensaje.toString()));
 
-        //recoger datos
-        viewModel.getGrupo(idcancion).observe(getViewLifecycleOwner(), datos ->{
-            //refrescar nombre
-            this.grupo=datos.grupo;
-            binding.lbNombre.setText(datos.grupo.getNombre());
-            binding.lbDescripcion.setText(datos.grupo.getDescripcion());
-            viewModel.setGrupoId(datos.grupo.getId());
-            //refrescar canciones
-            cancionesActuales=datos.getCancionesOrdenadas().stream().filter(cancionEntity -> !cancionEntity.isBorrado()).collect(Collectors.toList());
-            adaptadorNotas.setData(cancionesActuales);
-            //refrescar usuarios
-            adaptadorUsuarios.setData(datos.getUsuariosOrdenados());
-            usuariosActuales =datos.getUsuariosOrdenados();
+        //recoger cancion
+        viewModel.getCancion(idcancion).observe(getViewLifecycleOwner(), datos ->{
+            //refrescar cancion
+            this.cancion=datos;
+            binding.lbNombre.setText(datos.getNombre());
+            binding.lbDescripcion.setText(datos.getDescripcion());
+            binding.lbDuracion.setText(datos.getDuracion());
+            viewModel.setIdcancion(datos.getId());
             }
         );
-
+        //recoger nota cancion
+        viewModel.getNotasDeCancion(idcancion).observe(getViewLifecycleOwner(), datos->{
+            notasActuales=datos.stream().filter(notaConAudio -> !notaConAudio.nota.isBorrado()).collect(Collectors.toList());
+            adaptadorNotas.setData(notasActuales);
+        });
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.btnAgregarCancion.setOnClickListener(v -> mostrarDialogoCrearCancion());
-        binding.btnAgregarUsuario.setOnClickListener(v -> mostrarDialogoAgregarUsuario());
+        binding.btnAgregarNota.setOnClickListener(v -> mostrarFragmentCrearNota());
 
 
 
         getActivity().addMenuProvider( new MenuProvider(){
-
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-
             }
-
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 return false;
@@ -123,73 +110,53 @@ public class VercanciondetalleFragment extends Fragment {
 
     }
 
-    private void mostrarDialogoAgregarUsuario() {
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialogo_agregar_usuario);
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
-            String email = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
 
-            if (TextUtils.isEmpty(email))
-                toast("El email no puede estar vacío");
-            else {
-                //guardar Usuario
-                viewModel.agregarUsuario(email,grupo);
-                dialog.dismiss();
-            }
-        });
-        ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
-    }
-
-
-    private void mostrarDialogoCrearCancion() {
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialogo_crear_cancion);
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
-            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
-            String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
-            String duracion = ((EditText) (dialog.findViewById(R.id.inputDuracion))).getText().toString();
-
-            if (TextUtils.isEmpty(nombre))
-                toast("El nombre no puede estar vacío");
-            else {
-                //guardar Cancion
-                viewModel.crearCancion(nombre,  descripcion, duracion, idcancion);
-                dialog.dismiss();
-            }
-        });
-        ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
+    private void mostrarFragmentCrearNota() {
+//        Dialog dialog = new Dialog(getContext());
+//        dialog.setContentView(R.layout.dialogo_crear_cancion);
+//        dialog.show();
+//        Window window = dialog.getWindow();
+//        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
+//            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
+//            String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
+//            String duracion = ((EditText) (dialog.findViewById(R.id.inputDuracion))).getText().toString();
+//
+//            if (TextUtils.isEmpty(nombre))
+//                toast("El nombre no puede estar vacío");
+//            else {
+//                //guardar Cancion
+//                viewModel.crearCancion(nombre,  descripcion, duracion, idcancion);
+//                dialog.dismiss();
+//            }
+//        });
+//        ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
 
     }
 
-    private void mostrarDialogoEdicionCancion(CancionEntity cancion) {
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialogo_crear_cancion);
-        ((EditText)dialog.findViewById(R.id.inputEmail)).setText(cancion.getNombre());
-        ((EditText)dialog.findViewById(R.id.inputDescripcion)).setText(cancion.getDescripcion());
-        ((EditText)dialog.findViewById(R.id.inputDuracion)).setText(cancion.getDuracion());
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
-            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
-            String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
-            String duracion = ((EditText) (dialog.findViewById(R.id.inputDuracion))).getText().toString();
-
-            if (TextUtils.isEmpty(nombre))
-                toast("El nombre no puede estar vacío");
-            else {
-                //guardar CANCION
-                viewModel.actualizarCancion(cancion,nombre,descripcion,duracion);
-                dialog.dismiss();
-            }
-        });
-        ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
+    private void mostrarDialogoEdicionNota(NotaEntity nota) {
+//        Dialog dialog = new Dialog(getContext());
+//        dialog.setContentView(R.layout.dialogo_crear_cancion);
+//        ((EditText)dialog.findViewById(R.id.inputEmail)).setText(cancion.getNombre());
+//        ((EditText)dialog.findViewById(R.id.inputDescripcion)).setText(cancion.getDescripcion());
+//        ((EditText)dialog.findViewById(R.id.inputDuracion)).setText(cancion.getDuracion());
+//        dialog.show();
+//        Window window = dialog.getWindow();
+//        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
+//            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
+//            String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
+//            String duracion = ((EditText) (dialog.findViewById(R.id.inputDuracion))).getText().toString();
+//
+//            if (TextUtils.isEmpty(nombre))
+//                toast("El nombre no puede estar vacío");
+//            else {
+//                //guardar CANCION
+//                //viewModel.actualizarCancion(cancion,nombre,descripcion,duracion);
+//                dialog.dismiss();
+//            }
+//        });
+//        ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
     }
 
     private void toast(String msg) {
@@ -211,83 +178,39 @@ public class VercanciondetalleFragment extends Fragment {
         }
     }
 
-    public boolean mostrarMenuCancion(int position) {
-        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verNotasRecycleView.getChildAt(position).findViewById(R.id.texto));
+    public boolean mostrarMenuNota(int position) {
+        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verNotasRecycleView.getChildAt(position).findViewById(R.id.nombre));
         // add the menu
         popupMenu.inflate(R.menu.contextmenu);
         // implement on menu item click Listener
         popupMenu.setOnMenuItemClickListener(item -> {
 
             if (item.getItemId()==R.id.itemEditar){
-                mostrarDialogoEdicionCancion(cancionesActuales.get(position));
+                mostrarDialogoEdicionNota(notasActuales.get(position).nota);
             }
             else if (item.getItemId()==R.id.itemEliminar){
-                borrarCancion(cancionesActuales.get(position));
+                borrarNota(notasActuales.get(position).nota);
             }
             return true;
         });
         popupMenu.show();
         return true;
     }
+ 
 
-
-    public boolean mostrarMenuUsuario(int position) {
-        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verUsuariosRecycleView.getChildAt(position).findViewById(R.id.texto));
-        // add the menu
-        popupMenu.inflate(R.menu.contextmenu_delete);
-        // implement on menu item click Listener
-        popupMenu.setOnMenuItemClickListener(item -> {
-
-            if (item.getItemId()==R.id.itemEliminar){
-                borrarUsuario(usuariosActuales.get(position));
-            }
-            return true;
-        });
-        popupMenu.show();
-        return true;
-    }
-
-
-    private void borrarCancion(CancionEntity cancionEntity) {
+    private void borrarNota(NotaEntity nota) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Eliminación")
-                .setMessage("¿Quieres borrar la cancion "+cancionEntity.getNombre()+"?")
+                .setMessage("¿Quieres borrar la nota "+nota.getNombre()+"?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("SÍ",(dialog, which) -> {
-                    viewModel.borrarCancion(cancionEntity);
+                    viewModel.borrarNota(nota);
                 })
                 .setNegativeButton("NO", null)
                 .show();
     }
-    private void borrarUsuario(UsuarioEntity usuarioEntity) {
-        //abandonar grupo
-        if (usuarioEntity.getEmail().equals(viewModel.getUsuario())) {
 
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Abandonar el grupo")
-                    .setMessage("¿Quieres abandonar el grupo?")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("SÍ", (dialog, which) -> {
-                       viewModel.abandonarGrupo(usuarioEntity,grupo);
-                        NavHostFragment.findNavController(VercanciondetalleFragment.this).popBackStack();
-                    })
-                    .setNegativeButton("NO", null)
-                    .show();
-        }
-        else{
-            //eliminar usuario del grupo
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Eliminación")
-                    .setMessage("¿Quieres eliminar el usuario " + usuarioEntity.getEmail() + " de este grupo?")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("SÍ", (dialog, which) -> {
-                        viewModel.borrarUsuario(usuarioEntity,grupo);
-                    })
-                    .setNegativeButton("NO", null)
-                    .show();
-        }
-    }
-    public void verCancion(UUID id) {
+    public void verNota(UUID id) {
         Log.i("JJBO", id.toString());
     }
 }

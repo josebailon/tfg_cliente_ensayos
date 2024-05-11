@@ -76,9 +76,13 @@ public class VergrupodetalleViewModel extends ViewModel {
 
 
     public void borrarCancion(CancionEntity cancion) {
-        cancion.setBorrado(true);
-        cancion.setEditado(true);
-        cancionRepo.borrardoLogico(cancion);
+        if (cancion.getVersion()==0)
+            cancionRepo.deleteCancion(cancion);
+        else {
+            cancion.setBorrado(true);
+            cancion.setEditado(true);
+            cancionRepo.borrardoLogico(cancion);
+        }
     }
 
     public void actualizarCancion(CancionEntity cancion, String nombre, String descripcion, String duracion) {

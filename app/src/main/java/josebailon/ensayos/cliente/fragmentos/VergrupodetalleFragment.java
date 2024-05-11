@@ -215,7 +215,7 @@ public class VergrupodetalleFragment extends Fragment {
     }
 
     public boolean mostrarMenuCancion(int position) {
-        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verCancionesRecycleView.getChildAt(position).findViewById(R.id.texto));
+        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verCancionesRecycleView.getChildAt(position).findViewById(R.id.nombre));
         // add the menu
         popupMenu.inflate(R.menu.contextmenu);
         // implement on menu item click Listener
@@ -235,7 +235,7 @@ public class VergrupodetalleFragment extends Fragment {
 
 
     public boolean mostrarMenuUsuario(int position) {
-        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verUsuariosRecycleView.getChildAt(position).findViewById(R.id.texto));
+        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verUsuariosRecycleView.getChildAt(position).findViewById(R.id.nombre));
         // add the menu
         popupMenu.inflate(R.menu.contextmenu_delete);
         // implement on menu item click Listener
@@ -291,6 +291,10 @@ public class VergrupodetalleFragment extends Fragment {
         }
     }
     public void verCancion(UUID id) {
-        Log.i("JJBO", id.toString());
+        String uuid = id.toString();
+        Bundle bundle = new Bundle();
+        bundle.putString("idcancion", uuid);
+        NavHostFragment.findNavController(VergrupodetalleFragment.this)
+                .navigate(R.id.action_vergrupodetalleFragment_to_vercanciondetalleFragment,bundle);
     }
 }

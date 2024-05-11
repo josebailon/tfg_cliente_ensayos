@@ -20,7 +20,7 @@ public class NotaEntity {
     private int version;
     @ColumnInfo(name = "borrado", defaultValue = "0")
     private boolean borrado;
-    @ColumnInfo(name = "destacado", defaultValue = "0")
+    @ColumnInfo(name = "editado", defaultValue = "0")
     private boolean editado;
     @ColumnInfo(name = "destacado", defaultValue = "0")
     private boolean destacado;

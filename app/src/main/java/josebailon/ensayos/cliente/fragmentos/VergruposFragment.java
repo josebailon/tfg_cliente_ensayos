@@ -163,7 +163,7 @@ public class VergruposFragment extends Fragment {
 
 
     public boolean mostrarMenu(int position) {
-        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verGruposRecycleView.getChildAt(position).findViewById(R.id.texto));
+        PopupMenu popupMenu = new PopupMenu(getContext() , binding.verGruposRecycleView.getChildAt(position).findViewById(R.id.nombre));
         // add the menu
         popupMenu.inflate(R.menu.contextmenu);
         // implement on menu item click Listener

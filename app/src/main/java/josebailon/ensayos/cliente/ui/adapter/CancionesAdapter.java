@@ -36,7 +36,7 @@ public class CancionesAdapter extends RecyclerView.Adapter<CancionesAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.binding.texto.setText(list.get(position).getNombre());
+        holder.binding.nombre.setText(list.get(position).getNombre());
         holder.itemView.setOnClickListener(v -> fragment.verCancion(list.get(position).getId()));
         holder.itemView.setOnLongClickListener(v -> fragment.mostrarMenuCancion(position));
     }

@@ -22,7 +22,7 @@
         tools:text="Nombre Grupo" />
 
     <TextView
-        android:id="@+id/lbTexto"
+        android:id="@+id/lbDescripcion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -45,7 +45,7 @@
         android:src="@drawable/separador"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbTexto" />
+        app:layout_constraintTop_toBottomOf="@+id/lbDescripcion" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -64,7 +64,6 @@
                 android:id="@+id/botoneraCanciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@color/celeste"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -85,7 +84,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="Agregar"
-                    app:icon="@android:drawable/ic_menu_add"
+                    app:icon="@drawable/baseline_add_circle_outline_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -103,7 +102,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/verNotasRecycleView"
+                android:id="@+id/verCancionesRecycleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/botoneraCanciones"
@@ -118,7 +117,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/celeste"
-                app:layout_constraintTop_toBottomOf="@+id/verNotasRecycleView">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/verCancionesRecycleView">
 
                 <ImageView
                     android:id="@+id/separadorSuperiorUsuarios"
@@ -137,7 +139,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="Agregar"
-                    app:icon="@android:drawable/ic_menu_add"
+                    app:icon="@drawable/baseline_add_circle_outline_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -153,6 +155,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/btnAgregarUsuario" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/verUsuariosRecycleView"
                 android:layout_width="match_parent"

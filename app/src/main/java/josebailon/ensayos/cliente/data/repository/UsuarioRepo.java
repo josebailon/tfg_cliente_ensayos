@@ -25,7 +25,7 @@ public class UsuarioRepo {
 
     public static UsuarioRepo getInstance(Context context) {
         if (instancia == null) {
-            synchronized (SharedPreferencesRepo.class) {
+            synchronized (UsuarioRepo.class) {
                 if (instancia == null) {
                     instancia = new UsuarioRepo(context);
                 }

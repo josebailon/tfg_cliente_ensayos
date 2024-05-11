@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import josebailon.ensayos.cliente.data.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
+import josebailon.ensayos.cliente.data.database.relaciones.CancionAndNotas;
 import josebailon.ensayos.cliente.data.database.relaciones.GrupoAndUsuariosAndCanciones;
 
 
@@ -32,13 +33,13 @@ public interface CancionDao {
     LiveData<List<CancionEntity>> getAllCanciones();
 
     @Query("SELECT * from cancion where id=:id")
-    CancionEntity getCancionById(UUID id);
-//
-//    @Transaction
-//    @Query("SELECT * FROM grupo WHERE id = :id")
-//    LiveData<List<GrupoAndUsuariosAndCanciones>> getWithUsuariosAndCanciones(UUID id);
-//
-//
+    LiveData<CancionEntity> getCancionById(UUID id);
+
+    @Transaction
+    @Query("SELECT * FROM cancion WHERE id = :id")
+    LiveData<CancionAndNotas> getCancionWithNotas(UUID id);
+
+
 
 
 }

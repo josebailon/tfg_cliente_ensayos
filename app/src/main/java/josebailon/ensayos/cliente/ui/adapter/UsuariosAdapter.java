@@ -34,7 +34,7 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.binding.texto.setText(list.get(position).getEmail());
+        holder.binding.nombre.setText(list.get(position).getEmail());
         holder.itemView.setOnLongClickListener(v -> fragment.mostrarMenuUsuario(position));
 
     }

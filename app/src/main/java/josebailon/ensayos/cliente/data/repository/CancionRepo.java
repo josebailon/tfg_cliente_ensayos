@@ -26,7 +26,7 @@ public class CancionRepo {
 
     public static CancionRepo getInstance(Context context) {
         if (instancia == null) {
-            synchronized (SharedPreferencesRepo.class) {
+            synchronized (CancionRepo.class) {
                 if (instancia == null) {
                     instancia = new CancionRepo(context);
                 }
@@ -54,8 +54,8 @@ public class CancionRepo {
     }
 
 
-    public CancionEntity getCancionById(UUID id){
-            return appDatabase.cancionDao().getCancionById(id);
+    public LiveData<CancionEntity> getCancionById(UUID id){
+        return appDatabase.cancionDao().getCancionById(id);
     }
 
     public void borrardoLogico(CancionEntity cancion) {
@@ -64,6 +64,5 @@ public class CancionRepo {
     }
 
 
-    //public LiveData<GrupoAndUsuariosAndCanciones> getGrupoWithUsuariosAndCanciones(UUID id){return appDatabase.grupoDao().getWithUsuariosAndCanciones(id);}
 
 }

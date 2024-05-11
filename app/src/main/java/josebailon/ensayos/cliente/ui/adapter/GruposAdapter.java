@@ -36,7 +36,7 @@ public class GruposAdapter extends RecyclerView.Adapter<GruposAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.binding.texto.setText(list.get(position).getNombre());
+        holder.binding.nombre.setText(list.get(position).getNombre());
         holder.itemView.setOnClickListener(v -> fragment.verGrupo(list.get(position).getId()));
         holder.itemView.setOnLongClickListener(v -> fragment.mostrarMenu(position));
     }
