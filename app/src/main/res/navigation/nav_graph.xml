@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/InitFragment"
-        android:name="josebailon.ensayos.cliente.fragmentos.InitFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.InitFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_init">
 
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/LoginregistroFragment"
-        android:name="josebailon.ensayos.cliente.fragmentos.LoginregistroFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.LoginregistroFragment"
         android:label="Ensayos"
         tools:layout="@layout/fragment_loginregistro">
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="josebailon.ensayos.cliente.fragmentos.LoginFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/registroFragment"
-        android:name="josebailon.ensayos.cliente.fragmentos.RegistroFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.RegistroFragment"
         android:label="Registro"
         tools:layout="@layout/fragment_registro" >
         <action
@@ -63,7 +63,7 @@
     </fragment>
     <fragment
         android:id="@+id/vergruposFragment"
-        android:name="josebailon.ensayos.cliente.fragmentos.VergruposFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.VergruposFragment"
         android:label="Grupos"
         tools:layout="@layout/fragment_vergrupos" >
         <action
@@ -73,7 +73,7 @@
     </fragment>
     <fragment
         android:id="@+id/vergrupodetalleFragment"
-        android:name="josebailon.ensayos.cliente.fragmentos.VergrupodetalleFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.VergrupodetalleFragment"
         android:label="Grupo"
         tools:layout="@layout/fragment_vergrupo_detalle" >
         <argument
@@ -86,15 +86,31 @@
     </fragment>
     <fragment
         android:id="@+id/vercanciondetalleFragment"
-        android:name="josebailon.ensayos.cliente.fragmentos.VercanciondetalleFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.VercanciondetalleFragment"
         android:label="Canción"
         tools:layout="@layout/fragment_vercancion_detalle">
         <argument
             android:name="idcancion"
             app:argType="string" />
+        <action
+            android:id="@+id/action_vercanciondetalleFragment_to_crearEditarNota"
+            app:destination="@id/crearEditarNota" />
     </fragment>
     <argument
         android:name="idcancion"
         app:argType="string" />
-        />
+    <fragment
+        android:id="@+id/crearEditarNota"
+        android:name="josebailon.ensayos.cliente.view.fragment.CrearEditarNotaFragment"
+        android:label="Crear Nota"
+        tools:layout="@layout/fragment_crear_editar_nota">
+        <argument
+            android:name="idnota"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="idcancion"
+            app:argType="string" />
+    </fragment>
+    />
 </navigation>

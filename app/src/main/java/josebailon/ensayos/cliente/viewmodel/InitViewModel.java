@@ -11,12 +11,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
-import josebailon.ensayos.cliente.data.network.model.LoginRequest;
-import josebailon.ensayos.cliente.data.network.model.LoginResponse;
-import josebailon.ensayos.cliente.data.repository.AuthApiRepo;
-import josebailon.ensayos.cliente.data.repository.SharedPreferencesRepo;
-import josebailon.ensayos.cliente.data.sharedpref.LoginDto;
+import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
+import josebailon.ensayos.cliente.model.network.model.LoginRequest;
+import josebailon.ensayos.cliente.model.network.model.LoginResponse;
+import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
+import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.dto.LoginDto;
 import retrofit2.Response;
 
 public class InitViewModel extends AndroidViewModel {

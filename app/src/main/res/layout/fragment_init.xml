@@ -5,7 +5,7 @@
     android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmentos.InitFragment">
+    tools:context=".view.fragment.InitFragment">
 
     <ProgressBar
         android:id="@+id/progressBar"

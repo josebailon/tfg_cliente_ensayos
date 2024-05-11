@@ -6,17 +6,16 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 import java.util.UUID;
 
-import josebailon.ensayos.cliente.App;
-import josebailon.ensayos.cliente.data.database.entity.GrupoEntity;
-import josebailon.ensayos.cliente.data.database.entity.UsuarioEntity;
-import josebailon.ensayos.cliente.data.repository.GrupoRepo;
-import josebailon.ensayos.cliente.data.repository.SharedPreferencesRepo;
-import josebailon.ensayos.cliente.data.repository.UsuarioRepo;
+import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
+import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
+import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.database.service.DatosLocalesServicio;
+import josebailon.ensayos.cliente.model.database.service.impl.DatosLocalesAsincronos;
 
 public class VergruposViewModel extends ViewModel {
-    GrupoRepo grupoRepo = GrupoRepo.getInstance(App.getContext());
-    UsuarioRepo usuarioRepo = UsuarioRepo.getInstance(App.getContext());
-    SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
+
+    private DatosLocalesServicio servicio = new DatosLocalesAsincronos();
+    private SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
     public void crear(String nombre, String descripcion) {
         GrupoEntity g = new GrupoEntity();
         g.setId(UUID.randomUUID());
@@ -28,25 +27,25 @@ public class VergruposViewModel extends ViewModel {
         UsuarioEntity u = new UsuarioEntity();
         u.setEmail(sharedRepo.readLogin().getEmail());
         u.setGrupo(g.getId());
-        grupoRepo.insertGrupoUsuario(g,u);
+        servicio.insertGrupoUsuario(g,u);
     }
     public LiveData<List<GrupoEntity>> getGrupos() {
-        return grupoRepo.getAllGrupos();
+        return servicio.getAllGrupos();
     }
 
     public void actualizar(GrupoEntity grupo, String nombre, String descripcion) {
         grupo.setNombre(nombre);
         grupo.setDescripcion(descripcion);
         grupo.setEditado(true);
-        grupoRepo.updateGrupo(grupo);
+        servicio.updateGrupo(grupo);
     }
 
     public void borrar(GrupoEntity grupo) {
         grupo.setBorrado(true);
         grupo.setEditado(true);
         if(grupo.getVersion()==0)
-            grupoRepo.deleteGrupo(grupo);
+            servicio.deleteGrupo(grupo);
         else
-            grupoRepo.borrardoLogico(grupo);
+            servicio.borrardoLogicoGrupo(grupo);
     }
 }

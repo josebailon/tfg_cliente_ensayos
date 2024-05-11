@@ -7,10 +7,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import josebailon.ensayos.cliente.data.network.model.LoginRequest;
-import josebailon.ensayos.cliente.data.network.model.LoginResponse;
-import josebailon.ensayos.cliente.data.repository.AuthApiRepo;
-import josebailon.ensayos.cliente.data.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.network.model.LoginRequest;
+import josebailon.ensayos.cliente.model.network.model.LoginResponse;
+import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
+import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
 import retrofit2.Response;
 
 public class LoginViewModel extends AndroidViewModel {

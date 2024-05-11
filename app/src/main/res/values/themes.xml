@@ -15,9 +15,7 @@
 
     <style name="Theme.Ensayos" parent="Base.Theme.Ensayos" />
 
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#2F3D8B</color>
-    <color name="colorAccent">#FFC107</color>
+
 
     <style name="Theme.Ensayos.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="android:textColorSecondary">#FFFFFF</item>
