@@ -140,11 +140,12 @@ public class VergrupodetalleViewModel extends ViewModel {
     public void abandonarGrupo(UsuarioEntity usuario, GrupoEntity grupo) {
         if (grupo.getVersion()==0)
             servicio.deleteGrupo(grupo);
-        else
+        else {
             grupo.setAbandonado(true);
-        servicio.deleteUsuario(usuario);
-        grupo.setEditado(true);
-        servicio.updateGrupo(grupo);
+            servicio.deleteUsuario(usuario);
+            grupo.setEditado(true);
+            servicio.updateGrupo(grupo);
+        }
     }
 
     public String getUsuario() {

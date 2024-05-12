@@ -48,22 +48,56 @@
 
     <Button
         android:id="@+id/btnElegirAudio"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="ELEGIR AUDIO"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="CAMBIAR AUDIO"
+        app:icon="@drawable/baseline_mic_24"
+        app:layout_constraintEnd_toEndOf="@+id/btnEscuchaAudio"
+        app:layout_constraintStart_toStartOf="@+id/btnEscuchaAudio"
         app:layout_constraintTop_toBottomOf="@+id/inputTexto" />
 
     <Button
-        android:id="@+id/btnQuitarAudio"
+        android:id="@+id/btnDescargaAudio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorAccent"
+        android:text="DESCARGAR AUDIO"
+        android:textColor="@color/black"
+        android:visibility="invisible"
+        app:icon="@drawable/baseline_cloud_download_24"
+        app:iconTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnElegirAudio" />
+    <Button
+        android:id="@+id/btnEscuchaAudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorAccent"
+        android:text="ESCUCHAR AUDIO"
+        android:textColor="@color/black"
+        android:visibility="invisible"
+        app:icon="@drawable/baseline_play_arrow_24"
+        app:iconTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnElegirAudio" />
+
+    <Button
+        android:id="@+id/btnQuitarAudio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/rojoOscuro"
         android:text="QUITAR AUDIO"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:icon="@drawable/delete"
+        app:layout_constraintEnd_toEndOf="@+id/btnEscuchaAudio"
+        app:layout_constraintStart_toStartOf="@+id/btnEscuchaAudio"
         app:layout_constraintTop_toBottomOf="@+id/btnEscuchaAudio" />
 
     <Button
@@ -87,16 +121,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnElegirAudio" />
 
-    <ImageButton
-        android:id="@+id/btnEscuchaAudio"
+    <ProgressBar
+        android:id="@+id/ocupadoBar"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/baseline_play_arrow_24"
+        android:layout_marginTop="32dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnElegirAudio"
-        app:tint="@color/colorPrimary" />
+        app:layout_constraintTop_toBottomOf="@+id/btnQuitarAudio" />
+
+    <ProgressBar
+        android:id="@+id/descargandoBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnElegirAudio" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

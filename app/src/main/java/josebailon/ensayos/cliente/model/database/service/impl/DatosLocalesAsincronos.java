@@ -54,7 +54,7 @@ public class DatosLocalesAsincronos implements DatosLocalesServicio {
     @Override
     public void deleteGrupo(GrupoEntity grupo) {
         executor.execute(() -> {
-            grupoRepo.updateGrupo(grupo);
+            grupoRepo.deleteGrupo(grupo);
         });
     }
 
@@ -161,7 +161,7 @@ public class DatosLocalesAsincronos implements DatosLocalesServicio {
             //poner audio si existe
             if (audio!=null) {
                 //si ya existe el audio se actualiza
-                if (audioRepo.getAudioById(audio.getNota_id()) != null)
+                if (audioRepo.getAudioByIdSinc(audio.getNota_id()) != null)
                     audioRepo.updateAudio(audio);
                     //si aun no existe se inserta
                 else
