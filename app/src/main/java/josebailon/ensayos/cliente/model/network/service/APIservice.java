@@ -4,6 +4,7 @@ import josebailon.ensayos.cliente.model.network.model.LoginRequest;
 import josebailon.ensayos.cliente.model.network.model.LoginResponse;
 import josebailon.ensayos.cliente.model.network.model.RegistroResponse;
 import josebailon.ensayos.cliente.model.network.model.UsuarioResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -19,6 +20,8 @@ public interface APIservice {
 
     @GET("/usuario/existe/{email}")
     public Call<UsuarioResponse> existe(@Path("email")String email, @Header("Authorization") String authHeader);
+    @GET("/audio/{uuidnota}")
+    public Call<ResponseBody> descarga(@Path("uuidnota")String uuidnota, @Header("Authorization") String authHeader);
 
 
 //    @GET("/auth/login/{email}")

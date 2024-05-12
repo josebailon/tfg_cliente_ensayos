@@ -29,4 +29,6 @@ public interface AudioDao {
 
     @Query("SELECT * from audio where nota_id=:id")
     AudioEntity getAudioByIdSinc(UUID id);
+
+
 }

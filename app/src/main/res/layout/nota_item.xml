@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             app:srcCompat="@drawable/baseline_volume_up_32"
-            app:tint="@color/colorPrimary" />
+            app:tint="@color/colorAccentOscuro" />
 
         <ImageView
             android:id="@+id/imgTexto"

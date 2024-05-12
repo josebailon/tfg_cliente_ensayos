@@ -17,13 +17,21 @@
             app:launchSingleTop="false"
             app:popUpTo="@id/InitFragment"
             app:popUpToInclusive="true"
-
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
             />
         <action
             android:id="@+id/action_InitFragment_to_vergruposFragment"
             app:destination="@id/vergruposFragment"
             app:popUpTo="@id/InitFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+            />
     </fragment>
     <fragment
         android:id="@+id/LoginregistroFragment"
@@ -34,10 +42,18 @@
             android:id="@+id/action_LoginRegistroFragment_to_LoginFragment"
             app:destination="@id/loginFragment"
             app:launchSingleTop="false"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="false"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_LoginregistroFragment_to_RegistroFragment"
-            app:destination="@id/registroFragment" />
+            app:destination="@id/registroFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -48,7 +64,12 @@
             android:id="@+id/action_loginFragment_to_vergruposFragment"
             app:destination="@id/vergruposFragment"
             app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+            />
     </fragment>
     <fragment
         android:id="@+id/registroFragment"
@@ -59,7 +80,12 @@
             android:id="@+id/action_registroFragment_to_vergruposFragment"
             app:destination="@id/vergruposFragment"
             app:popUpTo="@id/registroFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+            />
     </fragment>
     <fragment
         android:id="@+id/vergruposFragment"
@@ -68,8 +94,13 @@
         tools:layout="@layout/fragment_vergrupos" >
         <action
             android:id="@+id/action_vergruposFragment_to_vergrupodetalleFragment"
-            app:destination="@id/vergrupodetalleFragment">
-        </action>
+            app:destination="@id/vergrupodetalleFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+            />
     </fragment>
     <fragment
         android:id="@+id/vergrupodetalleFragment"
@@ -81,8 +112,11 @@
             app:argType="string" />
         <action
             android:id="@+id/action_vergrupodetalleFragment_to_vercanciondetalleFragment"
-            app:destination="@id/vercanciondetalleFragment">
-        </action>
+            app:destination="@id/vercanciondetalleFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/vercanciondetalleFragment"
@@ -94,11 +128,12 @@
             app:argType="string" />
         <action
             android:id="@+id/action_vercanciondetalleFragment_to_crearEditarNota"
-            app:destination="@id/crearEditarNota" />
+            app:destination="@id/crearEditarNota"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
-    <argument
-        android:name="idcancion"
-        app:argType="string" />
     <fragment
         android:id="@+id/crearEditarNota"
         android:name="josebailon.ensayos.cliente.view.fragment.CrearEditarNotaFragment"

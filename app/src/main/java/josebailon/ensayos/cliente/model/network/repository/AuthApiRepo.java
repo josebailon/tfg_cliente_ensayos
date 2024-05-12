@@ -68,6 +68,10 @@ public class AuthApiRepo {
         void onFailure(Throwable t);
     }
 
+
+
+
+
 //    public ApiResponse fetchDataSynchronously() {
 //        Call<ApiResponse> call = apiService.getApiData();
 //        try {

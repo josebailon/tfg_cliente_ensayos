@@ -9,17 +9,16 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">@color/colorAccent</item>
-
         <item name="materialButtonStyle">@style/Theme.Ensayos.Button</item>
     </style>
 
     <style name="Theme.Ensayos" parent="Base.Theme.Ensayos" />
 
 
-
     <style name="Theme.Ensayos.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="android:textColorSecondary">#FFFFFF</item>
     </style>
+
     <style name="Theme.Ensayos.Button" parent="Widget.MaterialComponents.Button">
         <item name="cornerSize">50dp</item>
     </style>
