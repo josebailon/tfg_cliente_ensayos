@@ -215,10 +215,12 @@ public class CrearEditarNotaFragment extends Fragment {
 
 
         //titulo
-        if (viewModel.getModo()== viewModel.MODO_EDICION)
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Editar Nota");
-        else
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Crear Nota");
+            if(((AppCompatActivity) getActivity()).getSupportActionBar()!=null) {
+                if (viewModel.getModo() == viewModel.MODO_EDICION)
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Editar Nota");
+                else
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Crear Nota");
+            }
     }
 
     private void escucharAudio() {

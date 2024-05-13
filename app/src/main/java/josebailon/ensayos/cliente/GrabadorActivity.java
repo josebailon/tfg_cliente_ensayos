@@ -52,14 +52,15 @@ public class GrabadorActivity extends AppCompatActivity {
             ArchivosRepo repo = ArchivosRepo.getInstance();
             data.setData(Uri.fromFile(rutaActual));
             setResult(RESULT_OK, data);
-            grabador.parar();
-            reproductor.parar();
+            if (reproduciendo)
+                reproductor.parar();
+
             finish();
         });
         //cancelar
         binding.btnCancelar.setOnClickListener(v->{
-            reproductor.parar();
-            grabador.parar();
+            if(reproduciendo)
+                reproductor.parar();
             finish();
         });
 
