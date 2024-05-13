@@ -133,6 +133,13 @@
             app:exitAnim="@anim/nav_slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_vercanciondetalleFragment_to_verNotaFragment"
+            app:destination="@id/verNotaFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/crearEditarNota"
@@ -145,6 +152,15 @@
             app:nullable="true" />
         <argument
             android:name="idcancion"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/verNotaFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.VerNotaFragment"
+        android:label="Ver Nota"
+        tools:layout="@layout/fragment_ver_nota">
+        <argument
+            android:name="idnota"
             app:argType="string" />
     </fragment>
     />

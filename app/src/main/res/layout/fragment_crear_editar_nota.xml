@@ -121,6 +121,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnElegirAudio" />
 
+    <ImageButton
+        android:id="@+id/btnStop"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_stop_24"
+        android:tint="@color/black"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/btnQuitarAudio"
+        tools:layout_editor_absoluteX="44dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mediaControl"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStop">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ProgressBar
         android:id="@+id/ocupadoBar"
         style="?android:attr/progressBarStyle"

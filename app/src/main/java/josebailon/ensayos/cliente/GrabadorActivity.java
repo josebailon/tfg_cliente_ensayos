@@ -22,8 +22,8 @@ import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
 
 public class GrabadorActivity extends AppCompatActivity {
-    private Grabador grabador = new GrabadorImpl();
-    private Reproductor reproductor = new ReproductorImpl();
+    private Grabador grabador;
+    private Reproductor reproductor;
 
     private boolean grabando = false;
     private boolean grabado = false;
@@ -44,6 +44,13 @@ public class GrabadorActivity extends AppCompatActivity {
 
         binding = ActivityGrabadorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        //inicializar reproductor y grabador
+        grabador = new GrabadorImpl();
+        reproductor = new ReproductorImpl();
+        reproductor.definirVistaParaMc(this,binding.mediaControl,() -> {
+            pararReproduccion();
+        });
+
         actualizaBotones();
         //EVENTOS
         //guardar
@@ -106,12 +113,16 @@ public class GrabadorActivity extends AppCompatActivity {
         });
         //parar reproduccion
         binding.btnPlayStop.setOnClickListener(v -> {
-            reproductor.parar();
-            reproduciendo=false;
-            actualizaBotones();
-            pararTiempo();
+            pararReproduccion();
         });
 
+    }
+
+    private void pararReproduccion() {
+        reproductor.parar();
+        reproduciendo=false;
+        actualizaBotones();
+        pararTiempo();
     }
 
     private void resetContador() {

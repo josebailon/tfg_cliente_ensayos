@@ -166,13 +166,10 @@ public class VercanciondetalleFragment extends Fragment {
     public void verNota(UUID id) {
 
 
-
-
-
-
-
-//        Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-//        startActivityForResult(intent, 1);
+        Bundle bundle = new Bundle();
+        bundle.putString("idnota", id.toString());
+        NavHostFragment.findNavController(VercanciondetalleFragment.this)
+                .navigate(R.id.action_vercanciondetalleFragment_to_verNotaFragment,bundle);
 
 
     }
