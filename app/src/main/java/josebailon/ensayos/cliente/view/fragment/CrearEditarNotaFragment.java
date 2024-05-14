@@ -201,8 +201,16 @@ public class CrearEditarNotaFragment extends Fragment {
         });
         //quitar audio
         binding.btnQuitarAudio.setOnClickListener(v -> {
-            viewModel.quitarAudio();
-            actualizarBotones();
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Eliminación")
+                    .setMessage("¿Quieres quitar el audio de la nota?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton("SÍ",(dialog, which) -> {
+                        viewModel.quitarAudio();
+                        actualizarBotones();
+                    })
+                    .setNegativeButton("NO", null)
+                    .show();
         });
         //reproducir audio
         binding.btnEscuchaAudio.setOnClickListener(v -> {

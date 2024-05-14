@@ -99,8 +99,11 @@
             app:exitAnim="@anim/nav_slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_vergruposFragment_to_sincronizadoFragment"
+            app:destination="@id/sincronizadoFragment" />
 
-            />
+        />
     </fragment>
     <fragment
         android:id="@+id/vergrupodetalleFragment"
@@ -163,5 +166,10 @@
             android:name="idnota"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/sincronizadoFragment"
+        android:name="josebailon.ensayos.cliente.view.fragment.SincronizadoFragment"
+        android:label="fragment_sincronizado"
+        tools:layout="@layout/fragment_sincronizado" />
     />
 </navigation>

@@ -9,10 +9,12 @@ import androidx.core.view.MenuProvider;
 import androidx.lifecycle.Lifecycle;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import josebailon.ensayos.cliente.databinding.ActivityMainBinding;
+import josebailon.ensayos.cliente.view.fragment.RegistroFragment;
 
 import android.util.Log;
 import android.view.Menu;
@@ -38,40 +40,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     }
 
-    public void ocultarMenuAcciones(){
-        addMenuProvider( new MenuProvider(){
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-            }
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                return false;
-            }
-        }, this, Lifecycle.State.RESUMED);
-    }
-
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
-////        if(Navigation.findNavController(this,R.id.nav_host_fragment_content_main).getCurrentDestination().getId()!=R.id.vergruposFragment)
-////            getMenuInflater().inflate(R.menu.menu_main, menu);
+//        if(Navigation.findNavController(this,R.id.nav_host_fragment_content_main).getCurrentDestination().getId()!=R.id.vergruposFragment)
+//            getMenuInflater().inflate(R.menu.menu_main, menu);
 //        return true;
 //    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
 
     /**
@@ -82,9 +58,15 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
         //derivar flecha de retorno a callback de fragment
-        if (item.getItemId() == android.R.id.home) {
+        if (id== android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
+            return true;
+        }
+        if (id == R.id.action_sincronizar) {
+            Navigation.findNavController(this, R.id.nav_host_fragment_content_main)
+                    .navigate(R.id.action_vergruposFragment_to_sincronizadoFragment);
             return true;
         }
         return true;
