@@ -1,4 +1,6 @@
-package josebailon.ensayos.cliente.model.database.service.impl;
+package josebailon.ensayos.cliente.model.database.service;
+
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -7,7 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import josebailon.ensayos.cliente.App;
+import josebailon.ensayos.cliente.model.database.AppDatabase;
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
@@ -15,159 +17,155 @@ import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
-import josebailon.ensayos.cliente.model.database.repository.AudioRepo;
-import josebailon.ensayos.cliente.model.database.repository.CancionRepo;
-import josebailon.ensayos.cliente.model.database.repository.GrupoRepo;
-import josebailon.ensayos.cliente.model.database.repository.NotaRepo;
-import josebailon.ensayos.cliente.model.database.repository.UsuarioRepo;
-import josebailon.ensayos.cliente.model.database.service.DatosLocalesServicio;
 
-public class DatosLocalesAsincronos implements DatosLocalesServicio {
+public class DatosLocalesAsincronos{
     private Executor executor = Executors.newSingleThreadExecutor();
-    private GrupoRepo grupoRepo = GrupoRepo.getInstance(App.getContext());
-    private UsuarioRepo usuarioRepo = UsuarioRepo.getInstance(App.getContext());
-    private CancionRepo cancionRepo = CancionRepo.getInstance(App.getContext());
-    private NotaRepo notaRepo = NotaRepo.getInstance(App.getContext());
-    private AudioRepo audioRepo = AudioRepo.getInstance(App.getContext());
+    private AppDatabase DB;
+    private static DatosLocalesAsincronos instancia;
+    private DatosLocalesAsincronos(Context context){
+        DB=AppDatabase.getInstance(context);
+    }
 
-
-    @Override
+    public static DatosLocalesAsincronos getInstance(Context context) {
+        if (instancia == null) {
+            synchronized (DatosLocalesAsincronos.class) {
+                if (instancia == null) {
+                    instancia = new DatosLocalesAsincronos(context);
+                }
+            }
+        }
+        return instancia;
+    }
     public void insertGrupoUsuario(GrupoEntity grupo, UsuarioEntity usuario) {
         executor.execute(() ->{
-            grupoRepo.insertGrupo(grupo);
-            usuarioRepo.insertUsuario(usuario);
+            DB.grupoDao().insertGrupo(grupo);
+            DB.usuarioDao().insertUsuario(usuario);
         });
     }
 
-    @Override
-    public LiveData<List<GrupoEntity>> getAllGrupos() {
-             return grupoRepo.getAllGrupos();
+    public LiveData<List<GrupoEntity>> getAllGruposNoBorrados() {
+        return DB.grupoDao().getAllGruposNoBorrados();
+
     }
 
-    @Override
     public void updateGrupo(GrupoEntity grupo) {
         executor.execute(() -> {
-            grupoRepo.updateGrupo(grupo);
+            DB.grupoDao().updateGrupo(grupo);
         });
     }
 
-    @Override
     public void deleteGrupo(GrupoEntity grupo) {
         executor.execute(() -> {
-            grupoRepo.deleteGrupo(grupo);
+            DB.grupoDao().deleteGrupo(grupo);
         });
     }
 
     public void borrardoLogicoGrupo(GrupoEntity grupo) {
-        grupo.setBorrado(true);
-        grupoRepo.updateGrupo(grupo);
+        executor.execute(() -> {
+            grupo.setBorrado(true);
+            DB.grupoDao().updateGrupo(grupo);
+        });
     }
 
-    @Override
     public void insertCancion(CancionEntity cancion) {
         executor.execute(() ->{
-            cancionRepo.insertCancion(cancion);
+            DB.cancionDao().insertCancion(cancion);
         });
     }
 
-    @Override
+
     public LiveData<GrupoAndUsuariosAndCanciones> getGrupoWithUsuariosAndCanciones(UUID idgrupo) {
-        return grupoRepo.getGrupoWithUsuariosAndCanciones(idgrupo);
+
+            return DB.grupoDao().getGrupoWithUsuariosAndCanciones(idgrupo);
     }
 
-    @Override
+
     public void deleteCancion(CancionEntity cancion) {
         executor.execute(() ->{
-            cancionRepo.deleteCancion(cancion);
+            DB.cancionDao().deleteCancion(cancion);
         });
     }
 
-    @Override
     public void borrardoLogicoCancion(CancionEntity cancion) {
         executor.execute(() ->{
-            cancionRepo.borrardoLogico(cancion);
+            cancion.setBorrado(true);
+            DB.cancionDao().updateCancion(cancion);
         });
     }
 
-    @Override
     public void updateCancion(CancionEntity cancion) {
         executor.execute(() ->{
-            cancionRepo.updateCancion(cancion);
+            DB.cancionDao().updateCancion(cancion);
         });
     }
 
-    @Override
     public void insertUsuario(UsuarioEntity usuario) {
         executor.execute(() ->{
-            usuarioRepo.insertUsuario(usuario);
+            DB.usuarioDao().insertUsuario(usuario);
         });
     }
 
-    @Override
     public void deleteUsuario(UsuarioEntity usuario) {
         executor.execute(() ->{
-            usuarioRepo.deleteUsuario(usuario);
+            DB.usuarioDao().deleteUsuario(usuario);
         });
     }
 
-    @Override
     public LiveData<CancionEntity> getCancionById(UUID idcancion) {
-        return cancionRepo.getCancionById(idcancion);
+
+            return DB.cancionDao().getCancionById(idcancion);
     }
 
-    @Override
     public LiveData<List<NotaAndAudio>> getNotasWithAudioByCancionId(UUID idcancion) {
-        return notaRepo.getNotasWithAudioByCancionId(idcancion);
+
+            return DB.notaDao().getNotasWithAudioByCancionId(idcancion);
     }
 
-    @Override
     public void deleteNota(NotaEntity nota) {
         executor.execute(() ->{
-            notaRepo.deleteNota(nota);
+            DB.notaDao().deleteNota(nota);
         });
     }
 
-    @Override
     public void borrardoLogicoNota(NotaEntity nota) {
-        nota.setBorrado(true);
-        notaRepo.updateCancion(nota);
+        executor.execute(() -> {
+            nota.setBorrado(true);
+            DB.notaDao().updateNota(nota);
+        });
     }
 
-    @Override
     public void insertAudio(AudioEntity audio) {
         executor.execute(() -> {
-            audioRepo.insertAudio(audio);
+            DB.audioDao().insertAudio(audio);
         });
     }
 
-    @Override
     public void insertNotaWithAudio(NotaEntity nota,AudioEntity audio) {
         executor.execute(() -> {
-            notaRepo.insertNota(nota);
+            DB.notaDao().insertNota(nota);
             if(audio!=null)
-                audioRepo.insertAudio(audio);
+                DB.audioDao().insertAudio(audio);
         });
     }
 
-    @Override
     public LiveData<NotaAndAudio> getNotaWithAudioById(UUID idnota) {
-        return notaRepo.getNotaWithAudio(idnota);
+        return DB.notaDao().getNotaWithAudio(idnota);
     }
 
-    @Override
     public void updateNotaWithAudio(NotaEntity nota, AudioEntity audio) {
         executor.execute(() -> {
-            notaRepo.updateCancion(nota);
+            DB.notaDao().updateNota(nota);
             //poner audio si existe
             if (audio!=null) {
                 //si ya existe el audio se actualiza
-                if (audioRepo.getAudioByIdSinc(audio.getNota_id()) != null)
-                    audioRepo.updateAudio(audio);
+                if (DB.audioDao().getAudioById(audio.getNota_id()) != null)
+                    DB.audioDao().updateAudio(audio);
                     //si aun no existe se inserta
                 else
-                    audioRepo.insertAudio(audio);
+                    DB.audioDao().insertAudio(audio);
+            }else{
+                DB.audioDao().deleteAudio(DB.audioDao().getAudioByIdSinc(nota.getId()));
             }
         });
-
     }
 }

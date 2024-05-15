@@ -28,16 +28,25 @@ public interface GrupoDao {
     void deleteGrupo(GrupoEntity grupoEntity);
 
     @Query("SELECT * from grupo ORDER BY nombre ASC")
-    List<GrupoEntity> getAllGrupos();
+    LiveData<List<GrupoEntity>> getAllGrupos();
+    @Query("SELECT * from grupo ORDER BY nombre ASC")
+    List<GrupoEntity> getAllGruposSinc();
     @Query("SELECT * from grupo WHERE borrado=0 AND abandonado=0 ORDER BY nombre ASC")
     LiveData<List<GrupoEntity>> getAllGruposNoBorrados();
+    @Query("SELECT * from grupo WHERE borrado=0 AND abandonado=0 ORDER BY nombre ASC")
+    List<GrupoEntity> getAllGruposNoBorradosSinc();
 
     @Query("SELECT * from grupo where id=:id")
-    GrupoEntity getGrupoById(UUID id);
+    LiveData<GrupoEntity> getGrupoById(UUID id);
+    @Query("SELECT * from grupo where id=:id")
+    GrupoEntity getGrupoByIdSinc(UUID id);
 
     @Transaction
     @Query("SELECT * FROM grupo WHERE id = :id")
     LiveData<GrupoAndUsuariosAndCanciones> getGrupoWithUsuariosAndCanciones(UUID id);
+    @Transaction
+    @Query("SELECT * FROM grupo WHERE id = :id")
+    GrupoAndUsuariosAndCanciones getGrupoWithUsuariosAndCancionesSinc(UUID id);
 
 
 

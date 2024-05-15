@@ -46,26 +46,47 @@ public class SincronizadoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         handler= new Handler(Looper.getMainLooper());
 
-        binding.button.setOnClickListener(v -> {
+        binding.btnInicio.setOnClickListener(v -> {
             viewModel.iniciar();
 
         });
 
-        viewModel._s.observe(getViewLifecycleOwner(),semaphore -> {
-            Log.i("JJBO"," inicio de observe");
-            binding.button.setEnabled(false);
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle("Eliminación")
-                                .setMessage("Estas pausado por el semaforo ?")
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .setPositiveButton("SÍ",(dialog, which) -> {
-                                    semaphore.release();
+        viewModel.getMensaje().observe(getViewLifecycleOwner(),s -> {
+            toast(s);
+        });
 
-                                })
-                                .setNegativeButton("NO", (dialog, which) -> {
-                                    semaphore.release();
-                                })
-                                .show();
+        viewModel.getMensajeEstado().observe(getViewLifecycleOwner(),s -> {
+            binding.lbEstado.setText(s);
+        });
+        viewModel.getSincronizando().observe(getViewLifecycleOwner(),sincronizando -> {
+                if (sincronizando) {
+                    binding.btnInicio.setVisibility(View.GONE);
+                    binding.lbEstado.setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.btnCancelar.setVisibility(View.VISIBLE);
+                }else{
+                    binding.btnInicio.setVisibility(View.VISIBLE);
+                    binding.lbEstado.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.INVISIBLE);
+                    binding.btnCancelar.setVisibility(View.INVISIBLE);
+                }
+        });
+
+        viewModel._s.observe(getViewLifecycleOwner(),semaphore -> {
+//            Log.i("JJBO"," inicio de observe");
+//            binding.button.setEnabled(false);
+//                        new AlertDialog.Builder(requireContext())
+//                                .setTitle("Eliminación")
+//                                .setMessage("Estas pausado por el semaforo ?")
+//                                .setIcon(android.R.drawable.ic_dialog_alert)
+//                                .setPositiveButton("SÍ",(dialog, which) -> {
+//                                    semaphore.release();
+//
+//                                })
+//                                .setNegativeButton("NO", (dialog, which) -> {
+//                                    semaphore.release();
+//                                })
+//                                .show();
                     }
             );
 //        // Inicialización del ViewModel
@@ -105,6 +126,9 @@ public class SincronizadoFragment extends Fragment {
 //                Log.i("JJBO", "" + g.isBorrado());
 //            }
 //        });
+    }
+    private void toast(String msg) {
+        Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
 

@@ -26,16 +26,22 @@ public interface CancionDao {
 
     @Delete
     void deleteCancion(CancionEntity cancionEntity);
-
     @Query("SELECT * from cancion ORDER BY nombre ASC")
     LiveData<List<CancionEntity>> getAllCanciones();
+    @Query("SELECT * from cancion ORDER BY nombre ASC")
+    List<CancionEntity> getAllCancionesSinc();
 
     @Query("SELECT * from cancion where id=:id")
     LiveData<CancionEntity> getCancionById(UUID id);
+    @Query("SELECT * from cancion where id=:id")
+    CancionEntity getCancionByIdSinc(UUID id);
 
     @Transaction
     @Query("SELECT * FROM cancion WHERE id = :id")
     LiveData<CancionAndNotas> getCancionWithNotas(UUID id);
+    @Transaction
+    @Query("SELECT * FROM cancion WHERE id = :id")
+    CancionAndNotas getCancionWithNotasSinc(UUID id);
 
 
 

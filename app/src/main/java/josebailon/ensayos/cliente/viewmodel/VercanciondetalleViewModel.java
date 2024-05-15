@@ -11,16 +11,16 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
-import josebailon.ensayos.cliente.model.database.service.DatosLocalesServicio;
-import josebailon.ensayos.cliente.model.database.service.impl.DatosLocalesAsincronos;
+import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 
 public class VercanciondetalleViewModel extends ViewModel {
 
-    private DatosLocalesServicio servicio = new DatosLocalesAsincronos();
+    private DatosLocalesAsincronos servicio = DatosLocalesAsincronos.getInstance(App.getContext());
 
 
 

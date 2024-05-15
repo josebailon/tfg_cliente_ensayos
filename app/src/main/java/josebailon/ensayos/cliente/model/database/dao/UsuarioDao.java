@@ -27,10 +27,16 @@ public interface UsuarioDao {
 
     @Query("SELECT * from usuario ORDER BY email")
     LiveData<List<UsuarioEntity>> getAllUsuarios();
+    @Query("SELECT * from usuario ORDER BY email")
+    List<UsuarioEntity> getAllUsuariosSinc();
 
     @Query("SELECT * from usuario where email=:email AND grupo=:grupo ORDER BY email")
     LiveData<UsuarioEntity> getUsuarioByEmailGrupo(String email, UUID grupo);
+    @Query("SELECT * from usuario where email=:email AND grupo=:grupo ORDER BY email")
+    UsuarioEntity getUsuarioByEmailGrupoSinc(String email, UUID grupo);
 
     @Query("SELECT * from usuario where grupo=:grupo ORDER BY email")
     LiveData<UsuarioEntity> getUsuarioByGrupo( UUID grupo);
+    @Query("SELECT * from usuario where grupo=:grupo ORDER BY email")
+    UsuarioEntity getUsuarioByGrupoSinc( UUID grupo);
 }

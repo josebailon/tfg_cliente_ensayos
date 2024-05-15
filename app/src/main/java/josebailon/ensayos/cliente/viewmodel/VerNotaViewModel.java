@@ -1,6 +1,5 @@
 package josebailon.ensayos.cliente.viewmodel;
 
-import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.lifecycle.LiveData;
@@ -12,13 +11,11 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.archivos.service.ArchivosServicio;
-import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
-import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
-import josebailon.ensayos.cliente.model.database.service.DatosLocalesServicio;
-import josebailon.ensayos.cliente.model.database.service.impl.DatosLocalesAsincronos;
+import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.network.model.LoginRequest;
 import josebailon.ensayos.cliente.model.network.model.LoginResponse;
@@ -32,7 +29,7 @@ public class VerNotaViewModel extends ViewModel {
     public final int MODO_CREACION=0;
     public final int MODO_EDICION=1;
 
-    private DatosLocalesServicio servicioDb = new DatosLocalesAsincronos();
+    private DatosLocalesAsincronos servicioDb = DatosLocalesAsincronos.getInstance(App.getContext());
     private ArchivosServicio servicioArchivos = new ArchivosServicio();
     private AudioApiRepo audioApiRepo = AudioApiRepo.getInstance();
     private AuthApiRepo authApiRepo = AuthApiRepo.getInstance();

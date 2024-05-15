@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
@@ -22,8 +23,7 @@ import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
 import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.network.repository.UsuarioApiRepo;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
-import josebailon.ensayos.cliente.model.database.service.DatosLocalesServicio;
-import josebailon.ensayos.cliente.model.database.service.impl.DatosLocalesAsincronos;
+import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 import retrofit2.Response;
 
 public class VergrupodetalleViewModel extends ViewModel {
@@ -31,7 +31,7 @@ public class VergrupodetalleViewModel extends ViewModel {
     private SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
     private AuthApiRepo authApiRepo = AuthApiRepo.getInstance();
     private UsuarioApiRepo usuarioApiRepo = UsuarioApiRepo.getInstance();
-    private DatosLocalesServicio servicio = new DatosLocalesAsincronos();
+    private DatosLocalesAsincronos servicio = DatosLocalesAsincronos.getInstance(App.getContext());
 
     MutableLiveData<String> mensaje = new MutableLiveData<>();
     private Executor executor = Executors.newSingleThreadExecutor();

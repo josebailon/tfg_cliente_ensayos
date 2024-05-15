@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 import java.util.UUID;
 
+import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
-import josebailon.ensayos.cliente.model.database.service.DatosLocalesServicio;
-import josebailon.ensayos.cliente.model.database.service.impl.DatosLocalesAsincronos;
+import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 
 public class VergruposViewModel extends ViewModel {
 
-    private DatosLocalesServicio servicio = new DatosLocalesAsincronos();
+    private DatosLocalesAsincronos servicio = DatosLocalesAsincronos.getInstance(App.getContext());
     private SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
     public void crear(String nombre, String descripcion) {
         GrupoEntity g = new GrupoEntity();
@@ -30,7 +30,7 @@ public class VergruposViewModel extends ViewModel {
         servicio.insertGrupoUsuario(g,u);
     }
     public LiveData<List<GrupoEntity>> getGrupos() {
-        return servicio.getAllGrupos();
+        return servicio.getAllGruposNoBorrados();
     }
 
     public void actualizar(GrupoEntity grupo, String nombre, String descripcion) {

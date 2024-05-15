@@ -2,18 +2,13 @@ package josebailon.ensayos.cliente.view.fragment;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,13 +34,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.io.File;
 import java.util.UUID;
 
-import josebailon.ensayos.cliente.GrabadorActivity;
 import josebailon.ensayos.cliente.MainActivity;
 import josebailon.ensayos.cliente.databinding.FragmentCrearEditarNotaBinding;
-import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
-import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
-import josebailon.ensayos.cliente.model.database.service.impl.DatosLocalesAsincronos;
 import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
 import josebailon.ensayos.cliente.viewmodel.CrearEditarNotaViewModel;

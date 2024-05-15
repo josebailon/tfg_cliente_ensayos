@@ -27,12 +27,7 @@ public class UsuarioApiRepo {
         return instancia;
     }
 
-
-
-
-
     public Response<UsuarioResponse> existe(String email, String token) throws IOException {
-        Log.i("JJBO",token);
         return servicio.existe(email, token).execute();
     }
 

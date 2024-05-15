@@ -5,32 +5,74 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadoFeedbackHandler;
+import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
 import josebailon.ensayos.cliente.model.sincronizacion.TestHilo;
 
-public class SincronizadoViewModel extends AndroidViewModel {
+public class SincronizadoViewModel extends AndroidViewModel implements ISincronizadoFeedbackHandler {
 
 
-    MutableLiveData<Integer> _estado = new MutableLiveData<>();
+    MutableLiveData<String> mensaje = new MutableLiveData<>();
+    MutableLiveData<String> mensajeEstado = new MutableLiveData<>();
+
+    SincronizadorService sincronizadorService;
+
+    MutableLiveData<Boolean> sincronizando =new MutableLiveData<>(false);
 
     public MutableLiveData<Semaphore> _s = new MutableLiveData<>();
     TestHilo t;
+
     public SincronizadoViewModel(@NonNull Application application) {
         super(application);
-        _estado.postValue(0);
-         t = new TestHilo();
-         _s = t.getSemaforo();
+
+//         t = new TestHilo();
+//         _s = t.getSemaforo();
     }
 
+    public LiveData<String> getMensaje() {
+        return mensaje;
+    }
+
+    public LiveData<String> getMensajeEstado() {
+        return mensajeEstado;
+    }
+
+    public LiveData<Boolean> getSincronizando() {
+        return sincronizando;
+    }
 
     public void iniciar(){
-        ExecutorService e = Executors.newSingleThreadExecutor();
-        e.execute(t);
+        sincronizando.setValue(true);
+        sincronizadorService=new SincronizadorService(this);
+        sincronizadorService.iniciar();
+
+    }
+
+    @Override
+    public void onSendMessage(String msg) {
+        mensaje.postValue(msg);
+    }
+
+    @Override
+    public void onSendStatus(String msg) {
+        mensajeEstado.postValue(msg);
+    }
+
+    @Override
+    public void onIniciado() {
+        sincronizando.postValue(true);
+    }
+
+    @Override
+    public void onFinalizado() {
+        sincronizando.postValue(false);
     }
 
     /**

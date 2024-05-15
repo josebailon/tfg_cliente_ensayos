@@ -51,7 +51,6 @@ public class InitViewModel extends AndroidViewModel {
         //repo.clear();
 
         LoginDto l = repo.readLogin();
-        Log.i("JJBO",l.getEmail());
         authApiRepo.login(new LoginRequest(l.getEmail(), l.getPassword()), new AuthApiRepo.ILoginResponse() {
             @Override
             public void onResponse(Response<LoginResponse> loginResponse) {

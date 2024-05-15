@@ -1,12 +1,8 @@
 package josebailon.ensayos.cliente.model.archivos.repository;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.database.Cursor;
 import android.net.Uri;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,8 +11,6 @@ import java.util.UUID;
 
 import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.archivos.Utiles;
-import josebailon.ensayos.cliente.model.database.AppDatabase;
-import josebailon.ensayos.cliente.model.database.repository.AudioRepo;
 
 public class ArchivosRepo {
     private final String CARPETA_AUDIO="audio";
@@ -38,7 +32,7 @@ public class ArchivosRepo {
 
     public static ArchivosRepo getInstance() {
         if (instancia == null) {
-            synchronized (AudioRepo.class) {
+            synchronized (ArchivosRepo.class) {
                 if (instancia == null) {
                     instancia = new ArchivosRepo();
                 }
