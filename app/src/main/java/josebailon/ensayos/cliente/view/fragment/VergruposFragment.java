@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -105,6 +106,7 @@ public class VergruposFragment extends Fragment {
         dialog.setContentView(R.layout.dialogo_crear_grupo);
         dialog.show();
         Window window = dialog.getWindow();
+        ((TextView)window.findViewById(R.id.tituloventana)).setText("Agregar Grupo");
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
             String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
@@ -202,6 +204,7 @@ public class VergruposFragment extends Fragment {
         ((EditText)dialog.findViewById(R.id.inputDescripcion)).setText(grupo.getDescripcion());
         dialog.show();
         Window window = dialog.getWindow();
+        ((TextView)window.findViewById(R.id.tituloventana)).setText("Editar Grupo");
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
             String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();

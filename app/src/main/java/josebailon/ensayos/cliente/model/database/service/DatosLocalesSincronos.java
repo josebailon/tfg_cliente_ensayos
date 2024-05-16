@@ -15,14 +15,16 @@ import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
+import josebailon.ensayos.cliente.model.database.relation.CancionAndNotas;
 import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 
 public class DatosLocalesSincronos {
     private AppDatabase DB;
     private static DatosLocalesSincronos instancia;
-    private DatosLocalesSincronos(Context context){
-        DB=AppDatabase.getInstance(context);
+
+    private DatosLocalesSincronos(Context context) {
+        DB = AppDatabase.getInstance(context);
     }
 
     public static DatosLocalesSincronos getInstance(Context context) {
@@ -46,99 +48,121 @@ public class DatosLocalesSincronos {
         DB.usuarioDao().insertUsuario(usuario);
     }
 
-    public List<GrupoEntity> getAllGruposNoBorrados() {
-        return DB.grupoDao().getAllGruposNoBorradosSinc();
+    public List<GrupoEntity> getAllGrupos() {
+        return DB.grupoDao().getAllGruposSinc();
 
     }
 
     public void updateGrupo(GrupoEntity grupo) {
-            DB.grupoDao().updateGrupo(grupo);
+        DB.grupoDao().updateGrupo(grupo);
     }
 
     public void deleteGrupo(GrupoEntity grupo) {
-            DB.grupoDao().deleteGrupo(grupo);
+        DB.grupoDao().deleteGrupo(grupo);
     }
 
     public void borrardoLogicoGrupo(GrupoEntity grupo) {
-            grupo.setBorrado(true);
-            DB.grupoDao().updateGrupo(grupo);
+        grupo.setBorrado(true);
+        DB.grupoDao().updateGrupo(grupo);
     }
 
     public void insertCancion(CancionEntity cancion) {
-            DB.cancionDao().insertCancion(cancion);
+        DB.cancionDao().insertCancion(cancion);
     }
 
     public GrupoAndUsuariosAndCanciones getGrupoWithUsuariosAndCanciones(UUID idgrupo) {
 
-            return DB.grupoDao().getGrupoWithUsuariosAndCancionesSinc(idgrupo);
+        return DB.grupoDao().getGrupoWithUsuariosAndCancionesSinc(idgrupo);
     }
 
+    public List<GrupoAndUsuariosAndCanciones> getAllGruposWithUsuariosAndCanciones() {
+        return DB.grupoDao().getAllGruposWithUsuariosAndCancionesSinc();
+
+    }
+
+
     public void deleteCancion(CancionEntity cancion) {
-            DB.cancionDao().deleteCancion(cancion);
+        DB.cancionDao().deleteCancion(cancion);
     }
 
     public void borrardoLogicoCancion(CancionEntity cancion) {
-            cancion.setBorrado(true);
-            DB.cancionDao().updateCancion(cancion);
+        cancion.setBorrado(true);
+        DB.cancionDao().updateCancion(cancion);
     }
 
     public void updateCancion(CancionEntity cancion) {
-            DB.cancionDao().updateCancion(cancion);
+        DB.cancionDao().updateCancion(cancion);
     }
 
     public void insertUsuario(UsuarioEntity usuario) {
-            DB.usuarioDao().insertUsuario(usuario);
+        DB.usuarioDao().insertUsuario(usuario);
     }
 
     public void deleteUsuario(UsuarioEntity usuario) {
-            DB.usuarioDao().deleteUsuario(usuario);
+        DB.usuarioDao().deleteUsuario(usuario);
     }
 
     public CancionEntity getCancionById(UUID idcancion) {
 
-            return DB.cancionDao().getCancionByIdSinc(idcancion);
+        return DB.cancionDao().getCancionByIdSinc(idcancion);
+    }
+
+    public CancionAndNotas getCancionWithNotas(UUID idcancion) {
+        return DB.cancionDao().getCancionWithNotasSinc(idcancion);
     }
 
     public List<NotaAndAudio> getNotasWithAudioByCancionId(UUID idcancion) {
-
-            return DB.notaDao().getNotasWithAudioByCancionIdSinc(idcancion);
-    }
-
-    public void deleteNota(NotaEntity nota) {
-            DB.notaDao().deleteNota(nota);
-    }
-
-    public void borrardoLogicoNota(NotaEntity nota) {
-            nota.setBorrado(true);
-            DB.notaDao().updateNota(nota);
-    }
-
-    public void insertAudio(AudioEntity audio) {
-            DB.audioDao().insertAudio(audio);
-    }
-
-    public void insertNotaWithAudio(NotaEntity nota,AudioEntity audio) {
-            DB.notaDao().insertNota(nota);
-            if(audio!=null)
-                DB.audioDao().insertAudio(audio);
+        return DB.notaDao().getNotasWithAudioByCancionIdSinc(idcancion);
     }
 
     public NotaAndAudio getNotaWithAudioById(UUID idnota) {
         return DB.notaDao().getNotaWithAudioSinc(idnota);
     }
 
-    public void updateNotaWithAudio(NotaEntity nota, AudioEntity audio) {
-            DB.notaDao().updateNota(nota);
-            //poner audio si existe
-            if (audio!=null) {
-                //si ya existe el audio se actualiza
-                if (DB.audioDao().getAudioById(audio.getNota_id()) != null)
-                    DB.audioDao().updateAudio(audio);
-                    //si aun no existe se inserta
-                else
-                    DB.audioDao().insertAudio(audio);
-            }else{
-                DB.audioDao().deleteAudio(DB.audioDao().getAudioByIdSinc(nota.getId()));
-            }
+    public void deleteNota(NotaEntity nota) {
+        DB.notaDao().deleteNota(nota);
     }
+
+    public void borrardoLogicoNota(NotaEntity nota) {
+        nota.setBorrado(true);
+        DB.notaDao().updateNota(nota);
+    }
+
+    public void insertNota(NotaEntity nota) {
+        DB.notaDao().insertNota(nota);
+    }
+
+    public AudioEntity getAudioById(UUID idAudio) {
+        return DB.audioDao().getAudioByIdSinc(idAudio);
+    }
+
+    public void insertAudio(AudioEntity audio) {
+        DB.audioDao().insertAudio(audio);
+    }
+
+    public void insertNotaWithAudio(NotaEntity nota, AudioEntity audio) {
+        DB.notaDao().insertNota(nota);
+        if (audio != null)
+            DB.audioDao().insertAudio(audio);
+    }
+
+
+    public void updateNotaWithAudio(NotaEntity nota, AudioEntity audio) {
+        DB.notaDao().updateNota(nota);
+        //poner audio si existe
+        if (audio != null) {
+            //si ya existe el audio se actualiza
+            if (DB.audioDao().getAudioById(audio.getNota_id()) != null)
+                DB.audioDao().updateAudio(audio);
+                //si aun no existe se inserta
+            else
+                DB.audioDao().insertAudio(audio);
+        } else {
+            DB.audioDao().deleteAudio(DB.audioDao().getAudioByIdSinc(nota.getId()));
+        }
+    }
+
+
 }
+
+

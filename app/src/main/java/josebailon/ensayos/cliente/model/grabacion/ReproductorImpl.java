@@ -21,9 +21,11 @@ public class ReproductorImpl implements Reproductor{
 
 
     @Override
-    public void iniciar(File archivo) {
+    public void iniciar(File archivo) throws Exception {
         player = MediaPlayer.create(App.getContext(), Uri.fromFile(archivo));
-
+        if (player==null) {
+            throw new Exception("No se puede reproducir el archivo");
+        }
         Handler h;
         h=new Handler();
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

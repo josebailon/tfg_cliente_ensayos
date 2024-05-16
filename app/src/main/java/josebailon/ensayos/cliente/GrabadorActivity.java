@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,10 +106,14 @@ public class GrabadorActivity extends AppCompatActivity {
         });
         //iniciar reproduccion
         binding.btnPlayStart.setOnClickListener(v -> {
-            reproductor.iniciar(rutaActual);
-            reproduciendo=true;
-            actualizaBotones();
-            iniciarTiempo();
+            try {
+                reproductor.iniciar(rutaActual);
+                reproduciendo = true;
+                actualizaBotones();
+                iniciarTiempo();
+            }catch (Exception ex){
+                toast(ex.getMessage());
+            }
         });
         //parar reproduccion
         binding.btnPlayStop.setOnClickListener(v -> {
@@ -164,4 +169,8 @@ public class GrabadorActivity extends AppCompatActivity {
         handler.removeCallbacks(contador);
         resetContador();
     }
+    private void toast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
 }

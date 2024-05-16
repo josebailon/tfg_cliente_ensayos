@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -137,6 +138,7 @@ public class VergrupodetalleFragment extends Fragment {
         dialog.setContentView(R.layout.dialogo_crear_cancion);
         dialog.show();
         Window window = dialog.getWindow();
+        ((TextView)window.findViewById(R.id.tituloventana)).setText("Agregar Canción");
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
             String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
@@ -163,6 +165,7 @@ public class VergrupodetalleFragment extends Fragment {
         ((EditText)dialog.findViewById(R.id.inputDuracion)).setText(cancion.getDuracion());
         dialog.show();
         Window window = dialog.getWindow();
+        ((TextView)window.findViewById(R.id.tituloventana)).setText("Editar Canción");
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
             String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();

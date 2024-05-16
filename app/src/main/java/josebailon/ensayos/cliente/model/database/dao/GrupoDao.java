@@ -48,6 +48,9 @@ public interface GrupoDao {
     @Query("SELECT * FROM grupo WHERE id = :id")
     GrupoAndUsuariosAndCanciones getGrupoWithUsuariosAndCancionesSinc(UUID id);
 
+    @Transaction
+    @Query("SELECT * FROM grupo")
+    List<GrupoAndUsuariosAndCanciones> getAllGruposWithUsuariosAndCancionesSinc();
 
 
 

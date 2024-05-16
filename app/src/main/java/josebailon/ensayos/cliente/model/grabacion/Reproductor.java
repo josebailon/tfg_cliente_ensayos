@@ -7,7 +7,7 @@ import android.widget.MediaController;
 import java.io.File;
 
 public interface Reproductor extends   MediaController.MediaPlayerControl{
-    public void iniciar (File archivo);
+    public void iniciar (File archivo) throws Exception;
     public void parar();
     public void definirVistaParaMc(Context contexto, View v, OnMedioTerminado mt);
 }

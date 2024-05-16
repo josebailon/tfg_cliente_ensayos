@@ -155,9 +155,13 @@ public class VerNotaFragment extends Fragment {
         reproductor.definirVistaParaMc(getContext(),binding.mediaControl,() -> {
             pararAudio();
         });
+        try {
         reproductor.iniciar(new File(ruta));
         binding.btnEscuchaAudio.setVisibility(View.INVISIBLE);
         binding.btnStop.setVisibility(View.VISIBLE);
+        }catch (Exception ex){
+            toast(ex.getMessage());
+        }
 
 
     }

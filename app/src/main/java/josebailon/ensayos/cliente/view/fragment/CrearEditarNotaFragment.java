@@ -229,7 +229,7 @@ public class CrearEditarNotaFragment extends Fragment {
                 if (viewModel.getModo() == viewModel.MODO_EDICION)
                     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Editar Nota");
                 else
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Crear Nota");
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Agregar Nota");
             }
     }
 
@@ -243,11 +243,15 @@ public class CrearEditarNotaFragment extends Fragment {
         reproductor.definirVistaParaMc(getContext(),binding.mediaControl,() -> {
             pararAudio();
         });
-        reproductor.iniciar(new File(ruta));
+        try {
+            reproductor.iniciar(new File(ruta));
         binding.btnQuitarAudio.setVisibility(View.INVISIBLE);
         binding.btnEscuchaAudio.setVisibility(View.INVISIBLE);
         binding.btnElegirAudio.setVisibility(View.INVISIBLE);
         binding.btnStop.setVisibility(View.VISIBLE);
+        }catch (Exception ex){
+            toast(ex.getMessage());
+        }
 
 
     }
