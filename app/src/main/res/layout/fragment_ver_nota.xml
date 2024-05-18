@@ -36,7 +36,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnStop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputNombre" />
+        app:layout_constraintTop_toBottomOf="@+id/fechaNota" />
 
     <Button
         android:id="@+id/btnDescargaAudio"
@@ -101,6 +101,25 @@
         app:layout_constraintStart_toStartOf="parent">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/fechaNota"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/inputNombre"
+        app:layout_constraintTop_toBottomOf="@+id/inputNombre" />
+
+    <TextView
+        android:id="@+id/fechaAudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/inputNombre"
+        app:layout_constraintTop_toBottomOf="@+id/btnDescargaAudio" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -106,7 +106,10 @@ public class VerNotaFragment extends Fragment {
         viewModel.getNotaAndAudio().observe(getViewLifecycleOwner(), datos -> {
                 binding.inputNombre.setText(datos.nota.getNombre());
                 binding.inputTexto.setText(datos.nota.getTexto());
+                binding.fechaNota.setText(datos.nota.fechaFormateada());
             notaAndAudio=datos;
+            if (datos.audio!=null && !datos.audio.isBorrado())
+                binding.fechaAudio.setText("Fecha del audio: "+datos.audio.fechaFormateada());
             //refrescar botones
             actualizarBotones();
         });

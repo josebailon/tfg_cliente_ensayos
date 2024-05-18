@@ -1,5 +1,8 @@
 package josebailon.ensayos.cliente.model.sincronizacion;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
@@ -20,7 +23,12 @@ public class MediadorDeEntidades {
             g.setNombre(grupoApi.getNombre());
             g.setDescripcion(grupoApi.getDescripcion());
             g.setVersion(grupoApi.getVersion());
-            g.setBorrado(false);
+        try {
+            g.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(grupoApi.getFecha()));
+        } catch (ParseException e) {
+            g.setFecha(new Date(System.currentTimeMillis()));
+        }
+        g.setBorrado(false);
             g.setEditado(false);
             g.setAbandonado(false);
             return g;

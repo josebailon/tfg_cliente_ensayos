@@ -1,39 +1,32 @@
 package josebailon.ensayos.cliente.viewmodel;
 
 import android.app.Application;
-import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
-import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadoFeedbackHandler;
+import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadorFeedbackHandler;
 import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
-import josebailon.ensayos.cliente.model.sincronizacion.TestHilo;
+import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 
-public class SincronizadoViewModel extends AndroidViewModel implements ISincronizadoFeedbackHandler {
+public class SincronizadorViewModel extends AndroidViewModel implements ISincronizadorFeedbackHandler {
 
 
     MutableLiveData<String> mensaje = new MutableLiveData<>();
     MutableLiveData<String> mensajeEstado = new MutableLiveData<>();
 
+    MutableLiveData<Conflicto<?,?>> conflicto = new MutableLiveData<>();
     SincronizadorService sincronizadorService;
 
     MutableLiveData<Boolean> sincronizando =new MutableLiveData<>(false);
 
-    public MutableLiveData<Semaphore> _s = new MutableLiveData<>();
-    TestHilo t;
 
-    public SincronizadoViewModel(@NonNull Application application) {
+    public SincronizadorViewModel(@NonNull Application application) {
         super(application);
-
-//         t = new TestHilo();
-//         _s = t.getSemaforo();
     }
 
     public LiveData<String> getMensaje() {
@@ -46,6 +39,10 @@ public class SincronizadoViewModel extends AndroidViewModel implements ISincroni
 
     public LiveData<Boolean> getSincronizando() {
         return sincronizando;
+    }
+
+    public LiveData<Conflicto<?, ?>> getConflicto() {
+        return conflicto;
     }
 
     public void iniciar(){
@@ -75,8 +72,10 @@ public class SincronizadoViewModel extends AndroidViewModel implements ISincroni
         sincronizando.postValue(false);
     }
 
-    /**
-     * Devuelve si el usuario esta inicializado
-     * @return
-     */
+    @Override
+    public void onConflicto(Conflicto<?, ?> conflicto) {
+        this.conflicto.postValue(conflicto);
+    }
+
+
 }

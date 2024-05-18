@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executor;
@@ -38,6 +39,7 @@ public class DatosLocalesAsincronos{
     }
     public void insertGrupoUsuario(GrupoEntity grupo, UsuarioEntity usuario) {
         executor.execute(() ->{
+            grupo.setFecha(new Date(System.currentTimeMillis()));
             DB.grupoDao().insertGrupo(grupo);
             DB.usuarioDao().insertUsuario(usuario);
         });
@@ -50,6 +52,7 @@ public class DatosLocalesAsincronos{
 
     public void updateGrupo(GrupoEntity grupo) {
         executor.execute(() -> {
+            grupo.setFecha(new Date(System.currentTimeMillis()));
             DB.grupoDao().updateGrupo(grupo);
         });
     }
@@ -69,6 +72,7 @@ public class DatosLocalesAsincronos{
 
     public void insertCancion(CancionEntity cancion) {
         executor.execute(() ->{
+            cancion.setFecha(new Date(System.currentTimeMillis()));
             DB.cancionDao().insertCancion(cancion);
         });
     }
@@ -95,6 +99,7 @@ public class DatosLocalesAsincronos{
 
     public void updateCancion(CancionEntity cancion) {
         executor.execute(() ->{
+            cancion.setFecha(new Date(System.currentTimeMillis()));
             DB.cancionDao().updateCancion(cancion);
         });
     }
@@ -142,9 +147,12 @@ public class DatosLocalesAsincronos{
 
     public void insertNotaWithAudio(NotaEntity nota,AudioEntity audio) {
         executor.execute(() -> {
+            nota.setFecha(new Date(System.currentTimeMillis()));
             DB.notaDao().insertNota(nota);
-            if(audio!=null)
+            if(audio!=null) {
+                audio.setFecha(new Date(System.currentTimeMillis()));
                 DB.audioDao().insertAudio(audio);
+            }
         });
     }
 
@@ -154,17 +162,24 @@ public class DatosLocalesAsincronos{
 
     public void updateNotaWithAudio(NotaEntity nota, AudioEntity audio) {
         executor.execute(() -> {
+            nota.setFecha(new Date(System.currentTimeMillis()));
             DB.notaDao().updateNota(nota);
             //poner audio si existe
             if (audio!=null) {
                 //si ya existe el audio se actualiza
-                if (DB.audioDao().getAudioById(audio.getNota_id()) != null)
+                if (DB.audioDao().getAudioByIdSinc(audio.getNota_id()) != null)
                     DB.audioDao().updateAudio(audio);
                     //si aun no existe se inserta
-                else
+                else {
+                    audio.setFecha(new Date(System.currentTimeMillis()));
                     DB.audioDao().insertAudio(audio);
+                }
             }else{
-                DB.audioDao().deleteAudio(DB.audioDao().getAudioByIdSinc(nota.getId()));
+               AudioEntity a = DB.audioDao().getAudioByIdSinc(nota.getId());
+                if (a!=null) {
+                    a.setBorrado(true);
+                    DB.audioDao().updateAudio(a);
+                }
             }
         });
     }

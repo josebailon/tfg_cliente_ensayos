@@ -39,7 +39,9 @@ public class DatosLocalesSincronos {
     }
 
     public void insertGrupo(GrupoEntity grupo) {
+
         DB.grupoDao().insertGrupo(grupo);
+
     }
 
 

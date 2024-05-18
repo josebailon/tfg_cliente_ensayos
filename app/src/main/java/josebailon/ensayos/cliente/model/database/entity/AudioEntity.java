@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity(tableName = "audio", foreignKeys = {@ForeignKey(entity = NotaEntity.class, parentColumns = {"id"}, childColumns = {"nota_id"}, onDelete= ForeignKey.CASCADE)})
@@ -16,6 +18,7 @@ public class AudioEntity {
     private UUID nota_id;
     private String archivo;
     private int version;
+    private Date fecha;
     @ColumnInfo(name = "borrado", defaultValue = "0")
     private boolean borrado;
     @ColumnInfo(name = "destacado", defaultValue = "0")
@@ -45,6 +48,14 @@ public class AudioEntity {
         this.version = version;
     }
 
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     public boolean isBorrado() {
         return borrado;
     }
@@ -60,13 +71,8 @@ public class AudioEntity {
     public void setEditado(boolean editado) {
         this.editado = editado;
     }
+    public String fechaFormateada(){
+        return new SimpleDateFormat("dd-MM-yyy HH:mm:ss").format(fecha);
+    }
 
-//    data class UserAndLibrary(
-//            @Embedded val user: User,
-//            @Relation(
-//                    parentColumn = "userId",
-//                    entityColumn = "userOwnerId"
-//            )
-//            val library: Library
-//    )
 }

@@ -20,7 +20,7 @@ import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.UsuarioApiEnt;
 import josebailon.ensayos.cliente.model.network.service.APIservice;
-import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadoFeedbackHandler;
+import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadorFeedbackHandler;
 import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
 import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
 
@@ -28,7 +28,7 @@ public class ComprobadorNuevosRemotos {
     APIservice apIservice;
     private SharedPreferencesRepo sharedPreferencesRepo;
 
-    ISincronizadoFeedbackHandler handler;
+    ISincronizadorFeedbackHandler handler;
     String token;
     SincronizadorService sincronizadorService;
     DatosLocalesSincronos servicioLocal;

@@ -22,6 +22,9 @@ public class CancionApiEnt {
     @SerializedName("version")
     @Expose
     private Integer version;
+    @SerializedName("fecha")
+    @Expose
+    private String fecha;
     @SerializedName("notas")
     @Expose
     private List<NotaApiEnt> notas;
@@ -64,6 +67,14 @@ public class CancionApiEnt {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public List<NotaApiEnt> getNotas() {

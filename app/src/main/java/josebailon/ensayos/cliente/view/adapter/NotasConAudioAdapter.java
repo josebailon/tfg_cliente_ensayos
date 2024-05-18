@@ -37,7 +37,9 @@ public class NotasConAudioAdapter extends RecyclerView.Adapter<NotasConAudioAdap
         NotaAndAudio item = list.get(position);
         holder.binding.nombre.setText(item.nota.getNombre());
         holder.binding.imgTexto.setVisibility((TextUtils.isEmpty(item.nota.getTexto().toString()))?View.INVISIBLE : View.VISIBLE);
-        holder.binding.imgAudio.setVisibility((item.audio==null)?View.INVISIBLE : View.VISIBLE);
+        holder.binding.imgAudio.setVisibility((item.audio==null || item.audio.isBorrado())?View.INVISIBLE : View.VISIBLE);
+        holder.binding.fecha.setText("Nota: "+item.nota.fechaFormateada());
+        holder.binding.fechaAudio.setText((item.audio==null||item.audio.isBorrado())?"":"Audio: "+item.audio.fechaFormateada());
         holder.itemView.setOnClickListener(v -> fragment.verNota(item.nota.getId()));
         holder.itemView.setOnLongClickListener(v -> fragment.mostrarMenuNota(position));
     }

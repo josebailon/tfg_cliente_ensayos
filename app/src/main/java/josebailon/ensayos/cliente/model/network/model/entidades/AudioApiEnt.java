@@ -14,6 +14,9 @@ public class AudioApiEnt {
     @SerializedName("version")
     @Expose
     private Integer version;
+    @SerializedName("fecha")
+    @Expose
+    private String fecha;
 
     public String getId() {
         return id;
@@ -39,4 +42,11 @@ public class AudioApiEnt {
         this.version = version;
     }
 
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
 }

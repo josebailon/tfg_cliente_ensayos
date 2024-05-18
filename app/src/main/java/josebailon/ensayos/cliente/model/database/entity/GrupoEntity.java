@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity(tableName = "grupo")
@@ -18,12 +20,14 @@ public class GrupoEntity {
     private String descripcion;
 
     private int version;
+
     @ColumnInfo(name = "borrado", defaultValue = "0")
     private boolean borrado;
     @ColumnInfo(name = "editado", defaultValue = "0")
     private boolean editado;
 
 
+    private Date fecha;
     @ColumnInfo(name = "abandonado", defaultValue = "0")
     private boolean abandonado;
 
@@ -59,6 +63,14 @@ public class GrupoEntity {
         this.version = version;
     }
 
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     public boolean isBorrado() {
         return borrado;
     }
@@ -80,5 +92,8 @@ public class GrupoEntity {
 
     public void setAbandonado(boolean abandonado) {
         this.abandonado = abandonado;
+    }
+    public String fechaFormateada(){
+        return new SimpleDateFormat("dd-MM-yyy HH:mm:ss").format(fecha);
     }
 }

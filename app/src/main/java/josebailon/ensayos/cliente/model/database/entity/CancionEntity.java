@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity(tableName = "cancion", foreignKeys = {@ForeignKey(entity = GrupoEntity.class, parentColumns = {"id"}, childColumns = {"grupo"}, onDelete= ForeignKey.CASCADE)})
@@ -19,6 +21,7 @@ public class CancionEntity {
 
     private String duracion;
     private int version;
+    private Date fecha;
     @ColumnInfo(name = "borrado", defaultValue = "0")
     private boolean borrado;
     @ColumnInfo(name = "editado", defaultValue = "0")
@@ -68,6 +71,14 @@ public class CancionEntity {
         this.version = version;
     }
 
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     public boolean isBorrado() {
         return borrado;
     }
@@ -90,5 +101,8 @@ public class CancionEntity {
 
     public void setGrupo(UUID grupo) {
         this.grupo = grupo;
+    }
+    public String fechaFormateada(){
+        return new SimpleDateFormat("dd-MM-yyy HH:mm:ss").format(fecha);
     }
 }

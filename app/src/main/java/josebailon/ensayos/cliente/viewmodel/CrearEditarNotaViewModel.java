@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -170,11 +171,13 @@ public class CrearEditarNotaViewModel extends ViewModel {
                         a.setNota_id(idnota);
                         a.setArchivo(nombre);
                         a.setVersion(0);
+                        a.setFecha(new Date(System.currentTimeMillis()));
                         notaAndAudio.getValue().audio=a;
                     //si hay audio se modifica
                     }else{
                         AudioEntity a = notaAndAudio.getValue().audio;
                         a.setArchivo(nombre);
+                        a.setFecha(new Date(System.currentTimeMillis()));
                         //si la version no es 0 se marca como editado
                         if (a.getVersion()!=0){
                             a.setEditado(true);

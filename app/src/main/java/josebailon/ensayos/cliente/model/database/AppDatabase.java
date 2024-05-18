@@ -5,7 +5,9 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
+import josebailon.ensayos.cliente.model.database.converter.Converters;
 import josebailon.ensayos.cliente.model.database.dao.AudioDao;
 import josebailon.ensayos.cliente.model.database.dao.CancionDao;
 import josebailon.ensayos.cliente.model.database.dao.GrupoDao;
@@ -19,6 +21,7 @@ import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 
 
 @Database(entities = {UsuarioEntity.class,GrupoEntity.class, CancionEntity.class, NotaEntity.class, AudioEntity.class}, exportSchema = false, version = 2)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "app_database.db";

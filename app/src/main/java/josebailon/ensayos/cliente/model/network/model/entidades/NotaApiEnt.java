@@ -17,6 +17,9 @@ public class NotaApiEnt {
     @SerializedName("version")
     @Expose
     private Integer version;
+    @SerializedName("fecha")
+    @Expose
+    private String fecha;
     @SerializedName("audio")
     @Expose
     private AudioApiEnt audio;
@@ -51,6 +54,14 @@ public class NotaApiEnt {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public AudioApiEnt getAudio() {

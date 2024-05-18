@@ -40,7 +40,7 @@ public class CalculadoraEstados {
      * @param grupoRemoto
      * @return
      */
-    public static int estadoGrupos(GrupoEntity grupoLocal, GrupoApiEnt grupoRemoto) {
+    public static int estadoCanciones(GrupoEntity grupoLocal, GrupoApiEnt grupoRemoto) {
         Object objLocal=grupoLocal;
         boolean abandonadoLocal=(grupoLocal!=null && grupoLocal.isAbandonado());
         int versionLocal =(grupoLocal!=null) ?  grupoLocal.getVersion():-1;
@@ -132,8 +132,10 @@ public class CalculadoraEstados {
         if (objLocal!=null && borradoLocal && objRemoto!=null) return  B_VN;
         if (objLocal!=null && versionLocal==0 && objRemoto==null) return V0_X;
         if (objLocal!=null && objRemoto==null) return  VN_X;
+        //edicion
         if (objLocal!=null &&  objRemoto!=null && editadoLocal && versionLocal==versionRemoto) return  EVN_VN;
         if (objLocal!=null &&  objRemoto!=null && editadoLocal && versionLocal!=versionRemoto) return  EVN_VQ;
+        //versiones
         if (objLocal!=null &&  objRemoto!=null && versionLocal==versionRemoto) return  SVN_VN;
         if (objLocal!=null &&  objRemoto!=null && versionLocal!=versionRemoto) return  SVN_VQ;
         return 0;

@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
 import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.network.APIBuilder;
@@ -19,6 +20,7 @@ import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
 import josebailon.ensayos.cliente.model.network.service.APIservice;
 import josebailon.ensayos.cliente.model.sincronizacion.comprobadores.ComprobadorModificacionesGrupos;
 import josebailon.ensayos.cliente.model.sincronizacion.comprobadores.ComprobadorNuevosRemotos;
+import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.CredencialesErroneasException;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.TerminarSincronizacionException;
 import retrofit2.Call;
@@ -33,16 +35,15 @@ public class SincronizadorService extends Thread {
     private APIservice apIservice = APIBuilder.getBuilder().create(APIservice.class);
     private SharedPreferencesRepo sharedPreferencesRepo = SharedPreferencesRepo.getInstance();
     private ExecutorService executor = Executors.newSingleThreadExecutor();
-    private ISincronizadoFeedbackHandler handler;
+    private ISincronizadorFeedbackHandler handler;
     private String token;
-
-    int estado = 0;
+    private int estado = 0;
 
 
     MutableLiveData<Semaphore> s;
 
 
-    public SincronizadorService(ISincronizadoFeedbackHandler handler) {
+    public SincronizadorService(ISincronizadorFeedbackHandler handler) {
         this.handler = handler;
 
     }
@@ -52,7 +53,7 @@ public class SincronizadorService extends Thread {
         return apIservice;
     }
 
-    public ISincronizadoFeedbackHandler getHandler() {
+    public ISincronizadorFeedbackHandler getHandler() {
         return handler;
     }
 
@@ -109,6 +110,9 @@ public class SincronizadorService extends Thread {
             } catch (CredencialesErroneasException ex) {
                 setEstado(R_CREDENCIALES_ERRONEAS);
                 handler.onFinalizado();
+            } catch (IOException e) {
+                handler.onSendMessage("Hay problemas contactando con el servidor");
+                handler.onFinalizado();
             }
         });
     }
@@ -149,7 +153,7 @@ public class SincronizadorService extends Thread {
 
     }
 
-    private void comprobarModificaciones(List<GrupoApiEnt> gruposRemotos) throws CredencialesErroneasException, TerminarSincronizacionException {
+    private void comprobarModificaciones(List<GrupoApiEnt> gruposRemotos) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
         ComprobadorModificacionesGrupos comprobadorModificacionesGrupos = new ComprobadorModificacionesGrupos(this);
         comprobadorModificacionesGrupos.comprobarGrupos(gruposRemotos);
     }
@@ -157,4 +161,6 @@ public class SincronizadorService extends Thread {
     public void setEstado(int estado) {
         this.estado = estado;
     }
+
+
 }

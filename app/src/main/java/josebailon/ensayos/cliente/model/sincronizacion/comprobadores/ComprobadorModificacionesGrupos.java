@@ -15,9 +15,11 @@ import josebailon.ensayos.cliente.model.database.service.DatosLocalesSincronos;
 import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.UsuarioApiEnt;
 import josebailon.ensayos.cliente.model.network.service.APIservice;
-import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadoFeedbackHandler;
+import josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados;
+import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadorFeedbackHandler;
 import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
 import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
+import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.CredencialesErroneasException;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.TerminarSincronizacionException;
 import retrofit2.Response;
@@ -26,7 +28,7 @@ public class ComprobadorModificacionesGrupos {
     APIservice apIservice;
     private SharedPreferencesRepo sharedPreferencesRepo;
 
-    ISincronizadoFeedbackHandler handler;
+    ISincronizadorFeedbackHandler handler;
     String token;
     SincronizadorService sincronizadorService;
     DatosLocalesSincronos servicioLocal;
@@ -46,7 +48,7 @@ public class ComprobadorModificacionesGrupos {
 
 
 
-    public void comprobarGrupos(List<GrupoApiEnt> gruposRemotos) throws CredencialesErroneasException, TerminarSincronizacionException {
+    public void comprobarGrupos(List<GrupoApiEnt> gruposRemotos) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
         List<GrupoAndUsuariosAndCanciones> gruposLocales = servicioLocal.getAllGruposWithUsuariosAndCanciones();
         for (GrupoAndUsuariosAndCanciones grupoLocal : gruposLocales) {
                 GrupoApiEnt grupoRemoto = gruposRemotos.stream().filter(grupo -> UUID.fromString(grupo.getId()).equals(grupoLocal.grupo.getId())).findFirst().orElse(null);
@@ -54,8 +56,8 @@ public class ComprobadorModificacionesGrupos {
                 }
     }
 
-    public void comprobarGrupo(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, TerminarSincronizacionException {
-        int estado = estadoGrupos(grupoLocal.grupo,grupoRemoto);
+    public void comprobarGrupo(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
+        int estado = CalculadoraEstados.estadoCanciones(grupoLocal.grupo,grupoRemoto);
         switch (estado){
             case V0_X:
                 agregarAlServidor(grupoLocal);
@@ -64,18 +66,27 @@ public class ComprobadorModificacionesGrupos {
             case VN_X:
                 eliminarLocal(grupoLocal);
                 break;
+            case SVN_VN:VN_X:
+                comprobarCanciones(grupoLocal,grupoRemoto);
+                break;
             case SVN_VQ:
                 actualizarLocal(grupoLocal,grupoRemoto);
                 comprobarCanciones(grupoLocal,grupoRemoto);
                 break;
             case EVN_VN:
-                //TODO actualizar servidor con datos de local
-                //getstionar conflicto si lo hay
-                //o
-                //comprobarCanciones(grupoLocal,grupoRemoto);
+                //actualizar servidor
+                Conflicto<GrupoAndUsuariosAndCanciones, GrupoApiEnt> conflicto = actualizarServidorConDatosLocales(grupoLocal,grupoRemoto);
+                //si hay conflicto resolverlo
+                if (conflicto!=null){
+                    resolverConflicto(conflicto);
+                }else{
+                    //si no hay conflicto comprobar las canciones
+                    comprobarCanciones(grupoLocal,grupoRemoto);
+                }
                 break;
             case EVN_VQ:
-                //TODO resolucion directa de conflicto
+                    Conflicto conflictoDirecto = new Conflicto<GrupoAndUsuariosAndCanciones, GrupoApiEnt>(Conflicto.T_GRUPO,grupoLocal,grupoRemoto);
+                    resolverConflicto(conflictoDirecto);
                 break;
             case B_VN:
                 eliminarLocal(grupoLocal);
@@ -96,20 +107,72 @@ public class ComprobadorModificacionesGrupos {
 
 }
 
+    private Conflicto<GrupoAndUsuariosAndCanciones,GrupoApiEnt> actualizarServidorConDatosLocales(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
+
+        Response<GrupoApiEnt> lr=null;
+
+        try {
+            lr = apIservice.updateGrupo(grupoLocal.grupo, token).execute();
+            switch (lr.code()) {
+                case 200:
+                    servicioLocal.updateGrupo(MediadorDeEntidades.grupoApiEntToGrupoEntity(lr.body()));
+                    break;
+                case 409:
+                    //si hay conflicto devolverlo
+                    return new Conflicto<GrupoAndUsuariosAndCanciones, GrupoApiEnt>(Conflicto.T_GRUPO,grupoLocal,lr.body());
+                case 401:
+                    throw new CredencialesErroneasException("");
+                default:
+                    handler.onSendMessage("" + lr.code());
+            }
+        } catch (IOException e) {
+            throw new TerminarSincronizacionException("Sin conexión con el servidor");
+        }
+        //gestionar usuarios
+        List<UsuarioApiEnt> uRemotos=lr.body().getUsuarios();
+        List<UsuarioEntity> uLocales = grupoLocal.usuarios;
+        //si no hay conflicto resolver usuarios
+        //agregar locales a remoto
+        for (UsuarioEntity uLocal:uLocales)
+            apIservice.agregarUsarioAGrupo(uLocal.getEmail(),grupoLocal.grupo.getId().toString(), token).execute();
+
+        //quitar del servidor no existentes en local
+        for (UsuarioApiEnt uRemoto:uRemotos) {
+            if (!uLocales.stream().anyMatch(uLocal -> uLocal.getEmail().equals(uRemoto.getEmail()))){
+                apIservice.eliminarUsuarioDeGrupo(uRemoto.getEmail(),grupoLocal.grupo.getId().toString(),token).execute();
+            }
+        }
+        return null;
+    }
+
+    private void resolverConflicto(Conflicto<GrupoAndUsuariosAndCanciones, GrupoApiEnt> conflicto) throws  TerminarSincronizacionException {
+        //mandar conflicto
+        sincronizadorService.getHandler().onConflicto(conflicto);
+        try {
+            //esperar resolucion
+            conflicto.esperar();
+            //recoger solucion
+            GrupoAndUsuariosAndCanciones solucion =conflicto.getResuelto();
+            solucion.canciones=conflicto.getLocal().canciones;
+            //actualizar en local y en remoto con la eleccion de solucion
+            servicioLocal.updateGrupo( solucion.grupo);
+            reemplazarUsuarios(conflicto.getLocal(),solucion);
+            comprobarGrupo(solucion,conflicto.getRemoto());
+        } catch (InterruptedException | CredencialesErroneasException |
+                 TerminarSincronizacionException | IOException e) {
+            throw new TerminarSincronizacionException("Sincronización terminada");
+        }
+    }
+
     private void eliminarUsuarioDeGrupoDeServidor(String nombreUsuario, GrupoAndUsuariosAndCanciones grupoLocal) throws TerminarSincronizacionException {
 
         try {
             Response<Object> lr = apIservice.eliminarUsuarioDeGrupo(nombreUsuario,grupoLocal.grupo.getId().toString(),token).execute();
             switch (lr.code()) {
-                case 200:
-                    handler.onSendMessage("" + lr.code());
-                    break;
                 case 401:
-                    handler.onSendMessage("" + lr.code());
-                default:
-                    handler.onSendMessage("" + lr.code());
+                    throw new CredencialesErroneasException("");
             }
-        } catch (IOException e) {
+        } catch (IOException | CredencialesErroneasException e) {
             throw new TerminarSincronizacionException("Sin conexión con el servidor");
         }
     }
@@ -120,15 +183,10 @@ public class ComprobadorModificacionesGrupos {
         try {
             Response<Object> lr = apIservice.deleteGrupo(grupoLocal.grupo.getId().toString(),token).execute();
             switch (lr.code()) {
-                case 200:
-                    handler.onSendMessage("" + lr.code());
-                    break;
                 case 401:
-                    handler.onSendMessage("" + lr.code());
-                default:
-                    handler.onSendMessage("" + lr.code());
+                    throw new CredencialesErroneasException("");
             }
-        } catch (IOException e) {
+        } catch (IOException | CredencialesErroneasException e) {
             throw new TerminarSincronizacionException("Sin conexión con el servidor");
         }
     }
@@ -151,7 +209,12 @@ public class ComprobadorModificacionesGrupos {
         for (UsuarioApiEnt usuarioApiEnt : remoto.getUsuarios())
             servicioLocal.insertUsuario(MediadorDeEntidades.crearUsuarioEntityParaGrupo(remoto.getId(),usuarioApiEnt.getEmail()));
     }
-
+    private void reemplazarUsuarios(GrupoAndUsuariosAndCanciones local, GrupoAndUsuariosAndCanciones solucion) {
+        for(UsuarioEntity usuario : local.usuarios)
+            servicioLocal.deleteUsuario(usuario);
+        for (UsuarioEntity usuarioSolucion : solucion.usuarios)
+            servicioLocal.insertUsuario(usuarioSolucion);
+    }
 
     private void eliminarLocal(GrupoAndUsuariosAndCanciones grupoLocal) {
         servicioLocal.deleteGrupo(grupoLocal.grupo);
@@ -183,7 +246,7 @@ public class ComprobadorModificacionesGrupos {
         }
 
 
-    private void comprobarCanciones(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) {
-        //  TODO comprobar canciones
+    private void comprobarCanciones(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, IOException, TerminarSincronizacionException {
+        new ComprobadorModificacionesCanciones(sincronizadorService).comprobarCanciones(grupoLocal.grupo.getId(), grupoRemoto.getCanciones());
     }
 }

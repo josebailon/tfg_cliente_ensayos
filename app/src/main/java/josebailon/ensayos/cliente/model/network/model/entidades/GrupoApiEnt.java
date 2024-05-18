@@ -22,6 +22,9 @@ public class GrupoApiEnt {
     @SerializedName("version")
     @Expose
     private Integer version;
+    @SerializedName("fecha")
+    @Expose
+    private String fecha;
     @SerializedName("usuarios")
     @Expose
     private List<UsuarioApiEnt> usuarios;
@@ -59,6 +62,14 @@ public class GrupoApiEnt {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public List<UsuarioApiEnt> getUsuarios() {
