@@ -177,8 +177,8 @@ public class CrearEditarNotaFragment extends Fragment {
         binding.btnGuardarNota.setOnClickListener(v -> {
             if(reproductor!=null)
                 reproductor.parar();
-            viewModel.guardarNota();
-            NavHostFragment.findNavController(this).popBackStack();
+            if(viewModel.guardarNota())
+                NavHostFragment.findNavController(this).popBackStack();
         });
         //cancelar
         binding.btnCancelarNota.setOnClickListener(v -> {
@@ -343,4 +343,5 @@ public class CrearEditarNotaFragment extends Fragment {
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
+
 }

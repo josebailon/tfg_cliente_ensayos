@@ -2,6 +2,8 @@ package josebailon.ensayos.cliente.model.sincronizacion.comprobadores;
 
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.*;
 
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -10,7 +12,7 @@ import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesSincronos;
 import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.UsuarioApiEnt;
@@ -22,6 +24,7 @@ import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.CredencialesErroneasException;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.TerminarSincronizacionException;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 public class ComprobadorModificacionesGrupos {
@@ -66,7 +69,7 @@ public class ComprobadorModificacionesGrupos {
             case VN_X:
                 eliminarLocal(grupoLocal);
                 break;
-            case SVN_VN:VN_X:
+            case SVN_VN:
                 comprobarCanciones(grupoLocal,grupoRemoto);
                 break;
             case SVN_VQ:
@@ -100,7 +103,13 @@ public class ComprobadorModificacionesGrupos {
                 break;
             case A_VN:
                 eliminarLocal(grupoLocal);
-                eliminarUsuarioDeGrupoDeServidor(nombreUsuario,grupoLocal);
+                //si solo quedo yo lo elimino, si no lo actualizo
+                if (grupoRemoto.getUsuarios().size()==1 && grupoRemoto.getUsuarios().get(0).getEmail().equals(nombreUsuario)){
+                    eliminarDeServidor(grupoLocal);
+                }else {
+                    apIservice.updateGrupo(MediadorDeEntidades.grupoApiEntToGrupoEntity(grupoRemoto), token).execute();
+                    eliminarUsuarioDeGrupoDeServidor(nombreUsuario, grupoLocal);
+                }
                 break;
 
         }
@@ -119,7 +128,8 @@ public class ComprobadorModificacionesGrupos {
                     break;
                 case 409:
                     //si hay conflicto devolverlo
-                    return new Conflicto<GrupoAndUsuariosAndCanciones, GrupoApiEnt>(Conflicto.T_GRUPO,grupoLocal,lr.body());
+                    GrupoApiEnt remotoModificado = new GsonBuilder().create().fromJson(lr.errorBody().string(),GrupoApiEnt.class);
+                    return new Conflicto<GrupoAndUsuariosAndCanciones, GrupoApiEnt>(Conflicto.T_GRUPO,grupoLocal,remotoModificado);
                 case 401:
                     throw new CredencialesErroneasException("");
                 default:
@@ -167,7 +177,7 @@ public class ComprobadorModificacionesGrupos {
     private void eliminarUsuarioDeGrupoDeServidor(String nombreUsuario, GrupoAndUsuariosAndCanciones grupoLocal) throws TerminarSincronizacionException {
 
         try {
-            Response<Object> lr = apIservice.eliminarUsuarioDeGrupo(nombreUsuario,grupoLocal.grupo.getId().toString(),token).execute();
+            Response<ResponseBody> lr = apIservice.eliminarUsuarioDeGrupo(nombreUsuario,grupoLocal.grupo.getId().toString(),token).execute();
             switch (lr.code()) {
                 case 401:
                     throw new CredencialesErroneasException("");
@@ -181,7 +191,7 @@ public class ComprobadorModificacionesGrupos {
     private void eliminarDeServidor(GrupoAndUsuariosAndCanciones grupoLocal) throws TerminarSincronizacionException {
 
         try {
-            Response<Object> lr = apIservice.deleteGrupo(grupoLocal.grupo.getId().toString(),token).execute();
+            Response<ResponseBody> lr = apIservice.deleteGrupo(grupoLocal.grupo.getId().toString(),token).execute();
             switch (lr.code()) {
                 case 401:
                     throw new CredencialesErroneasException("");
@@ -247,6 +257,7 @@ public class ComprobadorModificacionesGrupos {
 
 
     private void comprobarCanciones(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, IOException, TerminarSincronizacionException {
-        new ComprobadorModificacionesCanciones(sincronizadorService).comprobarCanciones(grupoLocal.grupo.getId(), grupoRemoto.getCanciones());
+        if(grupoRemoto!=null)
+            new ComprobadorModificacionesCanciones(sincronizadorService).comprobarCanciones(grupoLocal.grupo.getId(), grupoRemoto.getCanciones());
     }
 }

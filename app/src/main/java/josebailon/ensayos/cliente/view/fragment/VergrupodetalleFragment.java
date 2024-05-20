@@ -86,6 +86,10 @@ public class VergrupodetalleFragment extends Fragment {
 
         //recoger datos
         viewModel.getGrupo(idgrupo).observe(getViewLifecycleOwner(), datos ->{
+            if(datos==null) {
+                NavHostFragment.findNavController(this).popBackStack();
+                return;
+            }
             //refrescar nombre
             this.grupo=datos.grupo;
             binding.lbNombre.setText(datos.grupo.getNombre());
@@ -108,7 +112,7 @@ public class VergrupodetalleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.btnAgregarCancion.setOnClickListener(v -> mostrarDialogoCrearCancion());
         binding.btnAgregarUsuario.setOnClickListener(v -> mostrarDialogoAgregarUsuario());
-        ocultarMenuAcciones();
+        mostrarMenuSuperior();
  }
 
 
@@ -286,14 +290,19 @@ public class VergrupodetalleFragment extends Fragment {
                 .navigate(R.id.action_vergrupodetalleFragment_to_vercanciondetalleFragment,bundle);
     }
 
-    private void ocultarMenuAcciones() {
+    private void mostrarMenuSuperior() {
         getActivity().addMenuProvider( new MenuProvider(){
+
             @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {}
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_main, menu);
+            }
+
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
     }
 }

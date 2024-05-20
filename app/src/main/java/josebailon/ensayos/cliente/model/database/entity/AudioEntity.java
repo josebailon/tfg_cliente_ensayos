@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
@@ -15,13 +17,15 @@ import java.util.UUID;
 public class AudioEntity {
     @PrimaryKey(autoGenerate = false)
     @NotNull
+    @SerializedName("id")
     private UUID nota_id;
+    @SerializedName("nombreArchivo")
     private String archivo;
     private int version;
     private Date fecha;
     @ColumnInfo(name = "borrado", defaultValue = "0")
     private boolean borrado;
-    @ColumnInfo(name = "destacado", defaultValue = "0")
+    @ColumnInfo(name = "editado", defaultValue = "0")
     private boolean editado;
 
     public UUID getNota_id() {

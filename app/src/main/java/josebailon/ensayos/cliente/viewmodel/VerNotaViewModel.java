@@ -1,5 +1,6 @@
 package josebailon.ensayos.cliente.viewmodel;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.lifecycle.LiveData;
@@ -13,8 +14,9 @@ import java.util.concurrent.Executors;
 
 import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.archivos.service.ArchivosServicio;
+import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.network.model.LoginRequest;
@@ -41,7 +43,7 @@ public class VerNotaViewModel extends ViewModel {
     private MutableLiveData<Boolean> descargando = new MutableLiveData<>(false);
     private Executor executor = Executors.newSingleThreadExecutor();
     private UUID idnota;
-    private UUID idcancion;
+
 
     MutableLiveData<String> mensaje = new MutableLiveData<>();
 
@@ -149,5 +151,13 @@ public class VerNotaViewModel extends ViewModel {
                 mensaje.postValue("Sin conexión con el servidor");
             }
         });
+    }
+
+    public Uri getUriDeAudio(String archivo){
+        return servicioArchivos.generarUri(archivo);
+    }
+
+    public LiveData<CancionEntity> getCancion() {
+        return servicioDb.getCancionByIdNota(idnota);
     }
 }

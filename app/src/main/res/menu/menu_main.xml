@@ -4,9 +4,8 @@
     tools:context="josebailon.ensayos.cliente.MainActivity">
     <item
         android:id="@+id/action_sincronizar"
-        android:icon="@drawable/baseline_cloud_sync_24"
+        android:icon="@drawable/baseline_cloud_sync_24_white"
         android:orderInCategory="100"
         android:title="Sincronizar"
-        app:showAsAction="never"
-        />
+        app:showAsAction="always|withText" />
 </menu>

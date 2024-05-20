@@ -1,9 +1,6 @@
 package josebailon.ensayos.cliente.view.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,16 +76,24 @@ public class VercanciondetalleFragment extends Fragment {
 
         //recoger cancion
         viewModel.getCancion(idcancion).observe(getViewLifecycleOwner(), datos ->{
+            if (datos==null){
+                NavHostFragment.findNavController(this).popBackStack();
+                return;
+            }
+
             //refrescar cancion
             this.cancion=datos;
             binding.lbNombre.setText(datos.getNombre());
             binding.lbDescripcion.setText(datos.getDescripcion());
             binding.lbDuracion.setText(datos.getDuracion());
             viewModel.setIdcancion(datos.getId());
-            }
-        );
+            });
         //recoger notas de la cancion
         viewModel.getNotasDeCancion(idcancion).observe(getViewLifecycleOwner(), datos->{
+            if(datos==null) {
+                NavHostFragment.findNavController(this).popBackStack();
+                return;
+            }
             notasActuales=datos.stream().filter(notaConAudio -> !notaConAudio.nota.isBorrado()).collect(Collectors.toList());
             adaptadorNotas.setData(notasActuales);
         });
@@ -99,7 +104,7 @@ public class VercanciondetalleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.btnAgregarNota.setOnClickListener(v -> mostrarFragmentCrearEditarNota(null));
         //Eliminar menu de accinoes
-        ocultarMenuAcciones();
+        mostrarMenuAcciones();
 
     }
 
@@ -149,7 +154,7 @@ public class VercanciondetalleFragment extends Fragment {
         popupMenu.show();
         return true;
     }
- 
+
 
     private void borrarNota(NotaEntity nota) {
         new AlertDialog.Builder(getContext())
@@ -174,10 +179,14 @@ public class VercanciondetalleFragment extends Fragment {
 
     }
 
-    private void ocultarMenuAcciones() {
+    private void mostrarMenuAcciones() {
         getActivity().addMenuProvider( new MenuProvider(){
+
             @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {}
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_main, menu);
+            }
+
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 return false;

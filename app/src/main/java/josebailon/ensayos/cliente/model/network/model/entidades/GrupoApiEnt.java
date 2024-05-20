@@ -1,5 +1,8 @@
 package josebailon.ensayos.cliente.model.network.model.entidades;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,6 +91,19 @@ public class GrupoApiEnt {
         this.canciones = canciones;
     }
 
+    public String fechaFormateada(){
+        //Formato inicial.
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d = null;
+        try {
+            d = formato.parse(fecha);
+        } catch (ParseException e) {
+            return fecha;
+        }
 
+        //Aplica formato requerido.
+        formato.applyPattern("dd-MM-yyyy HH:mm:ss");
+        return formato.format(d);
+    }
 
 }

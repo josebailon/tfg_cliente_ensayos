@@ -1,6 +1,7 @@
 package josebailon.ensayos.cliente.viewmodel;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -9,13 +10,18 @@ import java.util.UUID;
 import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 
 public class VergruposViewModel extends ViewModel {
 
     private DatosLocalesAsincronos servicio = DatosLocalesAsincronos.getInstance(App.getContext());
     private SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
+    private MutableLiveData<String> usuario = new MutableLiveData<>();
+
+    public VergruposViewModel(){
+        usuario.postValue(sharedRepo.readLogin().getEmail());
+    }
     public void crear(String nombre, String descripcion) {
         GrupoEntity g = new GrupoEntity();
         g.setId(UUID.randomUUID());
@@ -47,5 +53,9 @@ public class VergruposViewModel extends ViewModel {
             servicio.deleteGrupo(grupo);
         else
             servicio.borrardoLogicoGrupo(grupo);
+    }
+
+    public LiveData<String> getUsuario() {
+        return usuario;
     }
 }

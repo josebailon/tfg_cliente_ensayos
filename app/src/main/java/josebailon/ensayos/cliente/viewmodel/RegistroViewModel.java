@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import josebailon.ensayos.cliente.model.network.model.LoginRequest;
 import josebailon.ensayos.cliente.model.network.model.RegistroResponse;
 import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import retrofit2.Response;
 
 public class RegistroViewModel extends AndroidViewModel {

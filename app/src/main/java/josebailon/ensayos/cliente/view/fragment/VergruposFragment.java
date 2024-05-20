@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
+import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import android.text.TextUtils;
 import android.view.ContextMenu;
@@ -71,6 +73,7 @@ public class VergruposFragment extends Fragment {
             adaptador.setData(grupos);
             gruposActuales = grupos;
         });
+        viewModel.getUsuario().observe(getViewLifecycleOwner(), s-> binding.lbUsuarioActual.setText(s));
 
         return binding.getRoot();
 
@@ -79,12 +82,16 @@ public class VergruposFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.btnAgregarGrupo.setOnClickListener(v -> mostrarDialogoCreacion());
-        ocultarMenuSuperior();
+        mostrarMenuSuperior();
         registerForContextMenu(gruposRecyclerView);
+
+
+            ((Animatable) binding.imageView6.getDrawable()).start();
+
 
     }
 
-    private void ocultarMenuSuperior() {
+    private void mostrarMenuSuperior() {
         getActivity().addMenuProvider( new MenuProvider (){
 
             @Override

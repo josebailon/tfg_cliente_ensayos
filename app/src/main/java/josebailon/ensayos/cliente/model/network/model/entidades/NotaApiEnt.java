@@ -3,6 +3,10 @@ package josebailon.ensayos.cliente.model.network.model.entidades;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class NotaApiEnt {
 
     @SerializedName("id")
@@ -71,5 +75,18 @@ public class NotaApiEnt {
     public void setAudio(AudioApiEnt audio) {
         this.audio = audio;
     }
+    public String fechaFormateada(){
+        //Formato inicial.
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d = null;
+        try {
+            d = formato.parse(fecha);
+        } catch (ParseException e) {
+            return fecha;
+        }
 
+        //Aplica formato requerido.
+        formato.applyPattern("dd-MM-yyyy HH:mm:ss");
+        return formato.format(d);
+    }
 }

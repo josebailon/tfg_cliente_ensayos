@@ -20,7 +20,7 @@ import josebailon.ensayos.cliente.model.network.model.LoginRequest;
 import josebailon.ensayos.cliente.model.network.model.LoginResponse;
 import josebailon.ensayos.cliente.model.network.model.UsuarioResponse;
 import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.network.repository.UsuarioApiRepo;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;

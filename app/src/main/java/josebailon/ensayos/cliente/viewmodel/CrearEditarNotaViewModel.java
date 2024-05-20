@@ -18,7 +18,7 @@ import josebailon.ensayos.cliente.model.archivos.service.ArchivosServicio;
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.network.model.LoginRequest;
@@ -118,7 +118,13 @@ public class CrearEditarNotaViewModel extends ViewModel {
         }
     }
 
-    public void guardarNota(){
+    public boolean guardarNota(){
+        if (notaAndAudio.getValue().nota==null || TextUtils.isEmpty(notaAndAudio.getValue().nota.getNombre())){
+            mensaje.setValue("El titulo no puede estar vacío");
+            return false;
+        }
+
+
         if (modo==MODO_CREACION){
             servicioDb.insertNotaWithAudio(notaAndAudio.getValue().nota, notaAndAudio.getValue().audio);
         }else{
@@ -127,6 +133,7 @@ public class CrearEditarNotaViewModel extends ViewModel {
             AudioEntity a = notaAndAudio.getValue().audio;
             servicioDb.updateNotaWithAudio(n,a);
         }
+        return true;
     }
 
     public void actualizarTexto(String nombre, String texto) {

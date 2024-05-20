@@ -2,7 +2,6 @@ package josebailon.ensayos.cliente.viewmodel;
 
 import android.app.Application;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,7 +14,7 @@ import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.network.model.LoginRequest;
 import josebailon.ensayos.cliente.model.network.model.LoginResponse;
 import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import retrofit2.Response;
 

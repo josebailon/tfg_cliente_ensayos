@@ -183,4 +183,8 @@ public class DatosLocalesAsincronos{
             }
         });
     }
+
+    public LiveData<CancionEntity> getCancionByIdNota(UUID idnota) {
+        return DB.cancionDao().getCancionByIdNota(idnota);
+    }
 }

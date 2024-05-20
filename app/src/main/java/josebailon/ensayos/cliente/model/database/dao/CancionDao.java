@@ -44,6 +44,7 @@ public interface CancionDao {
     CancionAndNotas getCancionWithNotasSinc(UUID id);
 
 
-
-
+    @Transaction
+    @Query("SELECT C.id,C.nombre,C.descripcion,C.duracion,C.borrado,C.editado,C.fecha,C.grupo,C.version FROM cancion AS C LEFT JOIN nota AS N WHERE N.cancion = C.id AND N.id=:idnota")
+    LiveData<CancionEntity> getCancionByIdNota(UUID idnota);
 }

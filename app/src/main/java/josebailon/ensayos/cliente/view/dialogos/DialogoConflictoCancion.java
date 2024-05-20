@@ -66,6 +66,8 @@ public class DialogoConflictoCancion extends Dialog {
             fusion.setDuracion(remoto.getDuracion());
         else
             fusion.setDuracion(local.getDuracion()+" / "+remoto.getDuracion());
+        //grupo
+        fusion.setGrupo(local.getGrupo());
     }
 
     private void prepararInterface() {
@@ -78,7 +80,7 @@ public class DialogoConflictoCancion extends Dialog {
         ((TextView)this.findViewById(R.id.descripcionLocal)).setText(local.getDescripcion());
         ((TextView)this.findViewById(R.id.duracionLocal)).setText("Duracion: "+local.getDuracion());
         //remoto
-        ((TextView)this.findViewById(R.id.fechaRemota)).setText(remoto.getFecha());
+        ((TextView)this.findViewById(R.id.fechaRemota)).setText(remoto.fechaFormateada());
         ((TextView)this.findViewById(R.id.nombreRemoto)).setText(remoto.getNombre());
         ((TextView)this.findViewById(R.id.descripcionRemota)).setText(remoto.getDescripcion());
         ((TextView)this.findViewById(R.id.duracionRemota)).setText("Duracion: "+remoto.getDuracion());
@@ -88,7 +90,7 @@ public class DialogoConflictoCancion extends Dialog {
         ((TextView)this.findViewById(R.id.fechaFusion)).setText(fusion.fechaFormateada());
         ((TextView)this.findViewById(R.id.nombreFusion)).setText(fusion.getNombre());
         ((TextView)this.findViewById(R.id.descripcionFusion)).setText(fusion.getDescripcion());
-        ((TextView)this.findViewById(R.id.duracionFusion)).setText(fusion.getDuracion());
+        ((TextView)this.findViewById(R.id.duracionFusion)).setText("Duracion: "+fusion.getDuracion());
 
 
         //elegir local

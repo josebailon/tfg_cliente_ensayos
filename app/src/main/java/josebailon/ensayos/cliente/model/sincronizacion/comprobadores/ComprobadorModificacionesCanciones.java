@@ -6,24 +6,25 @@ import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.B_X;
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.EVN_VN;
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.EVN_VQ;
+import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.SVN_VN;
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.SVN_VQ;
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.V0_X;
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.VN_X;
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.estadoCanciones;
 
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
-import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
-import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesSincronos;
 import josebailon.ensayos.cliente.model.network.model.entidades.CancionApiEnt;
-import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
-import josebailon.ensayos.cliente.model.network.model.entidades.UsuarioApiEnt;
 import josebailon.ensayos.cliente.model.network.service.APIservice;
 import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadorFeedbackHandler;
 import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
@@ -31,6 +32,7 @@ import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.CredencialesErroneasException;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.TerminarSincronizacionException;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 public class ComprobadorModificacionesCanciones {
@@ -59,6 +61,8 @@ public class ComprobadorModificacionesCanciones {
 
     public void comprobarCanciones(UUID idGrupo, List<CancionApiEnt> cancionesRemotas) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
         this.idGrupo=idGrupo;
+        if (cancionesRemotas==null)
+            cancionesRemotas=new ArrayList<>();
         List<CancionEntity> cancionesLocales = servicioLocal.getGrupoWithUsuariosAndCanciones(idGrupo).canciones;
         for (CancionEntity cancionLocal : cancionesLocales) {
                 CancionApiEnt cancionRemota = cancionesRemotas.stream().filter(cancion -> UUID.fromString(cancion.getId()).equals(cancionLocal.getId())).findFirst().orElse(null);
@@ -75,6 +79,9 @@ public class ComprobadorModificacionesCanciones {
                 break;
             case VN_X:
                 eliminarLocal(cancionLocal);
+                break;
+            case SVN_VN:
+                comprobarNotas(cancionLocal,cancionRemota);
                 break;
             case SVN_VQ:
                 actualizarLocal(cancionLocal,cancionRemota);
@@ -125,7 +132,8 @@ public class ComprobadorModificacionesCanciones {
                     break;
                 case 409:
                     //si hay conflicto devolverlo
-                    return new Conflicto<CancionEntity, CancionApiEnt>(Conflicto.T_CANCION,cancionLocal,lr.body());
+                    CancionApiEnt remotoModificado = new GsonBuilder().create().fromJson(lr.errorBody().string(),CancionApiEnt.class);
+                    return new Conflicto<CancionEntity, CancionApiEnt>(Conflicto.T_CANCION,cancionLocal,remotoModificado);
                 case 401:
                     throw new CredencialesErroneasException("");
                 default:
@@ -160,7 +168,7 @@ public class ComprobadorModificacionesCanciones {
     private void eliminarDeServidor(CancionEntity cancionLocal) throws TerminarSincronizacionException {
 
         try {
-            Response<Object> lr = apIservice.deleteCancion(cancionLocal.getId().toString(),token).execute();
+            Response<ResponseBody> lr = apIservice.deleteCancion(cancionLocal.getId().toString(),token).execute();
             switch (lr.code()) {
                 case 401:
                     throw new CredencialesErroneasException("");
@@ -206,7 +214,10 @@ public class ComprobadorModificacionesCanciones {
         }
 
 
-    private void comprobarNotas(CancionEntity cancionLocal, CancionApiEnt cancionRemota) {
-        //new ComprobadorModificacionesNotas(cancionLocal,cancionRemota);
+    private void comprobarNotas(CancionEntity cancionLocal, CancionApiEnt cancionRemota) throws CredencialesErroneasException, IOException, TerminarSincronizacionException {
+        ComprobadorModificacionesNotas comprobadorNotas = new ComprobadorModificacionesNotas(sincronizadorService);
+
+        comprobadorNotas.comprobarNotas(cancionLocal.getId(),(cancionRemota!=null)?cancionRemota.getNotas():null);
+        
     }
 }

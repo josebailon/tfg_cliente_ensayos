@@ -12,7 +12,7 @@ import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.model.database.relation.CancionAndNotas;
 import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesSincronos;
 import josebailon.ensayos.cliente.model.network.model.entidades.AudioApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.CancionApiEnt;

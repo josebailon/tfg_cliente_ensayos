@@ -165,6 +165,17 @@ public class DatosLocalesSincronos {
     }
 
 
+    public void updateNota(NotaEntity nota) {
+        DB.notaDao().updateNota(nota);
+    }
+
+    public void updateAudio(AudioEntity audio) {
+        DB.audioDao().updateAudio(audio);
+    }
+
+    public void deleteAudio(AudioEntity audioLocal) {
+        DB.audioDao().deleteAudio(audioLocal);
+    }
 }
 
 

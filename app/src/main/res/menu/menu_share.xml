@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="josebailon.ensayos.cliente.MainActivity">
+    <item
+        android:id="@+id/action_compartir"
+        android:icon="@drawable/baseline_share_24"
+        android:orderInCategory="100"
+        android:title="Sincronizar"
+        app:showAsAction="always|withText" />
+</menu>

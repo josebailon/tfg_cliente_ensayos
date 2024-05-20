@@ -97,7 +97,7 @@ public class DialogoConflictoGrupo extends Dialog {
             lul.setText(lul.getText()+u.getEmail()+"\n");
         }
         //remoto
-        ((TextView)this.findViewById(R.id.fechaRemota)).setText(remoto.getFecha());
+        ((TextView)this.findViewById(R.id.fechaRemota)).setText(remoto.fechaFormateada());
         ((TextView)this.findViewById(R.id.nombreRemoto)).setText(remoto.getNombre());
         ((TextView)this.findViewById(R.id.descripcionRemota)).setText(remoto.getDescripcion());
         TextView lur = (TextView)this.findViewById(R.id.listaUsuariosRemotos);

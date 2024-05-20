@@ -10,8 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
-import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
-import josebailon.ensayos.cliente.model.database.repository.SharedPreferencesRepo;
+import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.network.APIBuilder;
 import josebailon.ensayos.cliente.model.network.model.LoginRequest;
@@ -20,7 +19,6 @@ import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
 import josebailon.ensayos.cliente.model.network.service.APIservice;
 import josebailon.ensayos.cliente.model.sincronizacion.comprobadores.ComprobadorModificacionesGrupos;
 import josebailon.ensayos.cliente.model.sincronizacion.comprobadores.ComprobadorNuevosRemotos;
-import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.CredencialesErroneasException;
 import josebailon.ensayos.cliente.model.sincronizacion.excepciones.TerminarSincronizacionException;
 import retrofit2.Call;

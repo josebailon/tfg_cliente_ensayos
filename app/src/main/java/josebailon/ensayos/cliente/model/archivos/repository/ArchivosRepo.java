@@ -2,6 +2,8 @@ package josebailon.ensayos.cliente.model.archivos.repository;
 
 import android.net.Uri;
 
+import androidx.core.content.FileProvider;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,7 +15,7 @@ import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.archivos.Utiles;
 
 public class ArchivosRepo {
-    private final String CARPETA_AUDIO="audio";
+    public final String CARPETA_AUDIO="audio";
     private final String CARPETA_TEMP="tmp";
     private static ArchivosRepo instancia;
     private ArchivosRepo(){
@@ -113,5 +115,19 @@ public class ArchivosRepo {
 
     public File getTempPathNuevo() {
         return new File(App.getContext().getFilesDir(),CARPETA_TEMP+"/"+UUID.randomUUID()+".mp3");
+    }
+
+    public Uri getUri(String archivo) {
+
+        File file = new File(App.getContext().getFilesDir(),CARPETA_AUDIO+"/"+archivo);
+        if (!file.exists())
+            return null;
+        return  FileProvider.getUriForFile(App.getContext(), "josebailon.ensayos.cliente.provider", file);
+    }
+
+    public void renombrar(String origen, String destino) {
+        File orig = new File(App.getContext().getFilesDir(),CARPETA_AUDIO+"/"+origen);
+        File dest = new File(App.getContext().getFilesDir(),CARPETA_AUDIO+"/"+destino);
+        orig.renameTo(dest);
     }
 }

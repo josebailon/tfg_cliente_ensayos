@@ -6,6 +6,7 @@ public class Conflicto <L, S>{
 
     public static final int T_GRUPO = 0;
     public static final int T_CANCION = 1 ;
+    public static final int T_NOTA = 2;
 
     private Semaphore semaforo;
     int tipo;

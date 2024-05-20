@@ -8,30 +8,30 @@
     <fragment
         android:id="@+id/InitFragment"
         android:name="josebailon.ensayos.cliente.view.fragment.InitFragment"
-        android:label="@string/first_fragment_label"
+        android:label="ENSAYOS"
         tools:layout="@layout/fragment_init">
 
         <action
             android:id="@+id/action_InitFragment_to_LoginRegistroFragment"
             app:destination="@id/LoginregistroFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:launchSingleTop="false"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
             app:popUpTo="@id/InitFragment"
-            app:popUpToInclusive="true"
-            app:enterAnim="@anim/nav_slide_in_right"
-            app:exitAnim="@anim/nav_slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
-            />
+            app:popUpToInclusive="true" />
+        />
         <action
             android:id="@+id/action_InitFragment_to_vergruposFragment"
             app:destination="@id/vergruposFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
             app:popUpTo="@id/InitFragment"
-            app:popUpToInclusive="true"
-            app:enterAnim="@anim/nav_slide_in_right"
-            app:exitAnim="@anim/nav_slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
-            />
+            app:popUpToInclusive="true" />
+        />
     </fragment>
     <fragment
         android:id="@+id/LoginregistroFragment"
@@ -41,19 +41,19 @@
         <action
             android:id="@+id/action_LoginRegistroFragment_to_LoginFragment"
             app:destination="@id/loginFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:launchSingleTop="false"
-            app:popUpToInclusive="false"
-            app:enterAnim="@anim/nav_slide_in_right"
-            app:exitAnim="@anim/nav_slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_LoginregistroFragment_to_RegistroFragment"
             app:destination="@id/registroFragment"
-            app:enterAnim="@anim/nav_slide_in_right"
-            app:exitAnim="@anim/nav_slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -101,7 +101,11 @@
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_vergruposFragment_to_sincronizadoFragment"
-            app:destination="@id/sincronizadoFragment" />
+            app:destination="@id/sincronizadoFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
 
         />
     </fragment>
@@ -120,6 +124,14 @@
             app:exitAnim="@anim/nav_slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_vergrupodetalleFragment_to_sincronizadoFragment"
+            app:destination="@id/sincronizadoFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            />
     </fragment>
     <fragment
         android:id="@+id/vercanciondetalleFragment"
@@ -169,7 +181,6 @@
     <fragment
         android:id="@+id/sincronizadoFragment"
         android:name="josebailon.ensayos.cliente.view.fragment.SincronizadoFragment"
-        android:label="fragment_sincronizado"
         tools:layout="@layout/fragment_sincronizado" />
     />
 </navigation>

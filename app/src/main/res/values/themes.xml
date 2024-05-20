@@ -10,7 +10,13 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">@color/colorAccent</item>
         <item name="materialButtonStyle">@style/Theme.Ensayos.Button</item>
+
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/animicono_mini_largo</item>
+        <item name="android:windowSplashScreenAnimationDuration">3000</item>
+        <item name="windowSplashScreenIconBackgroundColor">#f0e067</item>
     </style>
+
 
     <style name="Theme.Ensayos" parent="Base.Theme.Ensayos" />
 

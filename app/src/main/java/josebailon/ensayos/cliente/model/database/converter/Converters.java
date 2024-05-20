@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Converters {
-    private static final String DATE_FORMAT = "dd-MM-yyy HH:mm:ss";
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     @TypeConverter
     public static Date fromTimestamp(Long value) {
         return value == null ? null : new Date(value);

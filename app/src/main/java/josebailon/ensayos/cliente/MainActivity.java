@@ -5,20 +5,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import androidx.core.view.MenuProvider;
-import androidx.lifecycle.Lifecycle;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import josebailon.ensayos.cliente.databinding.ActivityMainBinding;
-import josebailon.ensayos.cliente.view.fragment.RegistroFragment;
 
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
-        appBarConfiguration=new AppBarConfiguration.Builder(R.id.InitFragment, R.id.LoginregistroFragment, R.id.vergruposFragment).build();
+        appBarConfiguration=new AppBarConfiguration.Builder(R.id.InitFragment, R.id.LoginregistroFragment, R.id.vergruposFragment, R.id.sincronizadoFragment).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         //appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -58,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+
         int id = item.getItemId();
         //derivar flecha de retorno a callback de fragment
         if (id== android.R.id.home) {
@@ -65,10 +61,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_sincronizar) {
-            Navigation.findNavController(this, R.id.nav_host_fragment_content_main)
-                    .navigate(R.id.action_vergruposFragment_to_sincronizadoFragment);
+            Navigation.findNavController(this, R.id.nav_host_fragment_content_main).navigate(R.id.sincronizadoFragment);
             return true;
         }
+        int actual=Navigation.findNavController(this,R.id.nav_host_fragment_content_main).getCurrentDestination().getId();
+        if (actual==R.id.verNotaFragment) {
+            return false;
+        }
+
         return true;
     }
 

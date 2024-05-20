@@ -4,6 +4,7 @@ import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
+import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.network.model.entidades.AudioApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.CancionApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
@@ -22,6 +23,7 @@ import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
  * • VQ: Versión Q (Diferente de 0 y N)
  * */
 public class CalculadoraEstados {
+    public static final int X_X=-1; // NO EXISTENTE - NO EXISTENTE
     public static final int X_VN=0; // NO EXISTENTE - IDn
     public static final int V0_X=1;// ID0 - NO EXISTENTE
     public static final int VN_X=2;//  IDn - NO EXISTENTE
@@ -125,6 +127,7 @@ public class CalculadoraEstados {
             Object objRemoto,
             int versionRemoto
             ){
+        if (objLocal==null && objRemoto==null) return X_X;
         if (objLocal==null && objRemoto!=null) return X_VN;
         if (objLocal!=null && abandonadoLocal && objRemoto==null) return  A_X;
         if (objLocal!=null && abandonadoLocal && objRemoto!=null) return  A_VN;

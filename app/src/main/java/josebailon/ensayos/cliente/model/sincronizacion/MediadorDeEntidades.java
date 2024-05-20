@@ -47,6 +47,11 @@ public class MediadorDeEntidades {
         c.setDescripcion(cancionRemota.getDescripcion());
         c.setDuracion(cancionRemota.getDuracion());
         c.setVersion(cancionRemota.getVersion());
+        try {
+            c.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(cancionRemota.getFecha()));
+        } catch (ParseException e) {
+            c.setFecha(new Date(System.currentTimeMillis()));
+        }
         c.setBorrado(false);
         c.setEditado(false);
         c.setGrupo(UUID.fromString(idGrupo));
@@ -59,6 +64,11 @@ public class MediadorDeEntidades {
         n.setNombre(notaRemota.getNombre());
         n.setTexto(notaRemota.getTexto());
         n.setVersion(notaRemota.getVersion());
+        try {
+            n.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(notaRemota.getFecha()));
+        } catch (ParseException e) {
+            n.setFecha(new Date(System.currentTimeMillis()));
+        }
         n.setBorrado(false);
         n.setEditado(false);
         n.setCancion(UUID.fromString(idCancion));
@@ -70,6 +80,11 @@ public class MediadorDeEntidades {
         a.setNota_id(UUID.fromString(audioRemoto.getId()));
         a.setArchivo(audioRemoto.getNombreArchivo());
         a.setVersion(audioRemoto.getVersion());
+        try {
+            a.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(audioRemoto.getFecha()));
+        } catch (ParseException e) {
+            a.setFecha(new Date(System.currentTimeMillis()));
+        }
         a.setBorrado(false);
         a.setEditado(false);
         return a;

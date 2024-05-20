@@ -86,13 +86,13 @@ public class InitFragment extends Fragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (((MainActivity) requireActivity()).getSupportActionBar() != null) {
-            ((MainActivity) requireActivity()).getSupportActionBar().hide();
-        }
-    }
+//    @Override
+//    public void onResume() {
+////        super.onResume();
+////        if (((MainActivity) requireActivity()).getSupportActionBar() != null) {
+////            ((MainActivity) requireActivity()).getSupportActionBar().hide();
+////        }
+//    }
 
 
 }

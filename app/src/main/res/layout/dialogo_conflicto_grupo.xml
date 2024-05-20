@@ -23,7 +23,7 @@
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="600dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,20 +47,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Guardar Version Local" />
+                    android:text="Guardar Versión Local" />
 
                 <TextView
                     android:id="@+id/fechaLocal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="fecha"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textStyle="italic" />
+
                 <TextView
                     android:id="@+id/nombreLocal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nombre"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/descripcionLocal"
@@ -96,19 +99,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Guardar Version Remota" />
+                    android:text="Guardar Versión Remota" />
+
                 <TextView
                     android:id="@+id/fechaRemota"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="fecha"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textStyle="italic" />
+
                 <TextView
                     android:id="@+id/nombreRemoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nombre"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/descripcionRemota"
@@ -131,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:text="..." />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -143,19 +151,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Guardar Version Fusionada" />
+                    android:text="Guardar Versión Fusionada" />
+
                 <TextView
                     android:id="@+id/fechaFusion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="fecha"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textStyle="italic" />
+
                 <TextView
                     android:id="@+id/nombreFusion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nombre"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/descripcionFusion"

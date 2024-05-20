@@ -1,4 +1,4 @@
-package josebailon.ensayos.cliente.model.database.repository;
+package josebailon.ensayos.cliente.model.sharedpreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
