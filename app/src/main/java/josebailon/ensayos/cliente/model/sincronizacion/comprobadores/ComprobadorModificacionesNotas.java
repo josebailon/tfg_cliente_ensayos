@@ -12,6 +12,7 @@ import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.estadoAudios;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.GsonBuilder;
 
@@ -43,6 +44,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 
 public class ComprobadorModificacionesNotas {
@@ -124,13 +126,14 @@ public class ComprobadorModificacionesNotas {
 
     private Conflicto<NotaAndAudio,NotaApiEnt> actualizarServidorConDatosLocales(NotaAndAudio notaLocal, NotaApiEnt notaRemota) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
 
+        //actualizar nota
         Response<NotaApiEnt> lr=null;
-
         try {
             lr = apIservice.updateNota(notaLocal.nota, token).execute();
             switch (lr.code()) {
                 case 200:
                     servicioLocal.updateNota(MediadorDeEntidades.notaApiEntToNotaEntity(notaLocal.nota.getCancion().toString(),lr.body()));
+                    //ver si hay que acutalizar audio y devolver su resultado que puede ser un conflicto o nulo
                     return actualizarServidorConAudioLocal(notaLocal,notaRemota);
                 case 409:
                     //si hay conflicto devolverlo
@@ -164,6 +167,8 @@ public class ComprobadorModificacionesNotas {
                 servicioLocal.deleteAudio(notaLocal.audio);
                 break;
             case VN_X:
+                if (TextUtils.isEmpty(fileLocal))
+                    return null;
             case V0_X:
                 agregarAudioAlServidor(notaLocal.audio);
             case EVN_VN:
@@ -220,23 +225,59 @@ public class ComprobadorModificacionesNotas {
     }
 
     private void resolverConflicto(Conflicto<NotaAndAudio, NotaApiEnt> conflicto) throws  TerminarSincronizacionException {
-        handler.onSendMessage("HAY CONFLICTO");
-//        //mandar conflicto
-//        sincronizadorService.getHandler().onConflicto(conflicto);
-//        try {
-//            //esperar resolucion
-//            conflicto.esperar();
-//            //recoger solucion
-//            CancionEntity solucion =conflicto.getResuelto();
-//            //actualizar en local y en remoto con la eleccion de solucion
-//            servicioLocal.updateCancion(solucion);
-//            comprobarNota(solucion,conflicto.getRemoto());
-//        } catch (InterruptedException | CredencialesErroneasException |
-//                 TerminarSincronizacionException | IOException e) {
-//            throw new TerminarSincronizacionException("Sincronización terminada");
-//        }
+
+        descargarAudios(conflicto);
+
+
+        //mandar conflicto
+        sincronizadorService.getHandler().onConflicto(conflicto);
+        try {
+            //esperar resolucion
+            conflicto.esperar();
+            //recoger solucion
+            NotaAndAudio solucion =conflicto.getResuelto();
+            //actualizar en local y en remoto con la eleccion de solucion
+            servicioLocal.updateNotaWithAudio(solucion.nota,solucion.audio);
+            comprobarNota(solucion,conflicto.getRemoto());
+        } catch (InterruptedException | CredencialesErroneasException |
+                 TerminarSincronizacionException | IOException e) {
+            throw new TerminarSincronizacionException("Sincronización terminada");
+        }
     }
 
+    private void descargarAudios(Conflicto<NotaAndAudio, NotaApiEnt> conflicto) {
+        try {
+        //descargar los audios para comparar
+            if (conflicto.getLocal().audio!=null && !archivosServicio.existeAudio(conflicto.getLocal().audio.getArchivo())) {
+                Response<ResponseBody>  res = apIservice.descarga(conflicto.getLocal().nota.getId().toString(),token).execute();
+                if (res.code()==200) {
+                    String header = res.headers().get("Content-Disposition");
+                    String nombre = header.replace("attachment; filename=", "");
+                    //guardar descarga
+
+                    try {
+                        archivosServicio.guardarBytes(res.body().byteStream(), nombre);
+                    } catch (IOException e) {
+                    }
+                }
+            }
+            if (conflicto.getRemoto().getAudio()!=null && !archivosServicio.existeAudio(conflicto.getRemoto().getAudio().getNombreArchivo())) {
+                Response<ResponseBody>  res = apIservice.descarga(conflicto.getRemoto().getId(),token).execute();
+                if (res.code()==200) {
+                    String header = res.headers().get("Content-Disposition");
+                    String nombre = header.replace("attachment; filename=", "");
+                    //guardar descarga
+
+                    try {
+                        archivosServicio.guardarBytes(res.body().byteStream(), nombre);
+                    } catch (IOException e) {
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     private void eliminarDeServidor(NotaEntity notaLocal) throws TerminarSincronizacionException {

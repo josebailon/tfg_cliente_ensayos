@@ -35,49 +35,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/lbSpNombre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nombre:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
             <Spinner
                 android:id="@+id/spinnerTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/lbSpTexto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Texto:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinnerTexto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/lbSpAudio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Texto:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
             <Spinner
                 android:id="@+id/spinnerAudio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,15 +59,7 @@
 
 
                 <TextView
-                    android:id="@+id/fechaLocal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="fecha"
-                    android:textSize="14sp"
-                    android:textStyle="italic" />
-
-                <TextView
-                    android:id="@+id/nombreLocal"
+                    android:id="@+id/lbNombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nombre"
@@ -104,20 +67,66 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/descripcionLocal"
+                    android:id="@+id/lbTexto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="false"
                     android:text="descripcion" />
 
-                <TextView
-                    android:id="@+id/duracionLocal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="duracion" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fechaAudio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="fecha"
+                        android:textSize="14sp"
+                        android:textStyle="italic" />
+                    <Button
+                        android:id="@+id/btnEscuchaAudio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorAccent"
+                        android:text="ESCUCHAR AUDIO"
+                        android:textColor="@color/black"
+                        android:visibility="invisible"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        app:iconTint="@color/black"
+                        app:layout_constraintBottom_toBottomOf="@+id/btnDescargaAudio"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.503"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/btnStop"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/baseline_stop_24"
+                        app:tint="@color/black"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toTopOf="@+id/mediaControl"
+                        tools:layout_editor_absoluteX="44dp" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/mediaControl"
+                        android:layout_width="fill_parent"
+                        android:layout_height="80dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/btnAceptarLocal"
+                    android:id="@+id/btnGuardarVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"

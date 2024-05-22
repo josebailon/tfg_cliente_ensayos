@@ -18,11 +18,14 @@ import josebailon.ensayos.cliente.MainActivity;
 import josebailon.ensayos.cliente.databinding.FragmentSincronizadoBinding;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
+import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.network.model.entidades.CancionApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
+import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 import josebailon.ensayos.cliente.view.dialogos.DialogoConflictoCancion;
 import josebailon.ensayos.cliente.view.dialogos.DialogoConflictoGrupo;
+import josebailon.ensayos.cliente.view.dialogos.DialogoConflictoNota;
 import josebailon.ensayos.cliente.viewmodel.SincronizadorViewModel;
 
 public class SincronizadoFragment extends Fragment {
@@ -73,6 +76,9 @@ public class SincronizadoFragment extends Fragment {
                     break;
                 case Conflicto.T_CANCION:
                     new DialogoConflictoCancion(getContext(), (Conflicto<CancionEntity, CancionApiEnt>) conflicto).show();
+                    break;
+                case Conflicto.T_NOTA:
+                    new DialogoConflictoNota(getContext(), (Conflicto<NotaAndAudio, NotaApiEnt>) conflicto,viewModel).show();
                     break;
             }
         });

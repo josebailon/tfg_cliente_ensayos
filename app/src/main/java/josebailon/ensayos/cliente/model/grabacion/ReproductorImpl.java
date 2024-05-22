@@ -85,7 +85,9 @@ public class ReproductorImpl implements Reproductor{
     }
     @Override
     public int getDuration() {
+        if (player!=null)
         return player.getDuration();
+        else return 0;
     }
     @Override
     public int getCurrentPosition() {
