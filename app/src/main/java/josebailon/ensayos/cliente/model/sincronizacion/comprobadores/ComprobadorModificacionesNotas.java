@@ -237,7 +237,11 @@ public class ComprobadorModificacionesNotas {
             //recoger solucion
             NotaAndAudio solucion =conflicto.getResuelto();
             //actualizar en local y en remoto con la eleccion de solucion
-            servicioLocal.updateNotaWithAudio(solucion.nota,solucion.audio);
+            servicioLocal.updateNota(solucion.nota);
+            if (solucion.audio == null)
+                servicioLocal.deleteAudio(servicioLocal.getAudioById(solucion.nota.getId()));
+            else
+                servicioLocal.updateAudio(solucion.audio);
             comprobarNota(solucion,conflicto.getRemoto());
         } catch (InterruptedException | CredencialesErroneasException |
                  TerminarSincronizacionException | IOException e) {

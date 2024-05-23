@@ -16,13 +16,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import java.io.File;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import josebailon.ensayos.cliente.R;
+import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
+import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
@@ -55,10 +57,11 @@ public class DialogoConflictoNota extends Dialog {
 
     SincronizadorViewModel viewModel;
     View zonaReproductor;
+
     public DialogoConflictoNota(@NonNull Context context, Conflicto<NotaAndAudio, NotaApiEnt> conflicto, SincronizadorViewModel viewModel) {
         super(context);
-        this.conflicto=conflicto;
-        this.viewModel=viewModel;
+        this.conflicto = conflicto;
+        this.viewModel = viewModel;
         local = conflicto.getLocal();
         remoto = conflicto.getRemoto();
 //        prepararFusion();
@@ -98,41 +101,41 @@ public class DialogoConflictoNota extends Dialog {
         Window window = this.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        spinnerTitulo=((Spinner)this.findViewById(R.id.spinnerTitulo));
-        spinnerTexto=((Spinner)this.findViewById(R.id.spinnerTexto));
-        spinnerAudio=((Spinner)this.findViewById(R.id.spinnerAudio));
+        spinnerTitulo = ((Spinner) this.findViewById(R.id.spinnerTitulo));
+        spinnerTexto = ((Spinner) this.findViewById(R.id.spinnerTexto));
+        spinnerAudio = ((Spinner) this.findViewById(R.id.spinnerAudio));
         lbNombre = ((TextView) this.findViewById(R.id.lbNombre));
         lbTexto = ((TextView) this.findViewById(R.id.lbTexto));
         lbFecha = ((TextView) this.findViewById(R.id.fechaAudio));
         btnEscuchaAudio = ((Button) this.findViewById(R.id.btnEscuchaAudio));
-        btnStop= ((ImageButton) this.findViewById(R.id.btnStop));
-        zonaReproductor= this.findViewById(R.id.mediaControl);
+        btnStop = ((ImageButton) this.findViewById(R.id.btnStop));
+        zonaReproductor = this.findViewById(R.id.mediaControl);
 
         //rellenar spinners
         //spinner titulo
         List<String> opcionesTitulo = Arrays.asList("Título local", "Título remoto", "Título fusionado");
-        ArrayAdapter<String> adapterTit = new ArrayAdapter<String>(getContext(),R.layout.elemento_spinner_simple,opcionesTitulo);
+        ArrayAdapter<String> adapterTit = new ArrayAdapter<String>(getContext(), R.layout.elemento_spinner_simple, opcionesTitulo);
 
         spinnerTitulo.setAdapter(adapterTit);
         //spinner texto
         List<String> opcionesTexto = Arrays.asList("Texto local", "Texto remoto", "Texto fusionado");
-        ArrayAdapter<String> adapterTex = new ArrayAdapter<String>(getContext(),R.layout.elemento_spinner_simple,opcionesTexto);
+        ArrayAdapter<String> adapterTex = new ArrayAdapter<String>(getContext(), R.layout.elemento_spinner_simple, opcionesTexto);
         spinnerTexto.setAdapter(adapterTex);
         //spinner audio
         List<String> opcionesAudio = new ArrayList<>();
-        if (local.audio==null && remoto.getAudio()==null)
+        if (local.audio == null && remoto.getAudio() == null)
             opcionesAudio.add("Sin audio");
         else {
-            if (local.audio!=null && !local.audio.isBorrado())
+            if (local.audio != null && !local.audio.isBorrado())
                 opcionesAudio.add("Audio local");
             else
                 opcionesAudio.add("Sin audio");
-            if(remoto.getAudio()!=null)
+            if (remoto.getAudio() != null)
                 opcionesAudio.add("Audio remoto");
             else
                 opcionesAudio.add("Sin audio");
         }
-        ArrayAdapter<String> adapterAudio = new ArrayAdapter<String>(getContext(),R.layout.elemento_spinner_simple,opcionesAudio);
+        ArrayAdapter<String> adapterAudio = new ArrayAdapter<String>(getContext(), R.layout.elemento_spinner_simple, opcionesAudio);
         spinnerAudio.setAdapter(adapterAudio);
 
         //onclick guardar
@@ -215,30 +218,30 @@ public class DialogoConflictoNota extends Dialog {
 
     private void actualizarCamposAudio() {
         String audioSeleccionado = spinnerAudio.getSelectedItem().toString();
-        switch (audioSeleccionado){
+        switch (audioSeleccionado) {
             case "Audio local":
-                archivoAudio=local.audio.getArchivo();
+                archivoAudio = local.audio.getArchivo();
                 fechaAudio = local.audio.fechaFormateada();
                 break;
             case "Audio remoto":
-                archivoAudio=remoto.getAudio().getNombreArchivo();
-                fechaAudio = "Fecha del audio: "+remoto.getAudio().fechaFormateada();
+                archivoAudio = remoto.getAudio().getNombreArchivo();
+                fechaAudio = "Fecha del audio: " + remoto.getAudio().fechaFormateada();
                 break;
             case "Sin audio":
-                archivoAudio="";
-                fechaAudio="Sin audio";
+                archivoAudio = "";
+                fechaAudio = "Sin audio";
                 break;
         }
 
-        if (archivoAudio.equals("")){
+        if (archivoAudio.equals("")) {
             lbFecha.setText("Sin audio");
             btnStop.setVisibility(View.GONE);
             btnEscuchaAudio.setVisibility(View.GONE);
-        }else if(reproduciendo){
-                lbFecha.setText(fechaAudio);
-                btnStop.setVisibility(View.VISIBLE);
-                btnEscuchaAudio.setVisibility(View.GONE);
-        }else{
+        } else if (reproduciendo) {
+            lbFecha.setText(fechaAudio);
+            btnStop.setVisibility(View.VISIBLE);
+            btnEscuchaAudio.setVisibility(View.GONE);
+        } else {
             lbFecha.setText(fechaAudio);
             btnStop.setVisibility(View.GONE);
             btnEscuchaAudio.setVisibility(View.VISIBLE);
@@ -247,11 +250,9 @@ public class DialogoConflictoNota extends Dialog {
     }
 
 
-
-
     private void actualizarTitulo() {
         long id = spinnerTitulo.getSelectedItemId();
-        switch ((int) id){
+        switch ((int) id) {
             case 0:
                 lbNombre.setText(local.nota.getNombre());
                 break;
@@ -259,13 +260,14 @@ public class DialogoConflictoNota extends Dialog {
                 lbNombre.setText(remoto.getNombre());
                 break;
             case 2:
-                lbNombre.setText(local.nota.getNombre()+"-"+remoto.getNombre());
+                lbNombre.setText(local.nota.getNombre() + "-" + remoto.getNombre());
                 break;
         }
     }
+
     private void actualizarTexto() {
         long id = spinnerTexto.getSelectedItemId();
-        switch ((int) id){
+        switch ((int) id) {
             case 0:
                 lbTexto.setText(local.nota.getTexto());
                 break;
@@ -273,13 +275,56 @@ public class DialogoConflictoNota extends Dialog {
                 lbTexto.setText(remoto.getTexto());
                 break;
             case 2:
-                lbTexto.setText(local.nota.getTexto()+"\n"+remoto.getTexto());
+                lbTexto.setText(local.nota.getTexto() + "\n" + remoto.getTexto());
                 break;
         }
     }
 
     private void guardar() {
-        conflicto.setResuelto(local);
+
+
+        NotaEntity nota = new NotaEntity();
+        nota.setId(local.nota.getId());
+        nota.setNombre(lbNombre.getText().toString());
+        nota.setTexto(lbTexto.getText().toString());
+        nota.setEditado(true);
+        nota.setBorrado(false);
+        nota.setVersion(remoto.getVersion());
+        nota.setFecha(new Date(System.currentTimeMillis()));
+        nota.setCancion(local.nota.getCancion());
+        nota.setDestacado(false);
+
+        NotaAndAudio salida = new NotaAndAudio();
+        salida.nota = nota;
+
+        //coger audio local
+        if (spinnerAudio.getSelectedItemId() == 0) {
+            salida.audio = local.audio;
+        }
+        //coger audio remoto
+        else
+            salida.audio = MediadorDeEntidades.audioApiEntToAudioEntity(remoto.getAudio());
+
+
+        if (salida.audio != null) {
+            if (remoto.getAudio() == null) {
+                // v0 e0
+                salida.audio.setVersion(0);
+                salida.audio.setEditado(true);
+            } else {
+                if (remoto.getAudio().getNombreArchivo().equals(salida.audio.getArchivo())) {
+                    //vr e0
+                    salida.audio.setVersion(remoto.getAudio().getVersion());
+                    salida.audio.setEditado(false);
+                } else {
+                    //vr e1
+                    salida.audio.setVersion(remoto.getAudio().getVersion());
+                    salida.audio.setEditado(true);
+                }
+            }
+        }
+
+        conflicto.setResuelto(salida);
         conflicto.liberar();
         this.dismiss();
 
