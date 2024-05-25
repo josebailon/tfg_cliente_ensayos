@@ -71,6 +71,7 @@ public class ComprobadorModificacionesCanciones {
     }
 
     public void comprobarCancion(CancionEntity cancionLocal, CancionApiEnt cancionRemota) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
+        handler.onSendStatus("Comprobando midificaciones de cancion "+cancionLocal.getNombre());
         int estado = estadoCanciones(cancionLocal,cancionRemota);
         switch (estado){
             case V0_X:

@@ -82,7 +82,12 @@ public class VergrupodetalleFragment extends Fragment {
         // Inicialización del ViewModel
         viewModel = new ViewModelProvider(this).get(VergrupodetalleViewModel.class);
         //escuchar mensajes
-        viewModel.getMensaje().observe(getViewLifecycleOwner(),mensaje -> toast(mensaje.toString()));
+        viewModel.getMensaje().observe(getViewLifecycleOwner(),mensaje -> {
+            if (!TextUtils.isEmpty(mensaje)) {
+                toast(mensaje.toString());
+                viewModel.lipiarMensaje();
+            }
+        });
 
         //recoger datos
         viewModel.getGrupo(idgrupo).observe(getViewLifecycleOwner(), datos ->{

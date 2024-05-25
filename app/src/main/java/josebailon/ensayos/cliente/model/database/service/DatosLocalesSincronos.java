@@ -176,6 +176,10 @@ public class DatosLocalesSincronos {
     public void deleteAudio(AudioEntity audioLocal) {
         DB.audioDao().deleteAudio(audioLocal);
     }
+
+    public List<AudioEntity> getAllAudios(){
+        return DB.audioDao().getAllAudioSinc();
+    }
 }
 
 

@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import josebailon.ensayos.cliente.MainActivity;
 import josebailon.ensayos.cliente.R;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.databinding.FragmentInitBinding;

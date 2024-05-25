@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 import josebailon.ensayos.cliente.databinding.ActivityGrabadorBinding;
-import josebailon.ensayos.cliente.model.archivos.repository.ArchivosRepo;
+import josebailon.ensayos.cliente.model.archivos.ArchivosRepo;
 import josebailon.ensayos.cliente.model.grabacion.Grabador;
 import josebailon.ensayos.cliente.model.grabacion.GrabadorImpl;
 import josebailon.ensayos.cliente.model.grabacion.Reproductor;

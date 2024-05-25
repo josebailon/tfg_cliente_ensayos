@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import java.util.List;
 import java.util.UUID;
 
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
@@ -29,6 +30,9 @@ public interface AudioDao {
 
     @Query("SELECT * from audio where nota_id=:id")
     AudioEntity getAudioByIdSinc(UUID id);
+
+    @Query("SELECT * from audio")
+    List<AudioEntity> getAllAudioSinc();
 
 
 }

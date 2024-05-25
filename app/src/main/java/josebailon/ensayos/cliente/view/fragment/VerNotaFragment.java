@@ -1,31 +1,18 @@
 package josebailon.ensayos.cliente.view.fragment;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -33,17 +20,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.File;
-import java.util.UUID;
 
 import josebailon.ensayos.cliente.MainActivity;
 import josebailon.ensayos.cliente.R;
-import josebailon.ensayos.cliente.databinding.FragmentCrearEditarNotaBinding;
 import josebailon.ensayos.cliente.databinding.FragmentVerNotaBinding;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
-import josebailon.ensayos.cliente.viewmodel.CrearEditarNotaViewModel;
 import josebailon.ensayos.cliente.viewmodel.VerNotaViewModel;
 
 public class VerNotaFragment extends Fragment {

@@ -4,12 +4,17 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+import josebailon.ensayos.cliente.App;
+import josebailon.ensayos.cliente.model.archivos.ArchivosRepo;
+import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
+import josebailon.ensayos.cliente.model.database.service.DatosLocalesSincronos;
 import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.network.APIBuilder;
@@ -24,7 +29,7 @@ import josebailon.ensayos.cliente.model.sincronizacion.excepciones.TerminarSincr
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SincronizadorService extends Thread {
+public class SincronizadorService  {
 
 
     public static int R_OK = 0;
@@ -36,7 +41,9 @@ public class SincronizadorService extends Thread {
     private ISincronizadorFeedbackHandler handler;
     private String token;
     private int estado = 0;
+    private ArchivosRepo archivosRepo = ArchivosRepo.getInstance();
 
+    private DatosLocalesSincronos servicioDatosLocales = DatosLocalesSincronos.getInstance(App.getContext());
 
     MutableLiveData<Semaphore> s;
 
@@ -65,33 +72,6 @@ public class SincronizadorService extends Thread {
     }
 
 
-    @Override
-    public void run() {
-        super.run();
-
-        for (int i = 0; i < 15; i++) {
-            Log.i("JJBO", "" + i);
-            if (i == 10) {
-                Semaphore sem = new Semaphore(0);
-                ExecutorService e = Executors.newSingleThreadExecutor();
-
-                s.postValue(sem);
-
-
-                try {
-                    sem.acquire();
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
 
     public void iniciar() {
         executor.execute(() -> {
@@ -112,7 +92,20 @@ public class SincronizadorService extends Thread {
                 handler.onSendMessage("Hay problemas contactando con el servidor");
                 handler.onFinalizado();
             }
+
+            //limpieza
+            limpiarArchivos();
         });
+    }
+
+    private void limpiarArchivos() {
+        List<String> archivos = archivosRepo.getAllAudioFiles();
+        List<AudioEntity> audios =  servicioDatosLocales.getAllAudios();
+        for (String archivo: archivos) {
+            if (!audios.stream().filter(a -> a.getArchivo().equals(archivo)).findFirst().isPresent()){
+                archivosRepo.borrarAudio(archivo);
+            }
+        }
     }
 
 

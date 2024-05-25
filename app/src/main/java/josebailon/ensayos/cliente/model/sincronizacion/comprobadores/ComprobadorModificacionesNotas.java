@@ -12,7 +12,6 @@ import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados
 import static josebailon.ensayos.cliente.model.sincronizacion.CalculadoraEstados.estadoAudios;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.GsonBuilder;
 
@@ -23,14 +22,12 @@ import java.util.List;
 import java.util.UUID;
 
 import josebailon.ensayos.cliente.App;
-import josebailon.ensayos.cliente.model.archivos.service.ArchivosServicio;
+import josebailon.ensayos.cliente.model.archivos.ArchivosRepo;
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
-import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesSincronos;
 import josebailon.ensayos.cliente.model.network.model.entidades.AudioApiEnt;
-import josebailon.ensayos.cliente.model.network.model.entidades.CancionApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
 import josebailon.ensayos.cliente.model.network.service.APIservice;
 import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
@@ -44,7 +41,6 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
 import retrofit2.Response;
 
 public class ComprobadorModificacionesNotas {
@@ -55,7 +51,7 @@ public class ComprobadorModificacionesNotas {
     String token;
     SincronizadorService sincronizadorService;
     DatosLocalesSincronos servicioLocal;
-    ArchivosServicio archivosServicio = new ArchivosServicio();
+    ArchivosRepo archivosRepo = ArchivosRepo.getInstance();
     UUID idCancion;
     String nombreUsuario;
 
@@ -84,6 +80,7 @@ public class ComprobadorModificacionesNotas {
     }
 
     public void comprobarNota(NotaAndAudio notaLocal, NotaApiEnt notaRemota) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
+        handler.onSendStatus("Comprobando midificaciones de nota "+notaLocal.nota.getNombre());
         int estadoNota = estadoNotas(notaLocal.nota,notaRemota);
 
         switch (estadoNota){
@@ -185,9 +182,9 @@ public class ComprobadorModificacionesNotas {
         if (notaLocal.audio==null)
             return null;
         try {
-            if (!archivosServicio.existeAudio(notaLocal.audio.getArchivo()))
+            if (!archivosRepo.existeAudio(notaLocal.audio.getArchivo()))
                 return null;
-            File archivo = new File(archivosServicio.getAudio(notaLocal.audio.getArchivo()));
+            File archivo = new File(archivosRepo.getAudio(notaLocal.audio.getArchivo()));
             RequestBody fileRequestBody = RequestBody.create(MediaType.parse("audio/mpeg"), archivo);
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("archivo", archivo.getName(), fileRequestBody);
 
@@ -196,7 +193,7 @@ public class ComprobadorModificacionesNotas {
             switch (lr.code()) {
                 case 200:
                     servicioLocal.updateAudio(MediadorDeEntidades.audioApiEntToAudioEntity(lr.body()));
-                    archivosServicio.renombrar(notaLocal.audio.getArchivo(),lr.body().getNombreArchivo());
+                    archivosRepo.renombrar(notaLocal.audio.getArchivo(),lr.body().getNombreArchivo());
                     break;
                 case 409:
                     return new Conflicto<NotaAndAudio, NotaApiEnt>(Conflicto.T_NOTA,notaLocal,notaRemota);
@@ -252,7 +249,7 @@ public class ComprobadorModificacionesNotas {
     private void descargarAudios(Conflicto<NotaAndAudio, NotaApiEnt> conflicto) {
         try {
         //descargar los audios para comparar
-            if (conflicto.getLocal().audio!=null && !archivosServicio.existeAudio(conflicto.getLocal().audio.getArchivo())) {
+            if (conflicto.getLocal().audio!=null && !archivosRepo.existeAudio(conflicto.getLocal().audio.getArchivo())) {
                 Response<ResponseBody>  res = apIservice.descarga(conflicto.getLocal().nota.getId().toString(),token).execute();
                 if (res.code()==200) {
                     String header = res.headers().get("Content-Disposition");
@@ -260,12 +257,12 @@ public class ComprobadorModificacionesNotas {
                     //guardar descarga
 
                     try {
-                        archivosServicio.guardarBytes(res.body().byteStream(), nombre);
+                        archivosRepo.guardarBytes(res.body().byteStream(), nombre);
                     } catch (IOException e) {
                     }
                 }
             }
-            if (conflicto.getRemoto().getAudio()!=null && !archivosServicio.existeAudio(conflicto.getRemoto().getAudio().getNombreArchivo())) {
+            if (conflicto.getRemoto().getAudio()!=null && !archivosRepo.existeAudio(conflicto.getRemoto().getAudio().getNombreArchivo())) {
                 Response<ResponseBody>  res = apIservice.descarga(conflicto.getRemoto().getId(),token).execute();
                 if (res.code()==200) {
                     String header = res.headers().get("Content-Disposition");
@@ -273,7 +270,7 @@ public class ComprobadorModificacionesNotas {
                     //guardar descarga
 
                     try {
-                        archivosServicio.guardarBytes(res.body().byteStream(), nombre);
+                        archivosRepo.guardarBytes(res.body().byteStream(), nombre);
                     } catch (IOException e) {
                     }
                 }
@@ -337,9 +334,9 @@ public class ComprobadorModificacionesNotas {
         if (audioLocal==null)
             return;
         try {
-            if (!archivosServicio.existeAudio(audioLocal.getArchivo()))
+            if (!archivosRepo.existeAudio(audioLocal.getArchivo()))
                 return;
-            File archivo = new File( archivosServicio.getAudio(audioLocal.getArchivo()));
+            File archivo = new File( archivosRepo.getAudio(audioLocal.getArchivo()));
             RequestBody fileRequestBody = RequestBody.create(MediaType.parse("audio/mpeg"), archivo);
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("archivo", archivo.getName(), fileRequestBody);
 
@@ -348,7 +345,7 @@ public class ComprobadorModificacionesNotas {
             switch (lr.code()) {
                 case 200:
                     servicioLocal.updateAudio(MediadorDeEntidades.audioApiEntToAudioEntity(lr.body()));
-                    archivosServicio.renombrar(audioLocal.getArchivo(),lr.body().getNombreArchivo());
+                    archivosRepo.renombrar(audioLocal.getArchivo(),lr.body().getNombreArchivo());
                     break;
                 case 401:
                     throw new CredencialesErroneasException("");

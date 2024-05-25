@@ -2,7 +2,6 @@ package josebailon.ensayos.cliente.view.dialogos;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.media.Image;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -22,13 +21,11 @@ import java.util.Date;
 import java.util.List;
 
 import josebailon.ensayos.cliente.R;
-import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
-import josebailon.ensayos.cliente.model.network.model.entidades.CancionApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
 import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
@@ -302,8 +299,12 @@ public class DialogoConflictoNota extends Dialog {
             salida.audio = local.audio;
         }
         //coger audio remoto
-        else
-            salida.audio = MediadorDeEntidades.audioApiEntToAudioEntity(remoto.getAudio());
+        else {
+            if (remoto.getAudio() == null)
+                salida.audio = null;
+            else
+                salida.audio = MediadorDeEntidades.audioApiEntToAudioEntity(remoto.getAudio());
+        }
 
 
         if (salida.audio != null) {

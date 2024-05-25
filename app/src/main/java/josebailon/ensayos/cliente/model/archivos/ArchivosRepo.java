@@ -1,6 +1,7 @@
-package josebailon.ensayos.cliente.model.archivos.repository;
+package josebailon.ensayos.cliente.model.archivos;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
 import androidx.core.content.FileProvider;
 
@@ -9,10 +10,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import josebailon.ensayos.cliente.App;
-import josebailon.ensayos.cliente.model.archivos.Utiles;
 
 public class ArchivosRepo {
     public final String CARPETA_AUDIO="audio";
@@ -76,12 +79,6 @@ public class ArchivosRepo {
             return null;
     }
 
-    public boolean existeArchivo(String archivo) {
-        File directorio = App.getContext().getFilesDir();
-        File destino = new File(directorio, CARPETA_AUDIO+"/"+archivo);
-        boolean r =destino.exists();
-        return r;
-    }
 
     public void guardarBytes(InputStream inputStream, String nombre) throws IOException {
         File directorio = App.getContext().getFilesDir();
@@ -117,7 +114,7 @@ public class ArchivosRepo {
         return new File(App.getContext().getFilesDir(),CARPETA_TEMP+"/"+UUID.randomUUID()+".mp3");
     }
 
-    public Uri getUri(String archivo) {
+    public Uri generarUri(String archivo) {
 
         File file = new File(App.getContext().getFilesDir(),CARPETA_AUDIO+"/"+archivo);
         if (!file.exists())
@@ -126,8 +123,64 @@ public class ArchivosRepo {
     }
 
     public void renombrar(String origen, String destino) {
-        File orig = new File(App.getContext().getFilesDir(),CARPETA_AUDIO+"/"+origen);
-        File dest = new File(App.getContext().getFilesDir(),CARPETA_AUDIO+"/"+destino);
-        orig.renameTo(dest);
+        if (existeAudio(origen)) {
+            File orig = new File(App.getContext().getFilesDir(), CARPETA_AUDIO + "/" + origen);
+            File dest = new File(App.getContext().getFilesDir(), CARPETA_AUDIO + "/" + destino);
+            orig.renameTo(dest);
+        }
+    }
+
+
+
+
+
+
+    public void guardarUri(Uri uri, ArchivosRepo.CallbackGuardado callback){
+
+        String resultado = this.guardarUri(uri);
+
+        if (resultado==null){
+            callback.fracaso("No se pudo guardar el audio");
+        }else {
+            callback.exito(resultado);
+        }
+    }
+
+    public String getAudio(String archivo) {
+        return this.getPath(archivo);
+    }
+
+    public boolean existeAudio(String archivo) {
+        if (TextUtils.isEmpty(archivo))
+            return false;
+        File destino = new File(App.getContext().getFilesDir(), CARPETA_AUDIO+"/"+archivo);
+        return destino.exists();
+
+    }
+
+
+
+    public interface CallbackGuardado{
+        public void exito(String nombre);
+        public void fracaso(String mensaje);
+    }
+
+    public List<String> getAllAudioFiles(){
+        File folder =   new File(App.getContext().getFilesDir(),CARPETA_AUDIO);
+        List<File> listaArchivos = Arrays.asList(folder.listFiles());
+
+        return listaArchivos.stream()
+                .filter(file -> file.isFile() && !file.isDirectory())
+                .map(file -> file.getName())
+                .collect(Collectors.toList());
+    }
+
+    public void borrarAudio(String archivo){
+        if (TextUtils.isEmpty(archivo))
+            return;
+        File directorio = App.getContext().getFilesDir();
+        File destino = new File(directorio, CARPETA_AUDIO+"/"+archivo);
+        if (destino.isFile()&&!destino.isDirectory())
+            destino.delete();
     }
 }

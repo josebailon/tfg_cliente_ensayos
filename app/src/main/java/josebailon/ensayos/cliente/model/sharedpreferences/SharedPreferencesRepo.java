@@ -3,10 +3,14 @@ package josebailon.ensayos.cliente.model.sharedpreferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Map;
 
 import josebailon.ensayos.cliente.App;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
 
 public class SharedPreferencesRepo {
     private final String K_EMAIL="email";
@@ -16,8 +20,24 @@ public class SharedPreferencesRepo {
     private static volatile SharedPreferencesRepo instancia = null;
 
     private SharedPreferencesRepo(Context contexto) {
-        this.sharedPref = contexto.getSharedPreferences("sharedpref",Context.MODE_PRIVATE);
+        MasterKey masterKey = null;
+        try {
+            masterKey = new MasterKey.Builder(contexto)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+        this.sharedPref = EncryptedSharedPreferences.create(
+                contexto,
+                "sharedpref",
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
         this.editor = sharedPref.edit();
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static SharedPreferencesRepo getInstance() {

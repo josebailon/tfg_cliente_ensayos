@@ -60,6 +60,7 @@ public class ComprobadorModificacionesGrupos {
     }
 
     public void comprobarGrupo(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
+        handler.onSendStatus("Comprobando midificaciones de grupo "+grupoLocal.grupo.getNombre());
         int estado = CalculadoraEstados.estadoCanciones(grupoLocal.grupo,grupoRemoto);
         switch (estado){
             case V0_X:

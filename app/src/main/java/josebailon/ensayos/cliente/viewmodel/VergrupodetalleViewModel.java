@@ -151,4 +151,8 @@ public class VergrupodetalleViewModel extends ViewModel {
     public String getUsuario() {
         return sharedRepo.readLogin().getEmail();
     }
+
+    public void lipiarMensaje() {
+        this.mensaje.postValue("");
+    }
 }

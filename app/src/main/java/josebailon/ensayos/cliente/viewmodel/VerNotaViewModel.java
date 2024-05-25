@@ -13,7 +13,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import josebailon.ensayos.cliente.App;
-import josebailon.ensayos.cliente.model.archivos.service.ArchivosServicio;
+import josebailon.ensayos.cliente.model.archivos.ArchivosRepo;
 import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
@@ -32,7 +32,7 @@ public class VerNotaViewModel extends ViewModel {
     public final int MODO_EDICION=1;
 
     private DatosLocalesAsincronos servicioDb = DatosLocalesAsincronos.getInstance(App.getContext());
-    private ArchivosServicio servicioArchivos = new ArchivosServicio();
+    private ArchivosRepo archivosRepo = ArchivosRepo.getInstance();
     private AudioApiRepo audioApiRepo = AudioApiRepo.getInstance();
     private AuthApiRepo authApiRepo = AuthApiRepo.getInstance();
 
@@ -89,13 +89,13 @@ public class VerNotaViewModel extends ViewModel {
 
 
       public String getRutaAudio() {
-        return servicioArchivos.getAudio(notaAndAudio.getValue().audio.getArchivo());
+        return archivosRepo.getAudio(notaAndAudio.getValue().audio.getArchivo());
     }
 
     public boolean existeArchivo() {
         if (notaAndAudio.getValue()==null ||notaAndAudio.getValue().audio==null)
             return false;
-        boolean r= servicioArchivos.existeAudio(notaAndAudio.getValue().audio.getArchivo());
+        boolean r= archivosRepo.existeAudio(notaAndAudio.getValue().audio.getArchivo());
         return r;
     }
 
@@ -125,7 +125,7 @@ public class VerNotaViewModel extends ViewModel {
                                             //guardar descarga
 
                                             try {
-                                                servicioArchivos.guardarBytes(response.body().byteStream(), nombre);
+                                                archivosRepo.guardarBytes(response.body().byteStream(), nombre);
                                             } catch (IOException e) {
                                                 mensaje.setValue("No se ha podido descargar el archivo");
                                             }
@@ -154,7 +154,7 @@ public class VerNotaViewModel extends ViewModel {
     }
 
     public Uri getUriDeAudio(String archivo){
-        return servicioArchivos.generarUri(archivo);
+        return archivosRepo.generarUri(archivo);
     }
 
     public LiveData<CancionEntity> getCancion() {

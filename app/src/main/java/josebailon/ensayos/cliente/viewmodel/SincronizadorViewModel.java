@@ -7,9 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.concurrent.Semaphore;
-
-import josebailon.ensayos.cliente.model.archivos.service.ArchivosServicio;
+import josebailon.ensayos.cliente.model.archivos.ArchivosRepo;
 import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadorFeedbackHandler;
 import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
@@ -22,7 +20,7 @@ public class SincronizadorViewModel extends AndroidViewModel implements ISincron
 
     MutableLiveData<Conflicto<?,?>> conflicto = new MutableLiveData<>();
     SincronizadorService sincronizadorService;
-    ArchivosServicio archivosServicio;
+    ArchivosRepo archivosRepo;
     MutableLiveData<Boolean> sincronizando =new MutableLiveData<>(false);
 
 
@@ -47,7 +45,7 @@ public class SincronizadorViewModel extends AndroidViewModel implements ISincron
     }
 
     public void iniciar(){
-        archivosServicio=new ArchivosServicio();
+        archivosRepo =ArchivosRepo.getInstance();
         sincronizando.setValue(true);
         sincronizadorService=new SincronizadorService(this);
         sincronizadorService.iniciar();
@@ -81,10 +79,10 @@ public class SincronizadorViewModel extends AndroidViewModel implements ISincron
 
 
     public String getRutaAudio(String archivo) {
-        return archivosServicio.getAudio(archivo);
+        return archivosRepo.getAudio(archivo);
     }
 
     public boolean existeArchivo(String archivoAudio) {
-        return archivosServicio.existeAudio(archivoAudio);
+        return archivosRepo.existeAudio(archivoAudio);
     }
 }

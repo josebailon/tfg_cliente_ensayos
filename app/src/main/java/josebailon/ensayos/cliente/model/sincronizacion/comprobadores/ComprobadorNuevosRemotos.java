@@ -52,6 +52,7 @@ public class ComprobadorNuevosRemotos {
     }
 
     private void insertarGrupos() {
+        handler.onSendStatus("Agregando nuevos grupos");
         for (GrupoApiEnt grupoRemoto : gruposRemotos) {
             GrupoAndUsuariosAndCanciones grupoLocal = servicioLocal.getGrupoWithUsuariosAndCanciones(UUID.fromString(grupoRemoto.getId()));
             if (grupoLocal == null) {
@@ -72,6 +73,7 @@ public class ComprobadorNuevosRemotos {
     }
 
     private void insertarCanciones(GrupoApiEnt grupoRemoto,boolean comprobar) {
+        handler.onSendStatus("Agregando nuevas canciones");
         for (CancionApiEnt cancionRemota : grupoRemoto.getCanciones()) {
             boolean existeLaCancionLocal = false;
             if (comprobar) {
@@ -87,6 +89,7 @@ public class ComprobadorNuevosRemotos {
     }
 
     private void insertarNotas(CancionApiEnt cancionRemota, boolean comprobar) {
+        handler.onSendStatus("Agregando nuevas notas");
         for (NotaApiEnt notaRemota : cancionRemota.getNotas()) {
             boolean existeLaNotaLocal = false;
             if (comprobar) {
@@ -102,6 +105,7 @@ public class ComprobadorNuevosRemotos {
     }
 
     private void insertarAudio(NotaApiEnt notaRemota, boolean comprobar) {
+        handler.onSendStatus("Agregando nuevos audios");
         AudioApiEnt audioRemoto = notaRemota.getAudio();
         if (audioRemoto==null)
             return;
@@ -114,7 +118,6 @@ public class ComprobadorNuevosRemotos {
             AudioEntity nuevoLocal = MediadorDeEntidades.audioApiEntToAudioEntity(audioRemoto);
             servicioLocal.insertAudio(nuevoLocal);
         }
-
     }
 
 }
