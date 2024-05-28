@@ -27,12 +27,37 @@ import josebailon.ensayos.cliente.model.network.model.entidades.UsuarioApiEnt;
 import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 
+/**
+ * Logica de la vista dialogo de resolucion de conflicto de grupo
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class DialogoConflictoGrupo extends Dialog {
-    Conflicto<GrupoAndUsuariosAndCanciones,GrupoApiEnt> conflicto;
-    GrupoAndUsuariosAndCanciones local;
-    GrupoApiEnt remoto;
-    GrupoAndUsuariosAndCanciones fusion;
+    /**
+     * Conflicto a resolver
+     */
+    private Conflicto<GrupoAndUsuariosAndCanciones,GrupoApiEnt> conflicto;
 
+    /**
+     * Grupo local
+     */
+    private GrupoAndUsuariosAndCanciones local;
+
+    /**
+     * Grupo remoto
+     */
+    private GrupoApiEnt remoto;
+
+    /**
+     * Grupo fusionado
+     */
+    private GrupoAndUsuariosAndCanciones fusion;
+
+    /**
+     * Constructor
+     * @param context Contexto del dialogo
+     * @param conflicto El conflicto a resolver
+     */
     public DialogoConflictoGrupo(@NonNull Context context, Conflicto<GrupoAndUsuariosAndCanciones,GrupoApiEnt> conflicto) {
         super(context);
         this.conflicto=conflicto;
@@ -43,6 +68,9 @@ public class DialogoConflictoGrupo extends Dialog {
         this.setCanceledOnTouchOutside(false);
     }
 
+    /**
+     * Preparar grupo fusionado
+     */
     private void prepararFusion() {
         fusion = new GrupoAndUsuariosAndCanciones();
         fusion.grupo=new GrupoEntity();
@@ -83,6 +111,9 @@ public class DialogoConflictoGrupo extends Dialog {
 
     }
 
+    /**
+     * Preparar elementos de la interfaz rellenandola y configurando eventos
+     */
     private void prepararInterface() {
         this.setContentView(R.layout.dialogo_conflicto_grupo);
         Window window = this.getWindow();

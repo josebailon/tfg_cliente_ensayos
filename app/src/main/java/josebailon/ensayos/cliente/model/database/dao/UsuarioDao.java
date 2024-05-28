@@ -14,6 +14,11 @@ import java.util.UUID;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 
 
+/**
+ * Dao Room de la entidad Usuario
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Dao
 public interface UsuarioDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

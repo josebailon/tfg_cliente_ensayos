@@ -11,6 +11,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Entidad Room Grupo
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Entity(tableName = "grupo")
 public class GrupoEntity {
     @PrimaryKey(autoGenerate = false)

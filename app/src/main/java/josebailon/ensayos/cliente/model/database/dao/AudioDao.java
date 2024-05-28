@@ -14,6 +14,11 @@ import java.util.UUID;
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 
 
+/**
+ * Dao Room de la entidad Audio
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Dao
 public interface AudioDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

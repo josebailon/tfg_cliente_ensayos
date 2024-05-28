@@ -36,6 +36,11 @@ import josebailon.ensayos.cliente.view.adapter.NotasConAudioAdapter;
 import josebailon.ensayos.cliente.view.adapter.UsuariosAdapter;
 import josebailon.ensayos.cliente.viewmodel.VercanciondetalleViewModel;
 
+/**
+ * Fragment para ver detalles de una cancion
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class VercanciondetalleFragment extends Fragment {
 
 
@@ -45,10 +50,10 @@ public class VercanciondetalleFragment extends Fragment {
 
     private NotasConAudioAdapter adaptadorNotas;
     private UsuariosAdapter adaptadorUsuarios;
-    List<NotaAndAudio> notasActuales=null;
-    List<UsuarioEntity> usuariosActuales =null;
+    private List<NotaAndAudio> notasActuales=null;
+    private List<UsuarioEntity> usuariosActuales =null;
 
-    UUID idcancion;
+    private UUID idcancion;
     private CancionEntity cancion;
 
     @Override
@@ -109,9 +114,11 @@ public class VercanciondetalleFragment extends Fragment {
     }
 
 
-
+    /**
+     * Lanzar el fragment para crear y editar notas de una cancion
+     * @param uuid id de la nota. POner a null para crear o pasar la id para editar
+     */
     private void mostrarFragmentCrearEditarNota(String uuid) {
-
         Bundle bundle = new Bundle();
         bundle.putString("idnota", uuid);
         bundle.putString("idcancion", idcancion.toString());
@@ -120,6 +127,10 @@ public class VercanciondetalleFragment extends Fragment {
     }
 
 
+    /**
+     * Toast de mensaje
+     * @param msg
+     */
     private void toast(String msg) {
         Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
@@ -139,6 +150,11 @@ public class VercanciondetalleFragment extends Fragment {
         }
     }
 
+    /**
+     * Muestra el menu contextual de una nota
+     * @param position Posicion en la lista
+     * @return True si se ha manejado
+     */
     public boolean mostrarMenuNota(int position) {
         PopupMenu popupMenu = new PopupMenu(getContext() , binding.verNotasRecycleView.getChildAt(position).findViewById(R.id.nombre));
         popupMenu.inflate(R.menu.contextmenu);
@@ -156,21 +172,27 @@ public class VercanciondetalleFragment extends Fragment {
     }
 
 
+    /**
+     * Borra una nota
+     * @param nota La nota
+     */
     private void borrarNota(NotaEntity nota) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Eliminación")
                 .setMessage("¿Quieres borrar la nota "+nota.getNombre()+"?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton("SÍ",(dialog, which) -> {
+                .setPositiveButton("SI",(dialog, which) -> {
                     viewModel.borrarNota(nota);
                 })
                 .setNegativeButton("NO", null)
                 .show();
     }
 
+    /**
+     * Navega hacia el fragmento de vista de detalle de una nota
+     * @param id La id de la nota
+     */
     public void verNota(UUID id) {
-
-
         Bundle bundle = new Bundle();
         bundle.putString("idnota", id.toString());
         NavHostFragment.findNavController(VercanciondetalleFragment.this)
@@ -179,6 +201,9 @@ public class VercanciondetalleFragment extends Fragment {
 
     }
 
+    /**
+     * Muestra el menu de acciones
+     */
     private void mostrarMenuAcciones() {
         getActivity().addMenuProvider( new MenuProvider(){
 

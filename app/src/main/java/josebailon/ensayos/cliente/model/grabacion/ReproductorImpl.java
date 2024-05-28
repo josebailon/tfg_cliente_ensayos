@@ -13,10 +13,31 @@ import java.io.File;
 
 import josebailon.ensayos.cliente.App;
 
+/**
+ * Implementacion del reproductor
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class ReproductorImpl implements Reproductor{
+
+    /**
+     * Player
+     */
     private MediaPlayer player;
+
+    /**
+     * Media controller
+     */
     private MediaController mediaController;
+
+    /**
+     * Vista padre de la interfaz del media controller
+     */
     private View vista;
+
+    /**
+     * Callback de onMedioTerminado
+     */
     private OnMedioTerminado mt;
 
 

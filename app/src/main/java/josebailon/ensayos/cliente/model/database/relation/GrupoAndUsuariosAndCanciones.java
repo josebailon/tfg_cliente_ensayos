@@ -10,6 +10,12 @@ import josebailon.ensayos.cliente.model.database.entity.CancionEntity;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 
+
+/**
+ * Relacion Room N:M entre usuario y grupo y 1:N entre grupo y notas
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class GrupoAndUsuariosAndCanciones {
     @Embedded
     public GrupoEntity grupo;

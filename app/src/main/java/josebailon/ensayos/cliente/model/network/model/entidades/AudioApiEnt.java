@@ -7,6 +7,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Entidad RetroFit para la recepcion de Audio
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class AudioApiEnt {
 
     @SerializedName("id")

@@ -18,6 +18,12 @@ import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.databinding.FragmentInitBinding;
 import josebailon.ensayos.cliente.viewmodel.InitViewModel;
 
+/**
+ * Fragment inicial. Se encarga de comprobar si ya se ha establecido usuario y en funcion de eso
+ * salta hacia el login/registro o la visualizacion de grupos
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class InitFragment extends Fragment {
 
     private FragmentInitBinding binding;
@@ -41,7 +47,7 @@ public class InitFragment extends Fragment {
         // Inicialización del ViewModel
         InitViewModel viewModel = new ViewModelProvider(this).get(InitViewModel.class);
         // Observar cambios en el estado
-        viewModel.comprobar().observe(getViewLifecycleOwner(), integer -> {
+        viewModel.checkEstado().observe(getViewLifecycleOwner(), integer -> {
             switch (integer) {
                 case InitViewModel.LOGINOK:
                     // ir a grupos
@@ -83,15 +89,5 @@ public class InitFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
-//    @Override
-//    public void onResume() {
-////        super.onResume();
-////        if (((MainActivity) requireActivity()).getSupportActionBar() != null) {
-////            ((MainActivity) requireActivity()).getSupportActionBar().hide();
-////        }
-//    }
-
 
 }

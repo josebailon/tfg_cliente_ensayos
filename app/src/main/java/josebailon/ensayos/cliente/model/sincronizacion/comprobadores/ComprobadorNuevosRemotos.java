@@ -24,18 +24,60 @@ import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadorFeedbackHan
 import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
 import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
 
+
+/**
+ * Comprueba si hay nuevas entidades remotas que haya que crear de manera local
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class ComprobadorNuevosRemotos {
-    APIservice apIservice;
+
+    /**
+     * Sevicio de acceso a la web API
+     */
+    private APIservice apIservice;
+
+    /**
+     * Repositioro de Shared preferences
+     */
     private SharedPreferencesRepo sharedPreferencesRepo;
 
-    ISincronizadorFeedbackHandler handler;
-    String token;
-    SincronizadorService sincronizadorService;
-    DatosLocalesSincronos servicioLocal;
-    List<GrupoApiEnt> gruposRemotos;
-    String nombreUsuario;
+    /**
+     * Handler de escucha a la sincronizacion
+     */
+    private ISincronizadorFeedbackHandler handler;
+
+    /**
+     * Token de acceso
+     */
+    private String token;
+
+    /**
+     * Servicio de sincronizacion
+     */
+    private SincronizadorService sincronizadorService;
+
+    /**
+     * Servicio de acceso sincrono a la base de datos
+     */
+    private DatosLocalesSincronos servicioLocal;
+
+    /**
+     * Grupos remotos
+     */
+    private List<GrupoApiEnt> gruposRemotos;
+
+    /**
+     * Nombre de usuario
+     */
+    private String nombreUsuario;
 
 
+    /**
+     * Constructor
+     * @param sincronizadorService Servicio de sincronizacion
+     * @param gruposRemotos Lista de grupos remotos
+     */
     public ComprobadorNuevosRemotos(SincronizadorService sincronizadorService, List<GrupoApiEnt> gruposRemotos) {
         this.sincronizadorService = sincronizadorService;
         this.apIservice = sincronizadorService.getApIservice();
@@ -47,10 +89,17 @@ public class ComprobadorNuevosRemotos {
         this.nombreUsuario = sharedPreferencesRepo.readLogin().getEmail();
     }
 
+    /**
+     * Inicia el proceso de comprobacion de nuevas entidades
+     */
     public void iniciar() {
         insertarGrupos();
     }
 
+
+    /**
+     * Inserta los nuevos grupos encontrados en  remoto
+     */
     private void insertarGrupos() {
         handler.onSendStatus("Agregando nuevos grupos");
         for (GrupoApiEnt grupoRemoto : gruposRemotos) {
@@ -65,6 +114,11 @@ public class ComprobadorNuevosRemotos {
         }
 
     }
+
+    /**
+     * Inserta los nuevos usuarios definidos en cada nuevo grupo remoto
+     * @param grupoRemoto
+     */
     private void insertarUsuarios(GrupoApiEnt grupoRemoto) {
         for (UsuarioApiEnt usuarioRemoto : grupoRemoto.getUsuarios()) {
                 UsuarioEntity nuevoUsuario = MediadorDeEntidades.crearUsuarioEntityParaGrupo(grupoRemoto.getId(), usuarioRemoto.getEmail());
@@ -72,6 +126,11 @@ public class ComprobadorNuevosRemotos {
         }
     }
 
+    /**
+     * Inserta la nuevas canciones encontradas en remoto
+     * @param grupoRemoto El grupo del que analizar las canciones
+     * @param comprobar True si debe comprobar si las canciones son nuevas. False para que las inserte directametne
+     */
     private void insertarCanciones(GrupoApiEnt grupoRemoto,boolean comprobar) {
         handler.onSendStatus("Agregando nuevas canciones");
         for (CancionApiEnt cancionRemota : grupoRemoto.getCanciones()) {
@@ -88,6 +147,11 @@ public class ComprobadorNuevosRemotos {
         }
     }
 
+    /**
+     * Inserta la nuevas notas encontradas en remoto
+     * @param cancionRemota La cancion de la que analizar las notas
+     * @param comprobar True si debe comprobar si las notas son nuevas. False para que las inserte directametne
+     */
     private void insertarNotas(CancionApiEnt cancionRemota, boolean comprobar) {
         handler.onSendStatus("Agregando nuevas notas");
         for (NotaApiEnt notaRemota : cancionRemota.getNotas()) {
@@ -104,6 +168,11 @@ public class ComprobadorNuevosRemotos {
         }
     }
 
+    /**
+     * Inserta la nuevos audios encontrados en remoto
+     * @param notaRemota La nota del que analizar las canciones
+     * @param comprobar True si debe comprobar si los audios son nuevos. False para que las inserte directametne
+     */
     private void insertarAudio(NotaApiEnt notaRemota, boolean comprobar) {
         handler.onSendStatus("Agregando nuevos audios");
         AudioApiEnt audioRemoto = notaRemota.getAudio();

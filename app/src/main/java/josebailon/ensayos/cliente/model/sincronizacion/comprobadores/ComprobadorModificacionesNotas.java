@@ -43,19 +43,63 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
+/**
+ * Comprueba si hay modificaciones en los notas y audios y maneja la sincronizacion adecuada
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class ComprobadorModificacionesNotas {
+
+    /**
+     * Sevicio de acceso a la web API
+     */
     APIservice apIservice;
+    /**
+     * Repositorio de shared preferences
+     */
     private SharedPreferencesRepo sharedPreferencesRepo;
 
+    /**
+     * Handler que escucha la respuesta de la sincronizacion
+     */
     ISincronizadorFeedbackHandler handler;
+
+    /**
+     * Token de acceso
+     */
     String token;
+
+    /**
+     * Servicio de sincronizacion
+     */
     SincronizadorService sincronizadorService;
+
+    /**
+     * Servicio de acceso sincrono a la base de datos local
+     */
     DatosLocalesSincronos servicioLocal;
+
+    /**
+     * Repositorio e archivos locales
+     */
     ArchivosRepo archivosRepo = ArchivosRepo.getInstance();
+
+    /**
+     * UUID de la cancion a la que pertenecen las notas
+     */
     UUID idCancion;
+
+    /**
+     * Nombre de usuario local
+     */
     String nombreUsuario;
 
 
+    /**
+     * Constructor
+     *
+     * @param sincronizadorService Servicio de sincronizacion
+     */
     public ComprobadorModificacionesNotas(SincronizadorService sincronizadorService) {
         this.sincronizadorService = sincronizadorService;
         this.apIservice = sincronizadorService.getApIservice();
@@ -67,23 +111,40 @@ public class ComprobadorModificacionesNotas {
     }
 
 
-
+    /**
+     * Itera una lista de notas analizando cada una
+     *
+     * @param idCancion    La UUID de la cancion a la que pertenecen
+     * @param notasRemotas Lista de notas remotas
+     * @throws CredencialesErroneasException   Si hay problema de credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     * @throws IOException                     Si se ha producido un error
+     */
     public void comprobarNotas(UUID idCancion, List<NotaApiEnt> notasRemotas) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
         this.idCancion = idCancion;
         List<NotaAndAudio> notasLocales = servicioLocal.getNotasWithAudioByCancionId(this.idCancion);
-        if (notasRemotas==null)
-            notasRemotas=new ArrayList<>();
+        if (notasRemotas == null)
+            notasRemotas = new ArrayList<>();
         for (NotaAndAudio notaLocal : notasLocales) {
-                NotaApiEnt notaRemota = notasRemotas.stream().filter(nota -> UUID.fromString(nota.getId()).equals(notaLocal.nota.getId())).findFirst().orElse(null);
-                comprobarNota(notaLocal,notaRemota);
-                }
+            NotaApiEnt notaRemota = notasRemotas.stream().filter(nota -> UUID.fromString(nota.getId()).equals(notaLocal.nota.getId())).findFirst().orElse(null);
+            comprobarNota(notaLocal, notaRemota);
+        }
     }
 
+    /**
+     * Comprueba las modificaciones de una nota
+     *
+     * @param notaLocal  La nota local
+     * @param notaRemota La nota remota
+     * @throws CredencialesErroneasException   Si hay problema de credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     * @throws IOException                     Si se ha producido un error
+     */
     public void comprobarNota(NotaAndAudio notaLocal, NotaApiEnt notaRemota) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
-        handler.onSendStatus("Comprobando midificaciones de nota "+notaLocal.nota.getNombre());
-        int estadoNota = estadoNotas(notaLocal.nota,notaRemota);
+        handler.onSendStatus("Comprobando midificaciones de nota " + notaLocal.nota.getNombre());
+        int estadoNota = estadoNotas(notaLocal.nota, notaRemota);
 
-        switch (estadoNota){
+        switch (estadoNota) {
             case V0_X:
                 agregarAlServidor(notaLocal.nota);
                 agregarAudioAlServidor(notaLocal.audio);
@@ -92,20 +153,20 @@ public class ComprobadorModificacionesNotas {
                 eliminarLocal(notaLocal.nota);
                 break;
             case SVN_VQ:
-                actualizarLocal(notaLocal,notaRemota);
-                actualizarAudioLocal(notaLocal.audio,notaRemota.getAudio());
+                actualizarLocal(notaLocal, notaRemota);
+                actualizarAudioLocal(notaLocal.audio, notaRemota.getAudio());
                 break;
             case EVN_VN:
                 //actualizar servidor
-                Conflicto<NotaAndAudio, NotaApiEnt> conflicto = actualizarServidorConDatosLocales(notaLocal,notaRemota);
+                Conflicto<NotaAndAudio, NotaApiEnt> conflicto = actualizarServidorConDatosLocales(notaLocal, notaRemota);
                 //si hay conflicto resolverlo
-                if (conflicto!=null){
+                if (conflicto != null) {
                     resolverConflicto(conflicto);
                 }
                 break;
             case EVN_VQ:
-                    Conflicto conflictoDirecto = new Conflicto<NotaAndAudio, NotaApiEnt>(Conflicto.T_NOTA,notaLocal,notaRemota);
-                    resolverConflicto(conflictoDirecto);
+                Conflicto conflictoDirecto = new Conflicto<NotaAndAudio, NotaApiEnt>(Conflicto.T_NOTA, notaLocal, notaRemota);
+                resolverConflicto(conflictoDirecto);
                 break;
             case B_VN:
                 eliminarLocal(notaLocal.nota);
@@ -118,24 +179,32 @@ public class ComprobadorModificacionesNotas {
 
         }
 
-}
+    }
 
-
-    private Conflicto<NotaAndAudio,NotaApiEnt> actualizarServidorConDatosLocales(NotaAndAudio notaLocal, NotaApiEnt notaRemota) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
+    /**
+     * Actualiza el servidor con los datos locales de una cancion. Si se actualiza con exito lanza la actualizacion del audio asociado
+     * @param notaLocal Nota local
+     * @param notaRemota Nota remota
+     * @return Conflicto si hay respuesta 409 o null si no
+     * @throws CredencialesErroneasException Si hay problema de credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     * @throws IOException Si se ha producido un error
+     */
+    private Conflicto<NotaAndAudio, NotaApiEnt> actualizarServidorConDatosLocales(NotaAndAudio notaLocal, NotaApiEnt notaRemota) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
 
         //actualizar nota
-        Response<NotaApiEnt> lr=null;
+        Response<NotaApiEnt> lr = null;
         try {
             lr = apIservice.updateNota(notaLocal.nota, token).execute();
             switch (lr.code()) {
                 case 200:
-                    servicioLocal.updateNota(MediadorDeEntidades.notaApiEntToNotaEntity(notaLocal.nota.getCancion().toString(),lr.body()));
+                    servicioLocal.updateNota(MediadorDeEntidades.notaApiEntToNotaEntity(notaLocal.nota.getCancion().toString(), lr.body()));
                     //ver si hay que acutalizar audio y devolver su resultado que puede ser un conflicto o nulo
-                    return actualizarServidorConAudioLocal(notaLocal,notaRemota);
+                    return actualizarServidorConAudioLocal(notaLocal, notaRemota);
                 case 409:
                     //si hay conflicto devolverlo
-                    NotaApiEnt remotoModificado = new GsonBuilder().create().fromJson(lr.errorBody().string(),NotaApiEnt.class);
-                    return new Conflicto<NotaAndAudio, NotaApiEnt>(Conflicto.T_NOTA,notaLocal,remotoModificado);
+                    NotaApiEnt remotoModificado = new GsonBuilder().create().fromJson(lr.errorBody().string(), NotaApiEnt.class);
+                    return new Conflicto<NotaAndAudio, NotaApiEnt>(Conflicto.T_NOTA, notaLocal, remotoModificado);
                 case 401:
                     throw new CredencialesErroneasException("");
                 default:
@@ -148,16 +217,26 @@ public class ComprobadorModificacionesNotas {
         return null;
     }
 
+
+    /**
+     * Analiza un audio y lo elimina o actualiza del servidor segun corresponda
+     * @param notaLocal La nota local
+     * @param notaRemota La nota remota
+     * @return Conflicto si hay que actualizar y se genera conflicto. Null en otro caso
+     * @throws CredencialesErroneasException Si hay problema de credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     * @throws IOException Si se ha producido un error
+     */
     private Conflicto<NotaAndAudio, NotaApiEnt> actualizarServidorConAudioLocal(NotaAndAudio notaLocal, NotaApiEnt notaRemota) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
 
-        String fileLocal = (notaLocal.audio!=null)?notaLocal.audio.getArchivo():"";
-        String fileRemoto = (notaRemota.getAudio()!=null)?notaRemota.getAudio().getNombreArchivo():"";
+        String fileLocal = (notaLocal.audio != null) ? notaLocal.audio.getArchivo() : "";
+        String fileRemoto = (notaRemota.getAudio() != null) ? notaRemota.getAudio().getNombreArchivo() : "";
 
         if (TextUtils.isEmpty(fileLocal))
             return null;
 
-        int estadoAudio = estadoAudios(notaLocal.audio,(notaRemota!=null)?notaRemota.getAudio():null);
-        switch (estadoAudio){
+        int estadoAudio = estadoAudios(notaLocal.audio, (notaRemota != null) ? notaRemota.getAudio() : null);
+        switch (estadoAudio) {
             case B_VN:
             case X_VN:
                 eliminarAudioDelServidor(notaLocal.audio);
@@ -171,15 +250,23 @@ public class ComprobadorModificacionesNotas {
             case EVN_VN:
             case SVN_VQ:
             case EVN_VQ:
-                if(!fileLocal.equals(fileRemoto)&&notaRemota.getAudio()!=null)
+                if (!fileLocal.equals(fileRemoto) && notaRemota.getAudio() != null)
                     notaLocal.audio.setVersion(notaRemota.getAudio().getVersion());
-                return actualizarAudioAlServidor(notaLocal,notaRemota);
+                return actualizarAudioAlServidor(notaLocal, notaRemota);
         }
         return null;
     }
 
+    /**
+     * Actualiza un audio en el servidor
+     * @param notaLocal Nota local
+     * @param notaRemota Nota remota
+     * @return conflicto si la respuesta es 409 o null en otro caso
+     * @throws CredencialesErroneasException
+     * @throws TerminarSincronizacionException
+     */
     private Conflicto<NotaAndAudio, NotaApiEnt> actualizarAudioAlServidor(NotaAndAudio notaLocal, NotaApiEnt notaRemota) throws CredencialesErroneasException, TerminarSincronizacionException {
-        if (notaLocal.audio==null)
+        if (notaLocal.audio == null)
             return null;
         try {
             if (!archivosRepo.existeAudio(notaLocal.audio.getArchivo()))
@@ -193,10 +280,10 @@ public class ComprobadorModificacionesNotas {
             switch (lr.code()) {
                 case 200:
                     servicioLocal.updateAudio(MediadorDeEntidades.audioApiEntToAudioEntity(lr.body()));
-                    archivosRepo.renombrar(notaLocal.audio.getArchivo(),lr.body().getNombreArchivo());
+                    archivosRepo.renombrar(notaLocal.audio.getArchivo(), lr.body().getNombreArchivo());
                     break;
                 case 409:
-                    return new Conflicto<NotaAndAudio, NotaApiEnt>(Conflicto.T_NOTA,notaLocal,notaRemota);
+                    return new Conflicto<NotaAndAudio, NotaApiEnt>(Conflicto.T_NOTA, notaLocal, notaRemota);
                 case 401:
                     throw new CredencialesErroneasException("");
                 default:
@@ -208,10 +295,16 @@ public class ComprobadorModificacionesNotas {
         return null;
     }
 
+    /**
+     * Elimina un audio del servidor
+     * @param audio El audio
+     * @throws IOException Si ha habido un error
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
     private void eliminarAudioDelServidor(AudioEntity audio) throws IOException, TerminarSincronizacionException {
 
         try {
-            Response<ResponseBody> lr =  apIservice.deleteAudio(audio.getNota_id().toString(),token).execute();
+            Response<ResponseBody> lr = apIservice.deleteAudio(audio.getNota_id().toString(), token).execute();
             switch (lr.code()) {
                 case 401:
                     throw new CredencialesErroneasException("");
@@ -221,7 +314,12 @@ public class ComprobadorModificacionesNotas {
         }
     }
 
-    private void resolverConflicto(Conflicto<NotaAndAudio, NotaApiEnt> conflicto) throws  TerminarSincronizacionException {
+    /**
+     * Lanza la resolucion de un conflicto de nota/audio y espera a su resolucion
+     * @param conflicto El conflicto
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
+    private void resolverConflicto(Conflicto<NotaAndAudio, NotaApiEnt> conflicto) throws TerminarSincronizacionException {
 
         descargarAudios(conflicto);
 
@@ -232,26 +330,30 @@ public class ComprobadorModificacionesNotas {
             //esperar resolucion
             conflicto.esperar();
             //recoger solucion
-            NotaAndAudio solucion =conflicto.getResuelto();
+            NotaAndAudio solucion = conflicto.getResuelto();
             //actualizar en local y en remoto con la eleccion de solucion
             servicioLocal.updateNota(solucion.nota);
             if (solucion.audio == null)
                 servicioLocal.deleteAudio(servicioLocal.getAudioById(solucion.nota.getId()));
             else
                 servicioLocal.updateAudio(solucion.audio);
-            comprobarNota(solucion,conflicto.getRemoto());
+            comprobarNota(solucion, conflicto.getRemoto());
         } catch (InterruptedException | CredencialesErroneasException |
                  TerminarSincronizacionException | IOException e) {
             throw new TerminarSincronizacionException("Sincronización terminada");
         }
     }
 
+    /**
+     * Descarga los audios asociados a un conflicto
+     * @param conflicto El conflicto
+     */
     private void descargarAudios(Conflicto<NotaAndAudio, NotaApiEnt> conflicto) {
         try {
-        //descargar los audios para comparar
-            if (conflicto.getLocal().audio!=null && !archivosRepo.existeAudio(conflicto.getLocal().audio.getArchivo())) {
-                Response<ResponseBody>  res = apIservice.descarga(conflicto.getLocal().nota.getId().toString(),token).execute();
-                if (res.code()==200) {
+            //descargar los audios para comparar
+            if (conflicto.getLocal().audio != null && !archivosRepo.existeAudio(conflicto.getLocal().audio.getArchivo())) {
+                Response<ResponseBody> res = apIservice.descarga(conflicto.getLocal().nota.getId().toString(), token).execute();
+                if (res.code() == 200) {
                     String header = res.headers().get("Content-Disposition");
                     String nombre = header.replace("attachment; filename=", "");
                     //guardar descarga
@@ -262,9 +364,9 @@ public class ComprobadorModificacionesNotas {
                     }
                 }
             }
-            if (conflicto.getRemoto().getAudio()!=null && !archivosRepo.existeAudio(conflicto.getRemoto().getAudio().getNombreArchivo())) {
-                Response<ResponseBody>  res = apIservice.descarga(conflicto.getRemoto().getId(),token).execute();
-                if (res.code()==200) {
+            if (conflicto.getRemoto().getAudio() != null && !archivosRepo.existeAudio(conflicto.getRemoto().getAudio().getNombreArchivo())) {
+                Response<ResponseBody> res = apIservice.descarga(conflicto.getRemoto().getId(), token).execute();
+                if (res.code() == 200) {
                     String header = res.headers().get("Content-Disposition");
                     String nombre = header.replace("attachment; filename=", "");
                     //guardar descarga
@@ -281,10 +383,15 @@ public class ComprobadorModificacionesNotas {
     }
 
 
+    /**
+     * Elimina una nota del servidor
+     * @param notaLocal La nota local
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
     private void eliminarDeServidor(NotaEntity notaLocal) throws TerminarSincronizacionException {
 
         try {
-            Response<ResponseBody> lr = apIservice.deleteNota(notaLocal.getId().toString(),token).execute();
+            Response<ResponseBody> lr = apIservice.deleteNota(notaLocal.getId().toString(), token).execute();
             switch (lr.code()) {
                 case 401:
                     throw new CredencialesErroneasException("");
@@ -294,8 +401,13 @@ public class ComprobadorModificacionesNotas {
         }
     }
 
+    /**
+     * Actualiza una nota local con los datos remotos
+     * @param notaLocal La nota local
+     * @param notaRemota La nota remota
+     */
     private void actualizarLocal(NotaAndAudio notaLocal, NotaApiEnt notaRemota) {
-        NotaEntity nuevaNota = MediadorDeEntidades.notaApiEntToNotaEntity(notaLocal.nota.getCancion().toString(),notaRemota);
+        NotaEntity nuevaNota = MediadorDeEntidades.notaApiEntToNotaEntity(notaLocal.nota.getCancion().toString(), notaRemota);
         notaLocal.nota.setNombre(nuevaNota.getNombre());
         notaLocal.nota.setTexto(nuevaNota.getTexto());
         notaLocal.nota.setVersion(nuevaNota.getVersion());
@@ -305,47 +417,27 @@ public class ComprobadorModificacionesNotas {
         servicioLocal.updateNota(notaLocal.nota);
     }
 
+    /**
+     * Elimina unanota local
+     * @param notaLocal La nota
+     */
     private void eliminarLocal(NotaEntity notaLocal) {
         servicioLocal.deleteNota(notaLocal);
     }
 
 
-
-
-        private void agregarAlServidor(NotaEntity notaLocal) throws CredencialesErroneasException, TerminarSincronizacionException {
-            try {
-                Response<NotaApiEnt> lr = apIservice.insertNota(idCancion.toString(),notaLocal, token).execute();
-                switch (lr.code()) {
-                    case 200:
-                        servicioLocal.updateNota(MediadorDeEntidades.notaApiEntToNotaEntity(idCancion.toString(),lr.body()));
-                        break;
-                    case 401:
-                        throw new CredencialesErroneasException("");
-                    default:
-                        handler.onSendMessage("" + lr.code());
-                }
-            } catch (IOException e) {
-                throw new TerminarSincronizacionException("Sin conexión con el servidor");
-            }
-
-        }
-
-    private void agregarAudioAlServidor(AudioEntity audioLocal) throws CredencialesErroneasException, TerminarSincronizacionException {
-        if (audioLocal==null)
-            return;
+    /**
+     * Agrega una nota al servidor
+     * @param notaLocal La nota local
+     * @throws CredencialesErroneasException Si hay problema de credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
+    private void agregarAlServidor(NotaEntity notaLocal) throws CredencialesErroneasException, TerminarSincronizacionException {
         try {
-            if (!archivosRepo.existeAudio(audioLocal.getArchivo()))
-                return;
-            File archivo = new File( archivosRepo.getAudio(audioLocal.getArchivo()));
-            RequestBody fileRequestBody = RequestBody.create(MediaType.parse("audio/mpeg"), archivo);
-            MultipartBody.Part filePart = MultipartBody.Part.createFormData("archivo", archivo.getName(), fileRequestBody);
-
-
-            Response<AudioApiEnt> lr = apIservice.insertAudio(filePart, audioLocal, token).execute();
+            Response<NotaApiEnt> lr = apIservice.insertNota(idCancion.toString(), notaLocal, token).execute();
             switch (lr.code()) {
                 case 200:
-                    servicioLocal.updateAudio(MediadorDeEntidades.audioApiEntToAudioEntity(lr.body()));
-                    archivosRepo.renombrar(audioLocal.getArchivo(),lr.body().getNombreArchivo());
+                    servicioLocal.updateNota(MediadorDeEntidades.notaApiEntToNotaEntity(idCancion.toString(), lr.body()));
                     break;
                 case 401:
                     throw new CredencialesErroneasException("");
@@ -358,9 +450,48 @@ public class ComprobadorModificacionesNotas {
 
     }
 
+    /**
+     * Agrega un audio al servidor
+     * @param audioLocal El audio local
+     * @throws CredencialesErroneasException Si hay problema de credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
+    private void agregarAudioAlServidor(AudioEntity audioLocal) throws CredencialesErroneasException, TerminarSincronizacionException {
+        if (audioLocal == null)
+            return;
+        try {
+            if (!archivosRepo.existeAudio(audioLocal.getArchivo()))
+                return;
+            File archivo = new File(archivosRepo.getAudio(audioLocal.getArchivo()));
+            RequestBody fileRequestBody = RequestBody.create(MediaType.parse("audio/mpeg"), archivo);
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("archivo", archivo.getName(), fileRequestBody);
+
+
+            Response<AudioApiEnt> lr = apIservice.insertAudio(filePart, audioLocal, token).execute();
+            switch (lr.code()) {
+                case 200:
+                    servicioLocal.updateAudio(MediadorDeEntidades.audioApiEntToAudioEntity(lr.body()));
+                    archivosRepo.renombrar(audioLocal.getArchivo(), lr.body().getNombreArchivo());
+                    break;
+                case 401:
+                    throw new CredencialesErroneasException("");
+                default:
+                    handler.onSendMessage("" + lr.code());
+            }
+        } catch (IOException e) {
+            throw new TerminarSincronizacionException("Sin conexión con el servidor");
+        }
+
+    }
+
+    /**
+     * Actualiza un audio local con los datos remotos bien sea borrandolo o haciendo un update
+     * @param audioLocal El audio local
+     * @param audioRemoto El audio remoto
+     */
     private void actualizarAudioLocal(AudioEntity audioLocal, AudioApiEnt audioRemoto) {
-        int estadoAudio = estadoAudios(audioLocal,audioRemoto);
-        switch (estadoAudio){
+        int estadoAudio = estadoAudios(audioLocal, audioRemoto);
+        switch (estadoAudio) {
             case V0_X:
             case VN_X:
             case B_X:

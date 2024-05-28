@@ -13,12 +13,25 @@ import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
 import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import retrofit2.Response;
 
+
+/**
+ * ViewModel de vista login
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class LoginViewModel extends AndroidViewModel {
     public static final int LOGINKO =1;
     public static final int LOGINOK =2;
     public static final int NO_INTERNET =-1;
 
+    /**
+     * True si se esta en proceso de login
+     */
     private MutableLiveData<Boolean> loging=new MutableLiveData<>();
+
+    /**
+     * Resultado de intento de login
+     */
     private MutableLiveData<Integer> resultado=new MutableLiveData<>();
 
     private AuthApiRepo authApiRepo;
@@ -40,6 +53,11 @@ public class LoginViewModel extends AndroidViewModel {
         return resultado;
     }
 
+    /**
+     * Efectuar login
+     * @param email Email a usar
+     * @param password password a usar
+     */
     public void login(String email, String password){
         loging.setValue(true);
         authApiRepo.login(new LoginRequest(email, password), new AuthApiRepo.ILoginResponse() {

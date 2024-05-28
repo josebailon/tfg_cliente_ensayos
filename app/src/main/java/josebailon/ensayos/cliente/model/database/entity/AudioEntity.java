@@ -13,6 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+
+/**
+ * Entidad Room Audio
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Entity(tableName = "audio", foreignKeys = {@ForeignKey(entity = NotaEntity.class, parentColumns = {"id"}, childColumns = {"nota_id"}, onDelete= ForeignKey.CASCADE)})
 public class AudioEntity {
     @PrimaryKey(autoGenerate = false)

@@ -9,8 +9,18 @@ import java.io.File;
 
 import josebailon.ensayos.cliente.App;
 
+/**
+ * Utiles para la gestion de archivos
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class Utiles {
 
+    /**
+     * Devuelve la extension de una uri
+     * @param uri La uri
+     * @return La extension
+     */
     public static String getExtensionDeUri(Uri uri) {
         String nombre = getNombreDeUri(uri);
         String extension = "";
@@ -20,6 +30,12 @@ public class Utiles {
         }
         return extension;
     }
+
+    /**
+     * Devuelve el nombre de una Uri
+     * @param uri La uri
+     * @return El nombre
+     */
     public static String getNombreDeUri(Uri uri){
         String uriString = uri.toString();
         File archivo = new File(uriString);

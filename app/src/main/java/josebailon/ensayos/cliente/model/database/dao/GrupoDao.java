@@ -15,7 +15,11 @@ import java.util.UUID;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.model.database.relation.GrupoAndUsuariosAndCanciones;
 
-
+/**
+ * Dao Room de la entidad Grupo
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Dao
 public interface GrupoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -30,6 +30,11 @@ import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
 import josebailon.ensayos.cliente.viewmodel.VerNotaViewModel;
 
+/**
+ * Fragmento de vista de detalle de una nota y su audio
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class VerNotaFragment extends Fragment {
 
     private FragmentVerNotaBinding binding;
@@ -105,6 +110,9 @@ public class VerNotaFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Actualiza los botones segun haya audio y se haya descargado o no
+     */
     private void actualizarBotones() {
         if (notaAndAudio == null)
             return;
@@ -117,9 +125,10 @@ public class VerNotaFragment extends Fragment {
         }
     }
 
+
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ocultarMenuAcciones();
+        mostrarMenuAcciones();
 
         //LISTENERS
         //reproducir audio
@@ -135,6 +144,9 @@ public class VerNotaFragment extends Fragment {
 
     }
 
+    /**
+     * Lanza la escucha de audio
+     */
     private void escucharAudio() {
         String ruta = viewModel.getRutaAudio();
         if (!viewModel.existeArchivo()) {
@@ -157,6 +169,9 @@ public class VerNotaFragment extends Fragment {
 
     }
 
+    /**
+     * para la escucha de audio
+     */
     private void pararAudio() {
         if (reproductor != null) {
             reproductor.parar();
@@ -165,13 +180,19 @@ public class VerNotaFragment extends Fragment {
         }
     }
 
+    /**
+     * Intercepta el boton atras para parar el reproductor si existe
+     */
     private void manejarBotonAtras() {
         if (reproductor != null)
             reproductor.parar();
         NavHostFragment.findNavController(this).popBackStack();
     }
 
-
+    /**
+     * Toas de mensaje
+     * @param msg
+     */
     private void toast(String msg) {
         Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
@@ -191,7 +212,10 @@ public class VerNotaFragment extends Fragment {
         }
     }
 
-    private void ocultarMenuAcciones() {
+    /**
+     * Muestra el menu de acciones y maneja el lanzado de intent de compartir la nota
+     */
+    private void mostrarMenuAcciones() {
         getActivity().addMenuProvider(new MenuProvider() {
 
             @Override

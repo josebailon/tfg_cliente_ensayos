@@ -6,6 +6,11 @@ import androidx.room.Relation;
 import josebailon.ensayos.cliente.model.database.entity.AudioEntity;
 import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 
+/**
+ * Relacion Room 1:1 entre nota y audio
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class NotaAndAudio {
     @Embedded
     public NotaEntity nota;

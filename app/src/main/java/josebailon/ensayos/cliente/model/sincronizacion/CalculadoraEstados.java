@@ -12,7 +12,7 @@ import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
 
 
 /**
- * Calcular el estado de dos entidades, remota y actual en fucnion de los siguientes parametros
+ * Calcular el estado de dos entidades, remota y local en funcion de los siguientes parametros
  * • S: Sin cambios locales
  * • E: Editado localmente
  * • B: Borrado localmente (borrado lógico)
@@ -21,6 +21,8 @@ import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
  * • V0: Version 0
  * • VN: Versión N (Diferente de 0)
  * • VQ: Versión Q (Diferente de 0 y N)
+ *
+ *  @author Jose Javier Bailon Ortiz
  * */
 public class CalculadoraEstados {
     public static final int X_X=-1; // NO EXISTENTE - NO EXISTENTE
@@ -108,7 +110,7 @@ public class CalculadoraEstados {
 
 
     /**
-     * Calcula el estado segun los parametros
+     * Calculador generico de estado segun los parametros
      * @param objLocal
      * @param abandonadoLocal
      * @param versionLocal

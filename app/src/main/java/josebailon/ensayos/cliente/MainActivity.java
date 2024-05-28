@@ -15,9 +15,17 @@ import josebailon.ensayos.cliente.databinding.ActivityMainBinding;
 import android.util.Log;
 import android.view.MenuItem;
 
+/**
+ * Actividad principal. Contiene un fragment un host fragment donde se van cargando las diferentes
+ * vistas de la apliacion.
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Configuracion de barra superior
+     */
     private AppBarConfiguration appBarConfiguration;
+
     private ActivityMainBinding binding;
 
     @Override
@@ -30,17 +38,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         appBarConfiguration=new AppBarConfiguration.Builder(R.id.InitFragment, R.id.LoginregistroFragment, R.id.vergruposFragment, R.id.sincronizadoFragment).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        //appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        if(Navigation.findNavController(this,R.id.nav_host_fragment_content_main).getCurrentDestination().getId()!=R.id.vergruposFragment)
-//            getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
+
 
 
 
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }

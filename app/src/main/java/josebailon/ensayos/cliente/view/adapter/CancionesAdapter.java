@@ -13,9 +13,20 @@ import josebailon.ensayos.cliente.databinding.CancionItemBinding;
 import josebailon.ensayos.cliente.view.fragment.VergrupodetalleFragment;
 
 
+/**
+ * Adaptador de lista de canciones para recycleview
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class CancionesAdapter extends RecyclerView.Adapter<CancionesAdapter.ViewHolder> {
 
+    /**
+     * La lista a usar
+     */
     List<CancionEntity> list;
+    /**
+     * Fragment padre
+     */
     VergrupodetalleFragment fragment;
 
     public CancionesAdapter(List<CancionEntity> list, VergrupodetalleFragment fragment) {
@@ -46,6 +57,7 @@ public class CancionesAdapter extends RecyclerView.Adapter<CancionesAdapter.View
         this.list=canciones;
         this.notifyDataSetChanged();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         CancionItemBinding binding;

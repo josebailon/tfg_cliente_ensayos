@@ -18,6 +18,11 @@ import josebailon.ensayos.cliente.view.util.Validators;
 import josebailon.ensayos.cliente.viewmodel.RegistroViewModel;
 
 
+/**
+ * Fragment que muestra el formulario de regristro
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class RegistroFragment extends Fragment {
 
     private FragmentRegistroBinding binding;
@@ -68,6 +73,9 @@ public class RegistroFragment extends Fragment {
 
     }
 
+    /**
+     * Intenta el registro validando previamente las entradas
+     */
     private void intentarRegistro() {
         String email = binding.inputEmail.getText().toString();
         String password= binding.inputPassword.getText().toString();
@@ -89,6 +97,10 @@ public class RegistroFragment extends Fragment {
     }
 
 
+    /**
+     * Toast de mensaje
+     * @param msg
+     */
     private void toast (String msg){
         Toast.makeText(this.getContext(),msg,Toast.LENGTH_SHORT).show();
     }

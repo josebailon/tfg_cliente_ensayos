@@ -8,6 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Entidad RetroFit para la recepcion de Cancion
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class CancionApiEnt {
 
     @SerializedName("id")

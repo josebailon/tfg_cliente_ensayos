@@ -28,6 +28,11 @@ import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
+/**
+ * ViewModel de crear/editar nota
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class CrearEditarNotaViewModel extends ViewModel {
 
     public final int MODO_CREACION=0;
@@ -39,14 +44,32 @@ public class CrearEditarNotaViewModel extends ViewModel {
     private AuthApiRepo authApiRepo = AuthApiRepo.getInstance();
 
     private SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
+
+    /**
+     * Modo actual edicion o creacion
+     */
     private int modo=0;
+
+    /**
+     * Controla si se han realizado cambios
+     */
     private MutableLiveData<Boolean> haCambiado= new MutableLiveData<>(false);
 
+    /**
+     * True si se esta descargando
+     */
     private MutableLiveData<Boolean> descargando = new MutableLiveData<>(false);
+
+    /**
+     * Executor para las descargas
+     */
     private Executor executor = Executors.newSingleThreadExecutor();
     private UUID idnota;
     private UUID idcancion;
 
+    /**
+     * Mensaje a mostrar
+     */
     MutableLiveData<String> mensaje = new MutableLiveData<>();
 
     public LiveData<Boolean> getOcupado() {
@@ -61,8 +84,14 @@ public class CrearEditarNotaViewModel extends ViewModel {
         return descargando;
     }
 
+    /**
+     * Nota y audio actuales
+     */
     private LiveData<NotaAndAudio> notaAndAudio;
 
+    /**
+     * True si esta procesando
+     */
     private MutableLiveData<Boolean> ocupado = new MutableLiveData<>(false);
 
     public LiveData<String> getMensaje() {
@@ -86,10 +115,18 @@ public class CrearEditarNotaViewModel extends ViewModel {
     }
 
 
+    /**
+     * Devuelve el livedata de la nota y audio actuales
+     * @return
+     */
     public LiveData<NotaAndAudio> getNotaAndAudio() {
         return notaAndAudio;
     }
 
+    /**
+     * Devuelve el valor concreto de la nota y audio actuales
+     * @return
+     */
     public NotaAndAudio getNotaAndAudioObj() {
         return notaAndAudio.getValue();
     }
@@ -118,12 +155,15 @@ public class CrearEditarNotaViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Valida campos y guarda la nota o la actualiza segun el modo
+     * @return
+     */
     public boolean guardarNota(){
         if (notaAndAudio.getValue().nota==null || TextUtils.isEmpty(notaAndAudio.getValue().nota.getNombre())){
             mensaje.setValue("El titulo no puede estar vacío");
             return false;
         }
-
 
         if (modo==MODO_CREACION){
             servicioDb.insertNotaWithAudio(notaAndAudio.getValue().nota, notaAndAudio.getValue().audio);
@@ -136,6 +176,11 @@ public class CrearEditarNotaViewModel extends ViewModel {
         return true;
     }
 
+    /**
+     * Actualiza el texto de la nota en el viewModel
+     * @param nombre
+     * @param texto
+     */
     public void actualizarTexto(String nombre, String texto) {
         notaAndAudio.getValue().nota.setNombre(nombre);
         notaAndAudio.getValue().nota.setTexto(texto);
@@ -143,6 +188,9 @@ public class CrearEditarNotaViewModel extends ViewModel {
         haCambiado.setValue(true);
     }
 
+    /**
+     * Quita el audio de la nota
+     */
     public void quitarAudio() {
         AudioEntity a = notaAndAudio.getValue().audio;
         //si es modo creacion se elimina directamente poniendolo a null
@@ -167,6 +215,10 @@ public class CrearEditarNotaViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Establece un audio para la nota
+     * @param uri Uri de origen del audio
+     */
     public void definirAudio(Uri uri) {
         ocupado.postValue(true);
         archivosRepo.guardarUri(uri, new ArchivosRepo.CallbackGuardado() {
@@ -203,10 +255,18 @@ public class CrearEditarNotaViewModel extends ViewModel {
 
     }
 
+    /**
+     * Devuelve la ruta del archivo del audio
+     * @return La ruta
+     */
     public String getRutaAudio() {
         return archivosRepo.getAudio(notaAndAudio.getValue().audio.getArchivo());
     }
 
+    /**
+     * Devuelve si existe o no el audio
+     * @return True si existe
+     */
     public boolean existeArchivo() {
         if (notaAndAudio.getValue()==null ||notaAndAudio.getValue().audio==null)
             return false;
@@ -214,6 +274,9 @@ public class CrearEditarNotaViewModel extends ViewModel {
         return r;
     }
 
+    /**
+     * Inicia y controla la descarga del archivo de audio
+     */
     public void descargarAudio() {
         descargando.setValue(true);
         LoginDto l = sharedRepo.readLogin();
@@ -230,7 +293,7 @@ public class CrearEditarNotaViewModel extends ViewModel {
 
                     executor.execute(() -> {
                         //hacer llamada
-                        Response<ResponseBody> response = audioApiRepo.descarga(idnota.toString(), loginResponse.body().getBearer(),
+                        audioApiRepo.descarga(idnota.toString(), loginResponse.body().getBearer(),
                                 new AudioApiRepo.IDescargaResponse() {
                                     @Override
                                     public void onResponse(Response<ResponseBody> response) {

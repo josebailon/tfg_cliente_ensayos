@@ -31,29 +31,108 @@ import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 import josebailon.ensayos.cliente.viewmodel.SincronizadorViewModel;
 
+/**
+ * Logica de la vista dialogo de resolucion de conflicto de nota y audios
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class DialogoConflictoNota extends Dialog {
-    Conflicto<NotaAndAudio, NotaApiEnt> conflicto;
-    NotaAndAudio local;
-    NotaApiEnt remoto;
-    CancionEntity resultado;
-    Spinner spinnerTitulo;
-    Spinner spinnerTexto;
-    Spinner spinnerAudio;
-    TextView lbNombre;
-    TextView lbTexto;
+    /**
+     * Conflicto a resolver
+     */
+    private Conflicto<NotaAndAudio, NotaApiEnt> conflicto;
 
-    TextView lbFecha;
+    /**
+     * Nota local
+     */
+    private NotaAndAudio local;
 
-    Button btnEscuchaAudio;
-    ImageButton btnStop;
-    String archivoAudio;
+    /**
+     * Nota remota
+     */
+    private NotaApiEnt remoto;
+
+    /**
+     * Resultado de resolucion del conflicto
+     */
+    private CancionEntity resultado;
+
+    /**
+     * Spinner de seleccion e titulo
+     */
+    private Spinner spinnerTitulo;
+
+    /**
+     * Spinner de seleccion de texto
+     */
+    private Spinner spinnerTexto;
+
+    /**
+     * Spinner de seleccion de audio
+     */
+    private Spinner spinnerAudio;
+
+    /**
+     * Etiqueta de nombre nota final
+     */
+    private TextView lbNombre;
+
+    /**
+     * Etiqueta de texto de nota final
+     */
+    private TextView lbTexto;
+
+    /**
+     * Etiqueta de fecha de la nota final
+     */
+    private TextView lbFecha;
+
+    /**
+     * boton para iniciar la reproduccion de audio
+     */
+    private Button btnEscuchaAudio;
+
+    /**
+     * Boton para parar la reproduccion de audio
+     */
+    private ImageButton btnStop;
+
+    /**
+     * Archivo de audio a reproducir
+     */
+    private String archivoAudio;
+
+    /**
+     * Fecha asignada al audio final
+     */
     String fechaAudio;
-    boolean reproduciendo;
 
+    /**
+     * True si esta reproducioendo
+     */
+    private boolean reproduciendo;
+
+    /**
+     * Reproductor de audio
+     */
     private Reproductor reproductor;
 
-    SincronizadorViewModel viewModel;
-    View zonaReproductor;
+    /**
+     * Viewmodel de conexion con el modelo
+     */
+    private SincronizadorViewModel viewModel;
+
+    /**
+     * View a la que anclar el control de audio
+     */
+    private View zonaReproductor;
+
+    /**
+     * Constructor
+     * @param context Contexto del dialogo
+     * @param conflicto Conflicto a resolver
+     * @param viewModel ViewModel de acceso a modelo
+     */
 
     public DialogoConflictoNota(@NonNull Context context, Conflicto<NotaAndAudio, NotaApiEnt> conflicto, SincronizadorViewModel viewModel) {
         super(context);
@@ -61,38 +140,14 @@ public class DialogoConflictoNota extends Dialog {
         this.viewModel = viewModel;
         local = conflicto.getLocal();
         remoto = conflicto.getRemoto();
-//        prepararFusion();
         prepararInterface();
         this.setCanceledOnTouchOutside(false);
     }
 
-//    private void prepararFusion() {
-//        fusion = new CancionEntity();
-//        fusion.setId(local.getId());
-//        fusion.setDescripcion("");
-//        fusion.setNombre("");
-//        fusion.setDuracion("");
-//        fusion.setFecha(new Date(System.currentTimeMillis()));
-//        fusion.setEditado(true);
-//        fusion.setBorrado(false);
-//        fusion.setVersion(remoto.getVersion());
-//        //nombre
-//        if (local.getNombre().equals(remoto.getNombre()))
-//            fusion.setNombre(remoto.getNombre());
-//        else
-//            fusion.setNombre(local.getNombre()+" - "+remoto.getNombre());
-//        //descripcion
-//        if (local.getDescripcion().equals(remoto.getDescripcion()))
-//            fusion.setDescripcion(remoto.getDescripcion());
-//        else
-//            fusion.setDescripcion(local.getDescripcion()+" \n "+remoto.getDescripcion());
-//        //duracion
-//        if (local.getDuracion().equals(remoto.getDescripcion()))
-//            fusion.setDuracion(remoto.getDuracion());
-//        else
-//            fusion.setDuracion(local.getDuracion()+" / "+remoto.getDuracion());
-//    }
 
+    /**
+     * Prepara la interface rellenando los spinners y estableciendo los eventos
+     */
     private void prepararInterface() {
         this.setContentView(R.layout.dialogo_conflicto_nota);
         Window window = this.getWindow();
@@ -178,12 +233,14 @@ public class DialogoConflictoNota extends Dialog {
         actualizarCamposAudio();
     }
 
+    /**
+     * Reproducir audio actual
+     */
     private void reproducir() {
         String ruta = viewModel.getRutaAudio(archivoAudio);
         if (!viewModel.existeArchivo(archivoAudio)) {
             return;
         }
-
         reproductor = new ReproductorImpl();
         reproductor.definirVistaParaMc(getContext(), zonaReproductor, () -> {
             pararReproduccion();
@@ -195,9 +252,11 @@ public class DialogoConflictoNota extends Dialog {
         } catch (Exception ex) {
 
         }
-
     }
 
+    /**
+     * Parar reproduccion
+     */
     private void pararReproduccion() {
         if (reproductor != null) {
             reproductor.parar();
@@ -207,12 +266,18 @@ public class DialogoConflictoNota extends Dialog {
     }
 
 
+    /**
+     * Actualiza los campos de la nota final
+     */
     private void actualizarCampos() {
         actualizarTitulo();
         actualizarTexto();
 
     }
 
+    /**
+     * Actualiza los campos del audio final
+     */
     private void actualizarCamposAudio() {
         String audioSeleccionado = spinnerAudio.getSelectedItem().toString();
         switch (audioSeleccionado) {
@@ -247,6 +312,9 @@ public class DialogoConflictoNota extends Dialog {
     }
 
 
+    /**
+     * Actualiza el titulo final
+     */
     private void actualizarTitulo() {
         long id = spinnerTitulo.getSelectedItemId();
         switch ((int) id) {
@@ -262,6 +330,9 @@ public class DialogoConflictoNota extends Dialog {
         }
     }
 
+    /**
+     * Actualiza el texto final
+     */
     private void actualizarTexto() {
         long id = spinnerTexto.getSelectedItemId();
         switch ((int) id) {
@@ -277,6 +348,9 @@ public class DialogoConflictoNota extends Dialog {
         }
     }
 
+    /**
+     * Guarda la resolucion del conflicto liberando a quienes esperen la resolucion
+     */
     private void guardar() {
 
 

@@ -13,6 +13,11 @@ import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 
+/**
+ * ViewModel de vista de lista de grupos
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class VergruposViewModel extends ViewModel {
 
     private DatosLocalesAsincronos servicio = DatosLocalesAsincronos.getInstance(App.getContext());
@@ -22,6 +27,12 @@ public class VergruposViewModel extends ViewModel {
     public VergruposViewModel(){
         usuario.postValue(sharedRepo.readLogin().getEmail());
     }
+
+    /**
+     * Crear un grupo
+     * @param nombre
+     * @param descripcion
+     */
     public void crear(String nombre, String descripcion) {
         GrupoEntity g = new GrupoEntity();
         g.setId(UUID.randomUUID());
@@ -39,6 +50,12 @@ public class VergruposViewModel extends ViewModel {
         return servicio.getAllGruposNoBorrados();
     }
 
+    /**
+     * Actualizar un grupo
+     * @param grupo
+     * @param nombre
+     * @param descripcion
+     */
     public void actualizar(GrupoEntity grupo, String nombre, String descripcion) {
         grupo.setNombre(nombre);
         grupo.setDescripcion(descripcion);
@@ -46,6 +63,10 @@ public class VergruposViewModel extends ViewModel {
         servicio.updateGrupo(grupo);
     }
 
+    /**
+     * Borrar un grupo
+     * @param grupo
+     */
     public void borrar(GrupoEntity grupo) {
         grupo.setBorrado(true);
         grupo.setEditado(true);

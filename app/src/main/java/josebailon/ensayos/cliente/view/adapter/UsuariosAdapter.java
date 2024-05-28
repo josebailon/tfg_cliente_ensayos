@@ -12,10 +12,21 @@ import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.databinding.UsuarioItemBinding;
 import josebailon.ensayos.cliente.view.fragment.VergrupodetalleFragment;
 
-
+/**
+ * Adaptador de lista de usuarios para recycleview
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHolder> {
 
+    /**
+     * La lista a usar
+     */
     List<UsuarioEntity> list;
+
+    /**
+     * el fragment padre
+     */
     VergrupodetalleFragment fragment;
 
     public UsuariosAdapter(List<UsuarioEntity> list, VergrupodetalleFragment fragment) {

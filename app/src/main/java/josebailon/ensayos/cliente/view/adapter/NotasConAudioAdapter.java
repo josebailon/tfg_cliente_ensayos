@@ -14,10 +14,21 @@ import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.databinding.NotaItemBinding;
 import josebailon.ensayos.cliente.view.fragment.VercanciondetalleFragment;
 
-
+/**
+ * Adaptador de lista de notas con audio para recycleview
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class NotasConAudioAdapter extends RecyclerView.Adapter<NotasConAudioAdapter.ViewHolder> {
 
+    /**
+     * La lista a usar
+     */
     List<NotaAndAudio> list;
+
+    /**
+     * El fragment padre
+     */
     VercanciondetalleFragment fragment;
 
     public NotasConAudioAdapter(List<NotaAndAudio> list, VercanciondetalleFragment fragment) {

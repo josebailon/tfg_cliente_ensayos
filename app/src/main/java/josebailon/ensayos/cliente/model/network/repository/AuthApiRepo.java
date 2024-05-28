@@ -9,13 +9,35 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+/**
+ * Repositorio de web API de autorizaciones y login
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class AuthApiRepo {
+
+    /**
+     * Instancia singletion
+     */
     private static volatile AuthApiRepo instancia = null;
+
+    /**
+     * Servicio de acceso a la web API
+     */
     APIservice servicio;
+
+    /**
+     * Constructor privado para singleton
+     */
     private AuthApiRepo() {
         servicio = APIBuilder.getBuilder().create(APIservice.class);
     }
 
+    /**
+     * Devuelve una instancia singleton
+     * @return La instancia
+     */
     public static AuthApiRepo getInstance() {
         if (instancia == null) {
             synchronized (AuthApiRepo.class) {
@@ -27,6 +49,12 @@ public class AuthApiRepo {
         return instancia;
     }
 
+
+    /**
+     * Hace una llamada de login a la web API
+     * @param loginRequest Peticion
+     * @param callback Callback al que suministrar la respuesta
+     */
     public void login(LoginRequest loginRequest, ILoginResponse callback){
         Call<LoginResponse> loginCall = servicio.login(loginRequest);
         loginCall.enqueue(new Callback<LoginResponse>() {
@@ -42,6 +70,12 @@ public class AuthApiRepo {
         });
     }
 
+
+    /**
+     * Hace una llamada de registro de usuario a la web API
+     * @param loginRequest Peticion
+     * @param callback Callaback al que suminsitrar la respuesta
+     */
     public void registro(LoginRequest loginRequest, IRegistroResponse callback){
         Call<RegistroResponse> registroCall = servicio.registro(loginRequest);
         registroCall.enqueue(new Callback<RegistroResponse>() {
@@ -58,36 +92,20 @@ public class AuthApiRepo {
     }
 
 
+    /**
+     * Interfaz de callback de login
+     */
     public interface ILoginResponse{
         void onResponse(Response<LoginResponse> loginResponse);
         void onFailure(Throwable t);
     }
 
+    /**
+     * Interfaz de callback de registro
+     */
     public interface IRegistroResponse{
         void onResponse(Response<RegistroResponse> registroResponse);
         void onFailure(Throwable t);
     }
-
-
-
-
-
-//    public ApiResponse fetchDataSynchronously() {
-//        Call<ApiResponse> call = apiService.getApiData();
-//        try {
-//            Response<ApiResponse> response = call.execute();
-//            if (response.isSuccessful()) {
-//                return response.body();
-//            } else {
-//                // Maneja errores aquí
-//                return null;
-//            }
-//        } catch (IOException e) {
-//            // Maneja excepciones aquí
-//            return null;
-//        }
-//    }
-
-
 
 }

@@ -12,16 +12,31 @@ import josebailon.ensayos.cliente.model.sincronizacion.ISincronizadorFeedbackHan
 import josebailon.ensayos.cliente.model.sincronizacion.SincronizadorService;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 
+/**
+ * ViewModel de vista de sincronizacion. Se encarga de iniciar la sincronizacion y escuchar
+ * los eventos de la misma para trasladarlos a la vista
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class SincronizadorViewModel extends AndroidViewModel implements ISincronizadorFeedbackHandler {
 
 
-    MutableLiveData<String> mensaje = new MutableLiveData<>();
-    MutableLiveData<String> mensajeEstado = new MutableLiveData<>();
+    private MutableLiveData<String> mensaje = new MutableLiveData<>();
+    private MutableLiveData<String> mensajeEstado = new MutableLiveData<>();
 
-    MutableLiveData<Conflicto<?,?>> conflicto = new MutableLiveData<>();
-    SincronizadorService sincronizadorService;
-    ArchivosRepo archivosRepo;
-    MutableLiveData<Boolean> sincronizando =new MutableLiveData<>(false);
+    /**
+     * Cuando se produzca un conflicto de sincronizacion el conflicto se establecera en esta variable
+     * para que sea resuelto
+     * @return
+     */
+    private MutableLiveData<Conflicto<?,?>> conflicto = new MutableLiveData<>();
+
+    /**
+     * Servicio de sincronizacion
+     */
+    private SincronizadorService sincronizadorService;
+    private ArchivosRepo archivosRepo;
+    private MutableLiveData<Boolean> sincronizando =new MutableLiveData<>(false);
 
 
     public SincronizadorViewModel(@NonNull Application application) {
@@ -40,10 +55,15 @@ public class SincronizadorViewModel extends AndroidViewModel implements ISincron
         return sincronizando;
     }
 
+
     public LiveData<Conflicto<?, ?>> getConflicto() {
         return conflicto;
     }
 
+    /**
+     * Iniciar sincronizacion estableciendo el viewModel como handler de escucha de la
+     * sincronizacion
+     */
     public void iniciar(){
         archivosRepo =ArchivosRepo.getInstance();
         sincronizando.setValue(true);

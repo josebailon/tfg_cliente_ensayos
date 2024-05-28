@@ -5,6 +5,11 @@ package josebailon.ensayos.cliente.model.network.model.entidades;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Entidad RetroFit para la recepcion de Usuario
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class UsuarioApiEnt {
 
     @SerializedName("id")

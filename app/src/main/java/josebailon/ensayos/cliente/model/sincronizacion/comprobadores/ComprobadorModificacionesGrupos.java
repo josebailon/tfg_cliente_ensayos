@@ -27,18 +27,52 @@ import josebailon.ensayos.cliente.model.sincronizacion.excepciones.TerminarSincr
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
+/**
+ * Comprueba si hay modificaciones en los grupos y maneja la sincronizacion adecuada
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class ComprobadorModificacionesGrupos {
-    APIservice apIservice;
+    /**
+     * Sevicio de acceso a la web API
+     */
+    private APIservice apIservice;
+    /**
+     * Repositorio de shared preferences
+     */
     private SharedPreferencesRepo sharedPreferencesRepo;
 
-    ISincronizadorFeedbackHandler handler;
-    String token;
-    SincronizadorService sincronizadorService;
-    DatosLocalesSincronos servicioLocal;
-    
-    String nombreUsuario;
+    /**
+     * Handler de escucha a la sincronizacion
+     */
+    private ISincronizadorFeedbackHandler handler;
+
+    /**
+     * token de acceso
+     */
+    private String token;
+
+    /**
+     * Servicio de sincronizacion
+     */
+    private SincronizadorService sincronizadorService;
+
+    /**
+     * Servicio de acceso sincrono a la base de datos local
+     */
+    private DatosLocalesSincronos servicioLocal;
+
+    /**
+     * Nombre de usuario local
+     */
+    private String nombreUsuario;
 
 
+    /**
+     * Conscturctor
+     *
+     * @param sincronizadorService Servicio de sincronizacion
+     */
     public ComprobadorModificacionesGrupos(SincronizadorService sincronizadorService) {
         this.sincronizadorService = sincronizadorService;
         this.apIservice = sincronizadorService.getApIservice();
@@ -50,7 +84,13 @@ public class ComprobadorModificacionesGrupos {
     }
 
 
-
+    /**
+     * Itera los grupos lanzando la comprobacion de cada uno
+     * @param gruposRemotos La lista de grupos
+     * @throws CredencialesErroneasException Si hay problema con las credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     * @throws IOException Si se ha producido un error
+     */
     public void comprobarGrupos(List<GrupoApiEnt> gruposRemotos) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
         List<GrupoAndUsuariosAndCanciones> gruposLocales = servicioLocal.getAllGruposWithUsuariosAndCanciones();
         for (GrupoAndUsuariosAndCanciones grupoLocal : gruposLocales) {
@@ -59,6 +99,14 @@ public class ComprobadorModificacionesGrupos {
                 }
     }
 
+    /**
+     * Hace la cmprobacion apara un grupo
+     * @param grupoLocal El grupo local
+     * @param grupoRemoto El grupo remoto con el que comparar
+     * @throws CredencialesErroneasException Si hay problema con las credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     * @throws IOException Si se ha producido un error
+     */
     public void comprobarGrupo(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
         handler.onSendStatus("Comprobando midificaciones de grupo "+grupoLocal.grupo.getNombre());
         int estado = CalculadoraEstados.estadoCanciones(grupoLocal.grupo,grupoRemoto);
@@ -117,6 +165,15 @@ public class ComprobadorModificacionesGrupos {
 
 }
 
+    /**
+     * Actualiza el servidor con los datos locales
+     * @param grupoLocal El grupo local
+     * @param grupoRemoto El grupo remoto
+     * @return Un conflicto si la respuesta es 409 o null si no hay conflicto
+     * @throws CredencialesErroneasException Si hay problema con las credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     * @throws IOException Si se ha producido un error
+     */
     private Conflicto<GrupoAndUsuariosAndCanciones,GrupoApiEnt> actualizarServidorConDatosLocales(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, TerminarSincronizacionException, IOException {
 
         Response<GrupoApiEnt> lr=null;
@@ -156,6 +213,11 @@ public class ComprobadorModificacionesGrupos {
         return null;
     }
 
+    /**
+     * Lanza la resolucion de un conflicto y espera a que sea resuelto
+     * @param conflicto El conflicto
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
     private void resolverConflicto(Conflicto<GrupoAndUsuariosAndCanciones, GrupoApiEnt> conflicto) throws  TerminarSincronizacionException {
         //mandar conflicto
         sincronizadorService.getHandler().onConflicto(conflicto);
@@ -175,6 +237,12 @@ public class ComprobadorModificacionesGrupos {
         }
     }
 
+    /**
+     * Elimina un usuario de un grupo en el servidor
+     * @param nombreUsuario El nombre de usuario
+     * @param grupoLocal El grupo local
+     * @throws TerminarSincronizacionException
+     */
     private void eliminarUsuarioDeGrupoDeServidor(String nombreUsuario, GrupoAndUsuariosAndCanciones grupoLocal) throws TerminarSincronizacionException {
 
         try {
@@ -189,6 +257,11 @@ public class ComprobadorModificacionesGrupos {
     }
 
 
+    /**
+     * Elimina un grupo del servidor
+     * @param grupoLocal El grupo local
+     * @throws TerminarSincronizacionException
+     */
     private void eliminarDeServidor(GrupoAndUsuariosAndCanciones grupoLocal) throws TerminarSincronizacionException {
 
         try {
@@ -202,6 +275,11 @@ public class ComprobadorModificacionesGrupos {
         }
     }
 
+    /**
+     * Actualiza un grupo local con los datos del servidor
+     * @param grupoLocal El grupo local
+     * @param remoto El grupo remoto
+     */
     private void actualizarLocal(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt remoto) {
         GrupoEntity local = grupoLocal.grupo;
         local.setNombre(remoto.getNombre());
@@ -214,12 +292,23 @@ public class ComprobadorModificacionesGrupos {
         reemplazarUsuarios(grupoLocal,remoto);
     }
 
+    /**
+     * Reemplaza los usuarios asignados a un grupo localmente cogiendolos de un grupo remoto
+     * @param local El grupo local
+     * @param remoto El grupo remoto
+     */
     private void reemplazarUsuarios(GrupoAndUsuariosAndCanciones local, GrupoApiEnt remoto) {
         for(UsuarioEntity usuario : local.usuarios)
             servicioLocal.deleteUsuario(usuario);
         for (UsuarioApiEnt usuarioApiEnt : remoto.getUsuarios())
             servicioLocal.insertUsuario(MediadorDeEntidades.crearUsuarioEntityParaGrupo(remoto.getId(),usuarioApiEnt.getEmail()));
     }
+
+    /**
+     * Reemplaza los usuarios asignados a un grupo localmente cogiendolos del resultado de la resolucion de un conflicto
+     * @param local El grupo local
+     * @param solucion El grupo remoto
+     */
     private void reemplazarUsuarios(GrupoAndUsuariosAndCanciones local, GrupoAndUsuariosAndCanciones solucion) {
         for(UsuarioEntity usuario : local.usuarios)
             servicioLocal.deleteUsuario(usuario);
@@ -227,14 +316,21 @@ public class ComprobadorModificacionesGrupos {
             servicioLocal.insertUsuario(usuarioSolucion);
     }
 
+    /**
+     * Elimina un grupo local
+     * @param grupoLocal El grupo
+     */
     private void eliminarLocal(GrupoAndUsuariosAndCanciones grupoLocal) {
         servicioLocal.deleteGrupo(grupoLocal.grupo);
 
     }
 
-
-
-
+    /**
+     * Agrega un grupo al servidor
+     * @param grupoLocal El grupo local
+     * @throws CredencialesErroneasException Si hay problema con las credenciales
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
         private void agregarAlServidor(GrupoAndUsuariosAndCanciones grupoLocal) throws CredencialesErroneasException, TerminarSincronizacionException {
             try {
                 Response<GrupoApiEnt> lr = apIservice.insertGrupo(grupoLocal.grupo, token).execute();
@@ -257,6 +353,14 @@ public class ComprobadorModificacionesGrupos {
         }
 
 
+    /**
+     * Lanza la comprobacion de canciones de un grupo
+     * @param grupoLocal El grupo local
+     * @param grupoRemoto El grupo remoto
+     * @throws CredencialesErroneasException Si hay problema con las credenciales
+     * @throws IOException Si ha habido algun problema
+     * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
+     */
     private void comprobarCanciones(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, IOException, TerminarSincronizacionException {
         if(grupoRemoto!=null)
             new ComprobadorModificacionesCanciones(sincronizadorService).comprobarCanciones(grupoLocal.grupo.getId(), grupoRemoto.getCanciones());

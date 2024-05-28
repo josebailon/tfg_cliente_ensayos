@@ -8,6 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Entidad Room Usuario
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Entity(tableName = "usuario", primaryKeys = {"email","grupo"}, foreignKeys = {@ForeignKey(entity = GrupoEntity.class, parentColumns = {"id"}, childColumns = {"grupo"}, onDelete= ForeignKey.CASCADE)})
 public class UsuarioEntity {
 

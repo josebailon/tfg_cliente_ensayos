@@ -13,12 +13,24 @@ import josebailon.ensayos.cliente.model.network.repository.AuthApiRepo;
 import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import retrofit2.Response;
 
+/**
+ * ViewModel de vista registro
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class RegistroViewModel extends AndroidViewModel {
     public static final int REGISTROOK =1;
     public static final int REGISTROKO =2;
     public static final int NO_INTERNET =-1;
 
+    /**
+     * True si se esta en proceso de registro
+     */
     private MutableLiveData<Boolean> registrando =new MutableLiveData<>();
+
+    /**
+     * REsultado del intento de registro
+     */
     private MutableLiveData<Integer> resultado=new MutableLiveData<>();
 
     private AuthApiRepo authApiRepo;
@@ -40,6 +52,12 @@ public class RegistroViewModel extends AndroidViewModel {
         return resultado;
     }
 
+
+    /**
+     * Intentar registro
+     * @param email Email a usar
+     * @param password Password a usar
+     */
     public void registro(String email, String password){
         registrando.setValue(true);
         authApiRepo.registro(new LoginRequest(email, password), new AuthApiRepo.IRegistroResponse() {

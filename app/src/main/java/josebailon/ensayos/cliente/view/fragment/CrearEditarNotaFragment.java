@@ -41,15 +41,22 @@ import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
 import josebailon.ensayos.cliente.viewmodel.CrearEditarNotaViewModel;
 
+/**
+ * Fragmento de control de la vista de crear y editar nota. Se comunica con un viewmodel CrearEditarNotaViewModel.
+ * Contiene un reproductor de audio.
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class CrearEditarNotaFragment extends Fragment {
 
     private FragmentCrearEditarNotaBinding binding;
     private CrearEditarNotaViewModel viewModel;
     private NotaAndAudio notaAndAudio;
-
     private Reproductor reproductor;
 
-    //Escucha de edicion de texto
+    /**
+     * Escucha la edicion de texto para actualizar automaticamente el viewmodel
+     */
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {      }
@@ -62,9 +69,13 @@ public class CrearEditarNotaFragment extends Fragment {
         }
     };
 
-
-
+    /**
+     * Lanzador de intent de grabacion
+     */
     private ActivityResultLauncher<Intent> lanzadorIntentGrabacion;
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,9 +149,8 @@ public class CrearEditarNotaFragment extends Fragment {
             //refrescar botones
             actualizarBotones();
         });
-
+        //gestion de los botones de audio en la transicion de reproduciendo/parando
         viewModel.getOcupado().observe(getViewLifecycleOwner(),ocupado -> {
-
             binding.btnQuitarAudio.setEnabled(!ocupado);
             binding.btnEscuchaAudio.setEnabled(!ocupado);
             binding.btnElegirAudio.setEnabled(!ocupado);
@@ -196,7 +206,7 @@ public class CrearEditarNotaFragment extends Fragment {
                     .setTitle("Eliminación")
                     .setMessage("¿Quieres quitar el audio de la nota?")
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("SÍ",(dialog, which) -> {
+                    .setPositiveButton("SI",(dialog, which) -> {
                         viewModel.quitarAudio();
                         actualizarBotones();
                     })
@@ -233,6 +243,9 @@ public class CrearEditarNotaFragment extends Fragment {
             }
     }
 
+    /**
+     * Lanza la escucha del audio
+     */
     private void escucharAudio() {
         String ruta = viewModel.getRutaAudio();
         if (!viewModel.existeArchivo()){
@@ -256,6 +269,9 @@ public class CrearEditarNotaFragment extends Fragment {
 
     }
 
+    /**
+     * Para la escucha del audio
+     */
     private void pararAudio(){
         if (reproductor!=null) {
             reproductor.parar();
@@ -266,6 +282,9 @@ public class CrearEditarNotaFragment extends Fragment {
         }
     }
 
+    /**
+     * Intercepta el boton atras para confirmar que se desean descartar los cambios y parar la reproduccion
+     */
     private void manejarBotonAtras() {
         if (viewModel.isHaCambiado()) {
 
@@ -289,7 +308,9 @@ public class CrearEditarNotaFragment extends Fragment {
     }
 
 
-
+    /**
+     * Lanza la seleccion del audio mostrando el selector de archvio, el grabador de la aplicacion y el grabador del telefono si existe
+     */
     private void seleccionarAudio() {
 
         Intent selectIntent = new Intent();
@@ -307,13 +328,21 @@ public class CrearEditarNotaFragment extends Fragment {
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
         lanzadorIntentGrabacion.launch(chooser);
     }
+
+    /**
+     * Pasa al modelo el audio seleccionado
+     * @param data Resultado del intent
+     */
     private void manejarSeleccionAudio(Intent data) {
         Uri uri = data.getData();
         viewModel.definirAudio(uri);
     }
 
 
-
+    /**
+     * Toast de mensajeria
+     * @param msg
+     */
     private void toast(String msg) {
         Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
@@ -333,6 +362,9 @@ public class CrearEditarNotaFragment extends Fragment {
         }
     }
 
+    /**
+     * Desactiva el menu de acciones
+     */
     private void ocultarMenuAcciones() {
         getActivity().addMenuProvider( new MenuProvider(){
             @Override

@@ -18,6 +18,12 @@ import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 
+
+/**
+ * ViewModel de vista detalle de una cancion
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class VercanciondetalleViewModel extends ViewModel {
 
     private DatosLocalesAsincronos servicio = DatosLocalesAsincronos.getInstance(App.getContext());
@@ -38,23 +44,7 @@ public class VercanciondetalleViewModel extends ViewModel {
         return mensaje;
     }
 
-    public void crearNota(String nombre, String descripcion, String duracion, UUID grupo) {
-        Log.i("JJBO", "Insertando cancion a "+idcancion.toString());
-        UUID n = UUID.randomUUID();
-        NotaEntity nota=new NotaEntity();
-        nota.setId(n);
-        nota.setCancion(idcancion);
-        nota.setNombre("Mi nota");
-        nota.setTexto("");
-        nota.setVersion(0);
-        //servicio.insertNotaWithAudio(nota,null);
 
-        AudioEntity audio = new AudioEntity();
-        audio.setNota_id(n);
-        audio.setVersion(0);
-        audio.setArchivo("miarchivo 1");
-        servicio.insertNotaWithAudio(nota,audio);
-    }
 
     public LiveData<CancionEntity> getCancion(UUID idcancion) {
         return servicio.getCancionById(idcancion);
@@ -65,6 +55,10 @@ public class VercanciondetalleViewModel extends ViewModel {
         return servicio.getNotasWithAudioByCancionId(idcancion);
     }
 
+    /**
+     * Borra una nota
+     * @param nota La nota a borrar
+     */
     public void borrarNota(NotaEntity nota) {
         if (nota.getVersion()==0)
             servicio.deleteNota(nota);

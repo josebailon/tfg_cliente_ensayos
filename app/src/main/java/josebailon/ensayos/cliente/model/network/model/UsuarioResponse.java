@@ -2,6 +2,11 @@ package josebailon.ensayos.cliente.model.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Entidad RetroFit para la recepcion de peticion de existencia de un usuario
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class UsuarioResponse {
     @SerializedName("id")
     public int id;

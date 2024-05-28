@@ -15,8 +15,18 @@ import josebailon.ensayos.cliente.model.network.model.entidades.CancionApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.GrupoApiEnt;
 import josebailon.ensayos.cliente.model.network.model.entidades.NotaApiEnt;
 
+/**
+ * Mediador entre entidades de Room y Retrofit.
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class MediadorDeEntidades {
 
+    /**
+     * Transforma un grupo de Retrofit a Room
+     * @param grupoApi El grupo como Retrofit Entity
+     * @return El grupo como Room Entity
+     */
     public static GrupoEntity grupoApiEntToGrupoEntity(GrupoApiEnt grupoApi){
             GrupoEntity g = new GrupoEntity();
             g.setId(UUID.fromString(grupoApi.getId()));
@@ -33,6 +43,11 @@ public class MediadorDeEntidades {
             g.setAbandonado(false);
             return g;
     }
+
+    /**
+     * Crea una entidad Usuario de room a partir de grupo y email
+     * @return El usuario
+     */
     public static UsuarioEntity crearUsuarioEntityParaGrupo(String idGrupo, String email){
         UsuarioEntity u = new UsuarioEntity();
         u.setGrupo(UUID.fromString(idGrupo));
@@ -40,6 +55,13 @@ public class MediadorDeEntidades {
         return u;
     }
 
+    /**
+     * Transforma una cancion de Retrofit a Room
+     * @param idGrupo UUID del grupo al que asignar lacancion
+     * @param cancionRemota Cancion Retrofit
+     *
+     * @return El cancion como Room Entity
+     */
     public static CancionEntity cancionApiEntToCancionEntity(String idGrupo, CancionApiEnt cancionRemota) {
         CancionEntity c = new CancionEntity();
         c.setId(UUID.fromString(cancionRemota.getId()));
@@ -58,6 +80,12 @@ public class MediadorDeEntidades {
         return c;
     }
 
+    /**
+     * Transfroma una nota retrofit a Room
+     * @param idCancion UUID de la cancion a la que asignar la nota
+     * @param notaRemota Nota retrofit
+     * @return Nota Room
+     */
     public static NotaEntity notaApiEntToNotaEntity(String idCancion, NotaApiEnt notaRemota) {
         NotaEntity n = new NotaEntity();
         n.setId(UUID.fromString(notaRemota.getId()));
@@ -75,6 +103,11 @@ public class MediadorDeEntidades {
         return n;
     }
 
+    /**
+     * Transforma un audio Retrofit a Room
+     * @param audioRemoto Audio retrofit
+     * @return Audio Room
+     */
     public static AudioEntity audioApiEntToAudioEntity(AudioApiEnt audioRemoto) {
         AudioEntity a = new AudioEntity();
         a.setNota_id(UUID.fromString(audioRemoto.getId()));

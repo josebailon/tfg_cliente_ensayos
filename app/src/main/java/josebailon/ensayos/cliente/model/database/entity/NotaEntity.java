@@ -11,6 +11,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Entidad Room Nota
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Entity(tableName = "nota", foreignKeys = {@ForeignKey(entity = CancionEntity.class, parentColumns = {"id"}, childColumns = {"cancion"}, onDelete= ForeignKey.CASCADE)})
 public class NotaEntity {
     @PrimaryKey(autoGenerate = false)

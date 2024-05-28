@@ -28,6 +28,12 @@ import josebailon.ensayos.cliente.view.dialogos.DialogoConflictoGrupo;
 import josebailon.ensayos.cliente.view.dialogos.DialogoConflictoNota;
 import josebailon.ensayos.cliente.viewmodel.SincronizadorViewModel;
 
+/**
+ * Fragment de sincronizacion.  Lanza la sincronizacion y espera a sus eventos mostrando el estado
+ * y en el caso que sea neceasrio dialogos de resolucion de conflictos
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class SincronizadoFragment extends Fragment {
 
     private FragmentSincronizadoBinding binding;
@@ -50,14 +56,17 @@ public class SincronizadoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         handler = new Handler(Looper.getMainLooper());
-
+        //escrucha de mensajes
         viewModel.getMensaje().observe(getViewLifecycleOwner(), s -> {
             toast(s);
         });
 
+        //escucha de estado
         viewModel.getMensajeEstado().observe(getViewLifecycleOwner(), s -> {
             binding.lbEstado.setText(s);
         });
+
+        //escucha de estado de sincronizando o terminado
         viewModel.getSincronizando().observe(getViewLifecycleOwner(), sincronizando -> {
             if (sincronizando) {
                 binding.lbEstado.setVisibility(View.VISIBLE);
@@ -69,6 +78,7 @@ public class SincronizadoFragment extends Fragment {
             }
         });
 
+        //escucha de eventos de conflicto
         viewModel.getConflicto().observe(getViewLifecycleOwner(), conflicto -> {
             switch (conflicto.getTipo()) {
                 case Conflicto.T_GRUPO:
@@ -86,6 +96,10 @@ public class SincronizadoFragment extends Fragment {
 
     }
 
+    /**
+     * Toast de mensaje
+     * @param msg
+     */
     private void toast(String msg) {
         Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }

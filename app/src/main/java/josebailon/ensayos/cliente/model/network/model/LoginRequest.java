@@ -2,6 +2,11 @@ package josebailon.ensayos.cliente.model.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Entidad RetroFit para la el envio de peticion de login y registro
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class LoginRequest {
     @SerializedName("email")
     private String email;

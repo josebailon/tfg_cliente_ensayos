@@ -14,6 +14,11 @@ import josebailon.ensayos.cliente.R;
 import josebailon.ensayos.cliente.databinding.FragmentLoginregistroBinding;
 
 
+/**
+ * Fragment que muestra un selector de login o registro
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class LoginregistroFragment extends Fragment {
 
     private FragmentLoginregistroBinding binding;
@@ -48,11 +53,5 @@ public class LoginregistroFragment extends Fragment {
         binding = null;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (((MainActivity) requireActivity()).getSupportActionBar() != null) {
-//            ((MainActivity) requireActivity()).getSupportActionBar().hide();
-//        }
-//    }
+
 }

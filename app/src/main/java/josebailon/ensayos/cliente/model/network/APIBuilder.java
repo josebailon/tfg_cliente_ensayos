@@ -9,6 +9,13 @@ import retrofit2.Retrofit;
 import josebailon.ensayos.cliente.R;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
+/**
+ * Constructor de objeto Retrofit.
+ * Establece GSon como conversor de entidades desde y hacia Json y establece el formato de fecha.
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class APIBuilder {
     public static Retrofit getBuilder(){
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();

@@ -1,5 +1,11 @@
 package josebailon.ensayos.cliente.model.dto;
 
+
+/**
+ * DTO para envio de peticiones login al servicio web
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class LoginDto {
     private String email;
     private String password;

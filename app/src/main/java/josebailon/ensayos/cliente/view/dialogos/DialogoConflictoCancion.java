@@ -25,12 +25,38 @@ import josebailon.ensayos.cliente.model.network.model.entidades.UsuarioApiEnt;
 import josebailon.ensayos.cliente.model.sincronizacion.MediadorDeEntidades;
 import josebailon.ensayos.cliente.model.sincronizacion.conflictos.Conflicto;
 
+/**
+ * Logica de la vista dialogo de resolucion de conflicto de cancion
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class DialogoConflictoCancion extends Dialog {
-    Conflicto<CancionEntity,CancionApiEnt> conflicto;
-    CancionEntity local;
-    CancionApiEnt remoto;
-    CancionEntity fusion;
 
+    /**
+     * El conflicto a resolver
+     */
+    private Conflicto<CancionEntity,CancionApiEnt> conflicto;
+
+    /**
+     * Cancion local
+     */
+    private CancionEntity local;
+
+    /**
+     * Cancion remota
+     */
+    private CancionApiEnt remoto;
+
+    /**
+     * Cancion con datos fusionados
+     */
+    private CancionEntity fusion;
+
+    /**
+     * Constructor
+     * @param context Contexto del dialogo
+     * @param conflicto Conflicto a resolver
+     */
     public DialogoConflictoCancion(@NonNull Context context, Conflicto<CancionEntity,CancionApiEnt> conflicto) {
         super(context);
         this.conflicto=conflicto;
@@ -41,6 +67,9 @@ public class DialogoConflictoCancion extends Dialog {
         this.setCanceledOnTouchOutside(false);
     }
 
+    /**
+     * Prepara la entidad fusion
+     */
     private void prepararFusion() {
         fusion = new CancionEntity();
         fusion.setId(local.getId());
@@ -70,6 +99,9 @@ public class DialogoConflictoCancion extends Dialog {
         fusion.setGrupo(local.getGrupo());
     }
 
+    /**
+     * Prepara la interface rellenando los datos iniciales y asignando los eventos
+     */
     private void prepararInterface() {
         this.setContentView(R.layout.dialogo_conflicto_cancion);
         Window window = this.getWindow();

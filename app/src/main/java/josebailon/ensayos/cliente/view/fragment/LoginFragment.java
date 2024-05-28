@@ -18,6 +18,11 @@ import josebailon.ensayos.cliente.view.util.Validators;
 import josebailon.ensayos.cliente.viewmodel.LoginViewModel;
 
 
+/**
+ * Control del fragment de login
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
@@ -69,6 +74,9 @@ public class LoginFragment extends Fragment {
 
     }
 
+    /**
+     * Intenta hacer login validando las entradas previamente
+     */
     private void intentarLogin() {
         String email = binding.inputEmail.getText().toString();
         String password= binding.inputPassword.getText().toString();
@@ -86,6 +94,10 @@ public class LoginFragment extends Fragment {
     }
 
 
+    /**
+     * Toast de mensaje
+     * @param msg
+     */
     private void toast (String msg){
         Toast.makeText(this.getContext(),msg,Toast.LENGTH_LONG).show();
     }

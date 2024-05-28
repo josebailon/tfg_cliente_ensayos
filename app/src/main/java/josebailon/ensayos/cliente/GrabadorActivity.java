@@ -21,18 +21,54 @@ import josebailon.ensayos.cliente.model.grabacion.GrabadorImpl;
 import josebailon.ensayos.cliente.model.grabacion.Reproductor;
 import josebailon.ensayos.cliente.model.grabacion.ReproductorImpl;
 
+/**
+ * Actividad de grabacion
+ */
 public class GrabadorActivity extends AppCompatActivity {
+
+    /**
+     * Objeto grabador
+     */
     private Grabador grabador;
+
+    /**
+     * Objeto repropductor
+     */
     private Reproductor reproductor;
 
+    /**
+     * Estado grabando
+     */
+
     private boolean grabando = false;
+
+    /**
+     * Estado ya grabado
+     */
     private boolean grabado = false;
+
+    /**
+     * Estado reproduciendo
+     */
     private boolean reproduciendo = false;
+
     private ActivityGrabadorBinding binding;
     ArchivosRepo archivosRepo = ArchivosRepo.getInstance();
+
+
+    /**
+     * audio actual
+     */
     private File rutaActual;
 
+    /**
+     * Handler de escucha de cronometro
+     */
     private final Handler handler = new Handler();
+
+    /**
+     * Hilo de cronometro
+     */
     private  Runnable contador;
 
 
@@ -122,6 +158,9 @@ public class GrabadorActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Para la reproduccion
+     */
     private void pararReproduccion() {
         reproductor.parar();
         reproduciendo=false;
@@ -129,11 +168,17 @@ public class GrabadorActivity extends AppCompatActivity {
         pararTiempo();
     }
 
+    /**
+     * Resetea el cronometro
+     */
     private void resetContador() {
         binding.contador.setText("00:00");
     }
 
 
+    /**
+     * Actualiza los botones segun lso estados de grabando, reproduciendo y grabado
+     */
     private void actualizaBotones(){
         binding.btnGuardar.setEnabled((!grabando&&grabado));
         binding.btnCancelar.setEnabled((!grabando));
@@ -144,6 +189,9 @@ public class GrabadorActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Inicia el cronometro
+     */
     private void iniciarTiempo(){
         resetContador();
         contador=new Runnable()
@@ -165,10 +213,18 @@ public class GrabadorActivity extends AppCompatActivity {
         handler.postDelayed(contador, 1000); // 1 second delay (takes millis)
     }
 
+    /**
+     * Para el cronometro
+     */
     private void pararTiempo(){
         handler.removeCallbacks(contador);
         resetContador();
     }
+
+    /**
+     * Toast de mensajes
+     * @param msg
+     */
     private void toast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }

@@ -16,6 +16,11 @@ import josebailon.ensayos.cliente.model.database.entity.NotaEntity;
 import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 
 
+/**
+ * Dao Room de la entidad Nota
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 @Dao
 public interface NotaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

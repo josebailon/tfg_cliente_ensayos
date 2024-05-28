@@ -15,10 +15,21 @@ import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.databinding.GrupoItemBinding;
 import josebailon.ensayos.cliente.view.fragment.VergruposFragment;
 
-
+/**
+ * Adaptador de lista de grupos para recycleview
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class GruposAdapter extends RecyclerView.Adapter<GruposAdapter.ViewHolder> {
 
+    /**
+     * La lista a usar
+     */
     List<GrupoEntity> list;
+
+    /**
+     * Fragment padre
+     */
     VergruposFragment fragment;
 
     public GruposAdapter(List<GrupoEntity> list, VergruposFragment fragment) {

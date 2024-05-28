@@ -11,6 +11,11 @@ import com.google.gson.annotations.SerializedName;
 
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 
+/**
+ * Entidad RetroFit para la recepcion de Grupo
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class GrupoApiEnt {
 
     @SerializedName("id")

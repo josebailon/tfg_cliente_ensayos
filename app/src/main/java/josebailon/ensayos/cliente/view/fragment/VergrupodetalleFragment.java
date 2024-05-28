@@ -42,6 +42,11 @@ import josebailon.ensayos.cliente.view.adapter.CancionesAdapter;
 import josebailon.ensayos.cliente.view.adapter.UsuariosAdapter;
 import josebailon.ensayos.cliente.viewmodel.VergrupodetalleViewModel;
 
+/**
+ * Fragment de vista de detalle de un grupo
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class VergrupodetalleFragment extends Fragment {
 
 
@@ -51,10 +56,10 @@ public class VergrupodetalleFragment extends Fragment {
 
     private CancionesAdapter adaptadorCanciones;
     private UsuariosAdapter adaptadorUsuarios;
-    List<CancionEntity> cancionesActuales=null;
-    List<UsuarioEntity> usuariosActuales =null;
+    private List<CancionEntity> cancionesActuales=null;
+    private List<UsuarioEntity> usuariosActuales =null;
 
-    UUID idgrupo;
+    private UUID idgrupo;
     private GrupoEntity grupo;
 
     @Override
@@ -121,6 +126,9 @@ public class VergrupodetalleFragment extends Fragment {
  }
 
 
+    /**
+     * Muestra el dialogo para agregar un usuario al grupo
+     */
     private void mostrarDialogoAgregarUsuario() {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialogo_agregar_usuario);
@@ -142,6 +150,9 @@ public class VergrupodetalleFragment extends Fragment {
     }
 
 
+    /**
+     * Muestra el dialogo de creacion de una cancion
+     */
     private void mostrarDialogoCrearCancion() {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialogo_crear_cancion);
@@ -166,6 +177,10 @@ public class VergrupodetalleFragment extends Fragment {
 
     }
 
+    /**
+     * Muestara el dialogo para editar una cancion
+     * @param cancion La cancion a editar
+     */
     private void mostrarDialogoEdicionCancion(CancionEntity cancion) {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialogo_crear_cancion);
@@ -192,6 +207,10 @@ public class VergrupodetalleFragment extends Fragment {
         ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
     }
 
+    /**
+     * Toast de mensaje
+     * @param msg
+     */
     private void toast(String msg) {
         Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
@@ -211,6 +230,11 @@ public class VergrupodetalleFragment extends Fragment {
         }
     }
 
+    /**
+     * Muestra el menu contextual de una cancion
+     * @param position La posicion
+     * @return true si se ha manejado
+     */
     public boolean mostrarMenuCancion(int position) {
         PopupMenu popupMenu = new PopupMenu(getContext() , binding.verCancionesRecycleView.getChildAt(position).findViewById(R.id.nombre));
         // add the menu
@@ -231,6 +255,11 @@ public class VergrupodetalleFragment extends Fragment {
     }
 
 
+    /**
+     * Muestra el menu contextual de un usuario
+     * @param position La posicion
+     * @return true si se ha manejado
+     */
     public boolean mostrarMenuUsuario(int position) {
         PopupMenu popupMenu = new PopupMenu(getContext() , binding.verUsuariosRecycleView.getChildAt(position).findViewById(R.id.nombre));
         // add the menu
@@ -248,17 +277,26 @@ public class VergrupodetalleFragment extends Fragment {
     }
 
 
+    /**
+     * Borra una cancion
+     * @param cancionEntity
+     */
     private void borrarCancion(CancionEntity cancionEntity) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Eliminación")
                 .setMessage("¿Quieres borrar la cancion "+cancionEntity.getNombre()+"?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton("SÍ",(dialog, which) -> {
+                .setPositiveButton("SI",(dialog, which) -> {
                     viewModel.borrarCancion(cancionEntity);
                 })
                 .setNegativeButton("NO", null)
                 .show();
     }
+
+    /**
+     * Borra un usuario
+     * @param usuarioEntity
+     */
     private void borrarUsuario(UsuarioEntity usuarioEntity) {
         //abandonar grupo
         if (usuarioEntity.getEmail().equals(viewModel.getUsuario())) {
@@ -267,7 +305,7 @@ public class VergrupodetalleFragment extends Fragment {
                     .setTitle("Abandonar el grupo")
                     .setMessage("¿Quieres abandonar el grupo?")
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("SÍ", (dialog, which) -> {
+                    .setPositiveButton("SI", (dialog, which) -> {
                        viewModel.abandonarGrupo(usuarioEntity,grupo);
                         NavHostFragment.findNavController(VergrupodetalleFragment.this).popBackStack();
                     })
@@ -280,13 +318,18 @@ public class VergrupodetalleFragment extends Fragment {
                     .setTitle("Eliminación")
                     .setMessage("¿Quieres eliminar el usuario " + usuarioEntity.getEmail() + " de este grupo?")
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("SÍ", (dialog, which) -> {
+                    .setPositiveButton("SI", (dialog, which) -> {
                         viewModel.borrarUsuario(usuarioEntity,grupo);
                     })
                     .setNegativeButton("NO", null)
                     .show();
         }
     }
+
+    /**
+     * Navega a la vista detalle de una cancion
+     * @param id
+     */
     public void verCancion(UUID id) {
         String uuid = id.toString();
         Bundle bundle = new Bundle();
@@ -295,6 +338,9 @@ public class VergrupodetalleFragment extends Fragment {
                 .navigate(R.id.action_vergrupodetalleFragment_to_vercanciondetalleFragment,bundle);
     }
 
+    /**
+     * Muestra el menu de acciones
+     */
     private void mostrarMenuSuperior() {
         getActivity().addMenuProvider( new MenuProvider(){
 

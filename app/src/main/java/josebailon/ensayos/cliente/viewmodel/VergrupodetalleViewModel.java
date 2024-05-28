@@ -26,6 +26,11 @@ import josebailon.ensayos.cliente.model.dto.LoginDto;
 import josebailon.ensayos.cliente.model.database.service.DatosLocalesAsincronos;
 import retrofit2.Response;
 
+/**
+ * ViewModel de vista de detalle de un grupo
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class VergrupodetalleViewModel extends ViewModel {
 
     private SharedPreferencesRepo sharedRepo = SharedPreferencesRepo.getInstance();
@@ -34,6 +39,10 @@ public class VergrupodetalleViewModel extends ViewModel {
     private DatosLocalesAsincronos servicio = DatosLocalesAsincronos.getInstance(App.getContext());
 
     MutableLiveData<String> mensaje = new MutableLiveData<>();
+
+    /**
+     * Executor para el manejo de peticiones a la api para comprobacion de usuarios
+     */
     private Executor executor = Executors.newSingleThreadExecutor();
     private UUID grupoId;
 
@@ -48,6 +57,13 @@ public class VergrupodetalleViewModel extends ViewModel {
         return mensaje;
     }
 
+    /**
+     * Crea una cancion
+     * @param nombre
+     * @param descripcion
+     * @param duracion
+     * @param grupo
+     */
     public void crearCancion(String nombre, String descripcion, String duracion, UUID grupo) {
         CancionEntity c = new CancionEntity();
         c.setId(UUID.randomUUID());
@@ -65,6 +81,10 @@ public class VergrupodetalleViewModel extends ViewModel {
     }
 
 
+    /**
+     * Borra una cancion
+     * @param cancion
+     */
     public void borrarCancion(CancionEntity cancion) {
         if (cancion.getVersion()==0)
             servicio.deleteCancion(cancion);
@@ -75,6 +95,13 @@ public class VergrupodetalleViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Actualiza los valores de una cancion
+     * @param cancion
+     * @param nombre
+     * @param descripcion
+     * @param duracion
+     */
     public void actualizarCancion(CancionEntity cancion, String nombre, String descripcion, String duracion) {
         cancion.setNombre(nombre);
         cancion.setDescripcion(descripcion);
@@ -84,6 +111,11 @@ public class VergrupodetalleViewModel extends ViewModel {
     }
 
 
+    /**
+     * Agrega un usuario a un grupo comprobando si existe
+     * @param email
+     * @param grupo
+     */
     public void agregarUsuario(String email, GrupoEntity grupo) {
         LoginDto l = sharedRepo.readLogin();
         if (TextUtils.isEmpty(l.getEmail())) {
@@ -131,12 +163,22 @@ public class VergrupodetalleViewModel extends ViewModel {
         });
     }
 
+    /**
+     * Borra un usuario de un grupo
+     * @param usuario
+     * @param grupo
+     */
     public void borrarUsuario(UsuarioEntity usuario, GrupoEntity grupo) {
         servicio.deleteUsuario(usuario);
         grupo.setEditado(true);
         servicio.updateGrupo(grupo);
     }
 
+    /**
+     * Desvincula el usuario local de un grupo
+     * @param usuario
+     * @param grupo
+     */
     public void abandonarGrupo(UsuarioEntity usuario, GrupoEntity grupo) {
         if (grupo.getVersion()==0)
             servicio.deleteGrupo(grupo);

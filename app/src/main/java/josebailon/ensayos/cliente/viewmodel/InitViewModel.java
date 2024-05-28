@@ -18,6 +18,11 @@ import josebailon.ensayos.cliente.model.sharedpreferences.SharedPreferencesRepo;
 import josebailon.ensayos.cliente.model.dto.LoginDto;
 import retrofit2.Response;
 
+/**
+ * ViewModel de vista init
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class InitViewModel extends AndroidViewModel {
 
     public static final int WORKING =0;
@@ -27,10 +32,18 @@ public class InitViewModel extends AndroidViewModel {
     public static final int NO_INTERNET =-1;
 
     private AuthApiRepo authApiRepo;
+
+    /**
+     * Estado actual(working, needlogin, loginok, no_internet)
+     */
     MutableLiveData<Integer> _estado = new MutableLiveData<>();
 
+    /**
+     * Grupos a mostrar
+     */
     public MutableLiveData<List<GrupoEntity>> grupos = new MutableLiveData<>();
     private SharedPreferencesRepo repo = SharedPreferencesRepo.getInstance();
+
     public InitViewModel(@NonNull Application application) {
         super(application);
         authApiRepo = AuthApiRepo.getInstance();
@@ -45,9 +58,14 @@ public class InitViewModel extends AndroidViewModel {
         return !TextUtils.isEmpty(repo.readLogin().getEmail());
     }
 
-    public LiveData<Integer> comprobar(){
 
-        //repo.clear();
+    /**
+     * Comprueba el estado de inicio intentando login
+     *
+     * @return El estado
+     */
+    public LiveData<Integer> checkEstado(){
+
 
         LoginDto l = repo.readLogin();
         authApiRepo.login(new LoginRequest(l.getEmail(), l.getPassword()), new AuthApiRepo.ILoginResponse() {

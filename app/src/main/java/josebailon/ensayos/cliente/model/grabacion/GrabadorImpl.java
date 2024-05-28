@@ -10,10 +10,22 @@ import java.io.IOException;
 
 import josebailon.ensayos.cliente.App;
 
+/**
+ * Implementacion del grabador
+ *
+ * @author Jose Javier Bailon Ortiz
+ */
 public class GrabadorImpl implements Grabador {
 
+    /**
+     * Grabador
+     */
     private MediaRecorder recorder;
 
+    /**
+     * Crea un recorder nuevo
+     * @return El recorder creado
+     */
     private MediaRecorder crearRecorder(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             return new MediaRecorder(App.getContext());

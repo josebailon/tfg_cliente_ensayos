@@ -115,7 +115,7 @@ public class VerNotaViewModel extends ViewModel {
 
                     executor.execute(() -> {
                         //hacer llamada
-                        Response<ResponseBody> response = audioApiRepo.descarga(idnota.toString(), loginResponse.body().getBearer(),
+                        audioApiRepo.descarga(idnota.toString(), loginResponse.body().getBearer(),
                                 new AudioApiRepo.IDescargaResponse() {
                                     @Override
                                     public void onResponse(Response<ResponseBody> response) {
