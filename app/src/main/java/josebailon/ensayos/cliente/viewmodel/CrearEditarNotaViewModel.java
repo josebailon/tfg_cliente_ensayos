@@ -236,6 +236,7 @@ public class CrearEditarNotaViewModel extends ViewModel {
                     }else{
                         AudioEntity a = notaAndAudio.getValue().audio;
                         a.setArchivo(nombre);
+                        a.setBorrado(false);
                         a.setFecha(new Date(System.currentTimeMillis()));
                         //si la version no es 0 se marca como editado
                         if (a.getVersion()!=0){

@@ -1,8 +1,8 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../javadoc/cliente" />
-    <option name="OPTION_SCOPE" value="public" />
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../../ENTREGA/JAVADOC/cliente" />
+    <option name="OPTION_SCOPE" value="private" />
     <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="true" />
     <option name="OTHER_OPTIONS" value="-sourcepath C:\Users\Jose\AppData\Local\Android\Sdk\platforms\android-34\android.jar" />
   </component>

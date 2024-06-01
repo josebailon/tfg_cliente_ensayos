@@ -20,7 +20,7 @@
             android:background="@color/colorPrimaryDark"
             android:theme="@style/Theme.Ensayos.Toolbar"
             app:title="Login"
-            app:titleCentered="true"
+            app:titleCentered="false"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Display1"
             app:titleTextColor="#FFFFFF" />
 

@@ -70,4 +70,19 @@ public class VercanciondetalleViewModel extends ViewModel {
     }
 
 
+    /**
+     * Actualiza los valores de una cancion
+     * @param cancion
+     * @param nombre
+     * @param descripcion
+     * @param duracion
+     */
+    public void actualizarCancion(CancionEntity cancion, String nombre, String descripcion, String duracion) {
+        cancion.setNombre(nombre);
+        cancion.setDescripcion(descripcion);
+        cancion.setDuracion(duracion);
+        cancion.setEditado(true);
+        servicio.updateCancion(cancion);
+    }
+
 }

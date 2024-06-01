@@ -159,7 +159,6 @@
     <fragment
         android:id="@+id/crearEditarNota"
         android:name="josebailon.ensayos.cliente.view.fragment.CrearEditarNotaFragment"
-        android:label="Crear Nota"
         tools:layout="@layout/fragment_crear_editar_nota">
         <argument
             android:name="idnota"
@@ -172,11 +171,18 @@
     <fragment
         android:id="@+id/verNotaFragment"
         android:name="josebailon.ensayos.cliente.view.fragment.VerNotaFragment"
-        android:label="Ver Nota"
+        android:label="Nota"
         tools:layout="@layout/fragment_ver_nota">
         <argument
             android:name="idnota"
             app:argType="string" />
+        <action
+            android:id="@+id/action_verNotaFragment_to_crearEditarNota"
+            app:destination="@id/crearEditarNota"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/sincronizadoFragment"

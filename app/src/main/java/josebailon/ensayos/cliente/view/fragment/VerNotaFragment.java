@@ -220,27 +220,46 @@ public class VerNotaFragment extends Fragment {
 
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.menu_share, menu);
+                menuInflater.inflate(R.menu.menu_edit_share, menu);
             }
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                String texto = (cancion!=null)?cancion.getNombre()+"\n":"";
-                texto += notaAndAudio.nota.getNombre() + "\n" + notaAndAudio.nota.getTexto();
-                sendIntent.putExtra(Intent.EXTRA_TEXT, texto);
-                if (notaAndAudio.audio != null) {
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, viewModel.getUriDeAudio(notaAndAudio.audio.getArchivo().toString()));
-                    sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                }
-                sendIntent.setType("text/plain");
 
-                Intent shareIntent = Intent.createChooser(sendIntent, null);
-                startActivity(shareIntent);
+                int id = menuItem.getItemId();
+                if (id == R.id.action_compartir)
+                    compartir();
+                else if (id == R.id.action_editar)
+                    editar();
                 return true;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    }
+
+    private void compartir() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        String texto = (cancion!=null)?cancion.getNombre()+"\n":"";
+        texto += notaAndAudio.nota.getNombre() + "\n" + notaAndAudio.nota.getTexto();
+        sendIntent.putExtra(Intent.EXTRA_TEXT, texto);
+        if (notaAndAudio.audio != null) {
+            sendIntent.putExtra(Intent.EXTRA_STREAM, viewModel.getUriDeAudio(notaAndAudio.audio.getArchivo().toString()));
+            sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+
+    }
+
+    private void editar() {
+        Bundle bundle = new Bundle();
+        bundle.putString("idnota", notaAndAudio.nota.getId().toString());
+        bundle.putString("idcancion", cancion.getId().toString());
+        NavHostFragment.findNavController(VerNotaFragment.this)
+                .navigate(R.id.action_verNotaFragment_to_crearEditarNota,bundle);
+
     }
 
 

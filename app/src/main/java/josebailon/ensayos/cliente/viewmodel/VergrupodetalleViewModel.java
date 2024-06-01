@@ -57,6 +57,23 @@ public class VergrupodetalleViewModel extends ViewModel {
         return mensaje;
     }
 
+
+
+    /**
+     * Actualizar un grupo
+     * @param grupo
+     * @param nombre
+     * @param descripcion
+     */
+    public void actualizarGrupo(GrupoEntity grupo, String nombre, String descripcion) {
+        grupo.setNombre(nombre);
+        grupo.setDescripcion(descripcion);
+        grupo.setEditado(true);
+        servicio.updateGrupo(grupo);
+    }
+
+
+
     /**
      * Crea una cancion
      * @param nombre

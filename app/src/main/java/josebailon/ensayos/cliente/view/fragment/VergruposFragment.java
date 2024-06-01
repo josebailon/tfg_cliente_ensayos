@@ -41,6 +41,7 @@ import josebailon.ensayos.cliente.R;
 import josebailon.ensayos.cliente.model.database.entity.GrupoEntity;
 import josebailon.ensayos.cliente.databinding.FragmentVergruposBinding;
 import josebailon.ensayos.cliente.view.adapter.GruposAdapter;
+import josebailon.ensayos.cliente.view.dialogos.DialogoEditarGrupo;
 import josebailon.ensayos.cliente.viewmodel.VergruposViewModel;
 
 /**
@@ -99,7 +100,7 @@ public class VergruposFragment extends Fragment {
 
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.menu_main, menu);
+                menuInflater.inflate(R.menu.menu_sincro, menu);
             }
 
             @Override
@@ -194,8 +195,6 @@ public class VergruposFragment extends Fragment {
         popupMenu.inflate(R.menu.contextmenu);
         // implement on menu item click Listener
         popupMenu.setOnMenuItemClickListener(item -> {
-
-
             if (item.getItemId() == R.id.itemEditar) {
                 mostrarDialogoEdicion(gruposActuales.get(position));
             } else if (item.getItemId() == R.id.itemEliminar) {
@@ -229,26 +228,15 @@ public class VergruposFragment extends Fragment {
      * @param grupo
      */
     private void mostrarDialogoEdicion(GrupoEntity grupo) {
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialogo_crear_grupo);
-        ((EditText) dialog.findViewById(R.id.inputEmail)).setText(grupo.getNombre());
-        ((EditText) dialog.findViewById(R.id.inputDescripcion)).setText(grupo.getDescripcion());
-        dialog.show();
-        Window window = dialog.getWindow();
-        ((TextView) window.findViewById(R.id.tituloventana)).setText("Editar Grupo");
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
-            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
-            String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
-
-            if (TextUtils.isEmpty(nombre))
+        DialogoEditarGrupo d = new DialogoEditarGrupo(getContext(),grupo);
+        d.mostrar(v -> {
+            if (TextUtils.isEmpty(d.getNombre()))
                 toast("El nombre no puede estar vacío");
             else {
                 //guardar GRUPO
-                viewModel.actualizar(grupo, nombre, descripcion);
-                dialog.dismiss();
+                viewModel.actualizar(grupo, d.getNombre(), d.getDescripcion());
+                d.dismiss();
             }
         });
-        ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
     }
 }

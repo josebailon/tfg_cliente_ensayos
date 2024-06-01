@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
             Navigation.findNavController(this, R.id.nav_host_fragment_content_main).navigate(R.id.sincronizadoFragment);
             return true;
         }
-        int actual=Navigation.findNavController(this,R.id.nav_host_fragment_content_main).getCurrentDestination().getId();
-        if (actual==R.id.verNotaFragment) {
+        int fragActual=Navigation.findNavController(this,R.id.nav_host_fragment_content_main).getCurrentDestination().getId();
+        if (fragActual==R.id.verNotaFragment || id==R.id.action_editar) {
             return false;
         }
 

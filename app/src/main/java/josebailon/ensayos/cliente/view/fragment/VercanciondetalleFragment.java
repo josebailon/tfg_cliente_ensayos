@@ -1,6 +1,7 @@
 package josebailon.ensayos.cliente.view.fragment;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,7 @@ import josebailon.ensayos.cliente.model.database.relation.NotaAndAudio;
 import josebailon.ensayos.cliente.databinding.FragmentVercancionDetalleBinding;
 import josebailon.ensayos.cliente.view.adapter.NotasConAudioAdapter;
 import josebailon.ensayos.cliente.view.adapter.UsuariosAdapter;
+import josebailon.ensayos.cliente.view.dialogos.DialogoEditarCancion;
 import josebailon.ensayos.cliente.viewmodel.VercanciondetalleViewModel;
 
 /**
@@ -209,13 +211,34 @@ public class VercanciondetalleFragment extends Fragment {
 
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.menu_main, menu);
+                menuInflater.inflate(R.menu.menu_edit_sincro, menu);
             }
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                return false;
+                int id = menuItem.getItemId();
+                if (id==R.id.action_editar)
+                    dialogoEditarCancion();
+                return true;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    }
+
+    private void dialogoEditarCancion() {
+        DialogoEditarCancion d = new DialogoEditarCancion(getContext(),cancion);
+        d.mostrar(v -> {
+            String nombre = d.getNombre();
+            String descripcion = d.getDescripcion();
+            String duracion = d.getDuracion();
+
+            if (TextUtils.isEmpty(nombre))
+                toast("El nombre no puede estar vacío");
+            else {
+                //guardar CANCION
+                viewModel.actualizarCancion(cancion,nombre,descripcion,duracion);
+                d.dismiss();
+            }
+        });
+
     }
 }

@@ -40,6 +40,8 @@ import josebailon.ensayos.cliente.model.database.entity.UsuarioEntity;
 import josebailon.ensayos.cliente.databinding.FragmentVergrupoDetalleBinding;
 import josebailon.ensayos.cliente.view.adapter.CancionesAdapter;
 import josebailon.ensayos.cliente.view.adapter.UsuariosAdapter;
+import josebailon.ensayos.cliente.view.dialogos.DialogoEditarCancion;
+import josebailon.ensayos.cliente.view.dialogos.DialogoEditarGrupo;
 import josebailon.ensayos.cliente.viewmodel.VergrupodetalleViewModel;
 
 /**
@@ -182,29 +184,19 @@ public class VergrupodetalleFragment extends Fragment {
      * @param cancion La cancion a editar
      */
     private void mostrarDialogoEdicionCancion(CancionEntity cancion) {
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialogo_crear_cancion);
-        ((EditText)dialog.findViewById(R.id.inputEmail)).setText(cancion.getNombre());
-        ((EditText)dialog.findViewById(R.id.inputDescripcion)).setText(cancion.getDescripcion());
-        ((EditText)dialog.findViewById(R.id.inputDuracion)).setText(cancion.getDuracion());
-        dialog.show();
-        Window window = dialog.getWindow();
-        ((TextView)window.findViewById(R.id.tituloventana)).setText("Editar Canción");
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((Button) (dialog.findViewById(R.id.btnAceptar))).setOnClickListener(v -> {
-            String nombre = ((EditText) (dialog.findViewById(R.id.inputEmail))).getText().toString();
-            String descripcion = ((EditText) (dialog.findViewById(R.id.inputDescripcion))).getText().toString();
-            String duracion = ((EditText) (dialog.findViewById(R.id.inputDuracion))).getText().toString();
-
+        DialogoEditarCancion d = new DialogoEditarCancion(getContext(),cancion);
+        d.mostrar(v -> {
+            String nombre = d.getNombre();
+            String descripcion = d.getDescripcion();
+            String duracion = d.getDuracion();
             if (TextUtils.isEmpty(nombre))
                 toast("El nombre no puede estar vacío");
             else {
                 //guardar CANCION
                 viewModel.actualizarCancion(cancion,nombre,descripcion,duracion);
-                dialog.dismiss();
+                d.dismiss();
             }
         });
-        ((Button) (dialog.findViewById(R.id.btnCancelar))).setOnClickListener(v -> dialog.dismiss());
     }
 
     /**
@@ -338,6 +330,8 @@ public class VergrupodetalleFragment extends Fragment {
                 .navigate(R.id.action_vergrupodetalleFragment_to_vercanciondetalleFragment,bundle);
     }
 
+
+
     /**
      * Muestra el menu de acciones
      */
@@ -346,14 +340,30 @@ public class VergrupodetalleFragment extends Fragment {
 
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.menu_main, menu);
+                menuInflater.inflate(R.menu.menu_edit_sincro, menu);
             }
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                return false;
+                int id = menuItem.getItemId();
+                if (id==R.id.action_editar)
+                    dialogoEditarGrupo();
+                return true;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
+    }
+
+    private void dialogoEditarGrupo() {
+        DialogoEditarGrupo d = new DialogoEditarGrupo(getContext(),grupo);
+        d.mostrar(v -> {
+       if (TextUtils.isEmpty(d.getNombre()))
+                toast("El nombre no puede estar vacío");
+            else {
+                //guardar GRUPO
+                viewModel.actualizarGrupo(grupo, d.getNombre(), d.getDescripcion());
+                d.dismiss();
+            }
+        });
     }
 }
