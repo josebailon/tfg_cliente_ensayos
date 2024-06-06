@@ -63,12 +63,12 @@
         <action
             android:id="@+id/action_loginFragment_to_vergruposFragment"
             app:destination="@id/vergruposFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/nav_slide_in_right"
             app:exitAnim="@anim/nav_slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/InitFragment"
+            app:popUpToInclusive="true" />
             />
     </fragment>
     <fragment
@@ -79,12 +79,12 @@
         <action
             android:id="@+id/action_registroFragment_to_vergruposFragment"
             app:destination="@id/vergruposFragment"
-            app:popUpTo="@id/registroFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/nav_slide_in_right"
             app:exitAnim="@anim/nav_slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/InitFragment"
+            app:popUpToInclusive="true" />
             />
     </fragment>
     <fragment
@@ -155,6 +155,9 @@
             app:exitAnim="@anim/nav_slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_vercanciondetalleFragment_to_sincronizadoFragment"
+            app:destination="@id/sincronizadoFragment" />
     </fragment>
     <fragment
         android:id="@+id/crearEditarNota"

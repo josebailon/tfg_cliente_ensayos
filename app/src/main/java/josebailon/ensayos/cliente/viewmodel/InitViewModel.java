@@ -38,10 +38,7 @@ public class InitViewModel extends AndroidViewModel {
      */
     MutableLiveData<Integer> _estado = new MutableLiveData<>();
 
-    /**
-     * Grupos a mostrar
-     */
-    public MutableLiveData<List<GrupoEntity>> grupos = new MutableLiveData<>();
+
     private SharedPreferencesRepo repo = SharedPreferencesRepo.getInstance();
 
     public InitViewModel(@NonNull Application application) {

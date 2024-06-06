@@ -74,13 +74,6 @@ public class InitFragment extends Fragment {
             }
         });
 
-        viewModel.grupos.observe(getViewLifecycleOwner(), grupoEntities -> {
-            for (GrupoEntity g : grupoEntities
-            ) {
-                Log.i("JJBO", g.getNombre());
-                Log.i("JJBO", "" + g.isBorrado());
-            }
-        });
     }
 
 
