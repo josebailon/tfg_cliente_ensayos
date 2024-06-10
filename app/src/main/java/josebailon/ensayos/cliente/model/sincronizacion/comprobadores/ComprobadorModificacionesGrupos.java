@@ -362,7 +362,7 @@ public class ComprobadorModificacionesGrupos {
      * @throws TerminarSincronizacionException Si hay que terminar la sincronizacion
      */
     private void comprobarCanciones(GrupoAndUsuariosAndCanciones grupoLocal, GrupoApiEnt grupoRemoto) throws CredencialesErroneasException, IOException, TerminarSincronizacionException {
-        if(grupoRemoto!=null)
-            new ComprobadorModificacionesCanciones(sincronizadorService).comprobarCanciones(grupoLocal.grupo.getId(), grupoRemoto.getCanciones());
+            ComprobadorModificacionesCanciones comprobadorCanciones =new ComprobadorModificacionesCanciones(sincronizadorService);
+            comprobadorCanciones.comprobarCanciones(grupoLocal.grupo.getId(), (grupoRemoto != null) ? grupoRemoto.getCanciones() : null );
     }
 }
