@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="base_url">http://tfg.imagenprogramada.com:80</string>
+    <!-- Ruta de acceso al servidor-->
+    <string name="base_url">http://192.168.1.53:80</string>
 </resources>

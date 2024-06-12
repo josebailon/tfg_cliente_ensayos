@@ -254,6 +254,7 @@ public class VerNotaFragment extends Fragment {
     }
 
     private void editar() {
+        pararAudio();
         Bundle bundle = new Bundle();
         bundle.putString("idnota", notaAndAudio.nota.getId().toString());
         bundle.putString("idcancion", cancion.getId().toString());
